@@ -1,1 +1,0 @@
-import{j as e}from"./index-BuNlSZMP.js";import s from"./CustomerLogoWall-BS-E1TPC.js";function r(){return e.jsx("main",{className:"flex min-h-screen items-center bg-[#070b0a] text-white antialiased",children:e.jsx("div",{className:"w-full",children:e.jsx(s,{})})})}export{r as default};
