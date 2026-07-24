@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /preview/
+Disallow: /zh/preview/
+Disallow: /fa/preview/
+
+Sitemap: https://jotoglobal.com/sitemap.xml
