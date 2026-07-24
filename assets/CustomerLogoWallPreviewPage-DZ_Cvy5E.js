@@ -1,1 +1,0 @@
-import{j as e,C as s}from"./index-DcIN5r8p-colors.js";function t(){return e.jsx("main",{className:"flex min-h-screen items-center bg-[#070b0a] text-white antialiased",children:e.jsx("div",{className:"w-full",children:e.jsx(s,{})})})}export{t as default};
