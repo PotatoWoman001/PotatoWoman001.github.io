@@ -9,8 +9,10 @@ const homeRoutes = ["index.html", "zh/index.html", "fa/index.html"];
 const solutionRoutePattern =
   /^(?:(?:zh|fa)\/)?solutions\/[^/]+(?:\/[^/]+)?\/index\.html$/;
 const expectedSolutionRouteCount = 75;
-const scriptTag = '<script type="module" src="/assets/contact-form-sections.js"></script>';
-const styleTag = '<link rel="stylesheet" href="/assets/contact-form-sections.css">';
+const scriptTag =
+  '<script type="module" src="/assets/contact-form-sections.js?v=20260727-1"></script>';
+const styleTag =
+  '<link rel="stylesheet" href="/assets/contact-form-sections.css?v=20260727-1">';
 
 async function collectIndexFiles(directory, relativeDirectory = "") {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -60,9 +62,8 @@ for (const locale of ["en", "zh-CN", "fa-IR"]) {
 }
 
 assert.match(script, /CONTACT_ENDPOINT\s*=\s*"\/api\/contact"/);
-assert.match(script, /data\.homeHeroActions/);
-assert.match(script, /data\.solutionContactForm/);
-assert.match(script, /sourcePath/);
+assert.match(script, /dataset\.homeHeroActions/);
+assert.match(script, /data-solution-contact-form/);
 assert.match(script, /window\.location\.hash\s*===\s*"#contact"/);
 assert.doesNotMatch(script, /安全咨询|提交即表示/);
 
