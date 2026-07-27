@@ -1,0 +1,111 @@
+html,
+body {
+  min-height: 100%;
+  background: #070b0a;
+}
+
+body[data-customer-logo-wall-preview] {
+  margin: 0;
+  overflow-x: hidden;
+  color: #fff;
+}
+
+#customer-logo-wall-preview-mount {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+}
+
+#customer-logo-wall-preview-mount > .customer-logo-wall {
+  width: 100%;
+}
+
+#customer-logo-wall-source {
+  position: fixed;
+  width: 1px;
+  height: 1px;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.customer-logo-wall-preview__loading,
+.customer-logo-wall-preview__error {
+  width: 100%;
+  padding: 3rem 1.5rem;
+  color: rgba(255, 255, 255, 0.58);
+  font: 500 0.75rem/1.6 Poppins, sans-serif;
+  text-align: center;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.customer-logo-wall-preview__error {
+  color: #ff8f8f;
+}
+
+[data-customer-logo-wall-preview] .customer-logo-wall__viewport[hidden] {
+  display: none;
+}
+
+.customer-logo-wall-preview__rows {
+  display: grid;
+  gap: 0.625rem;
+  direction: ltr;
+}
+
+.customer-logo-wall-preview__track {
+  animation-duration: var(--logo-wall-duration);
+  animation-delay: var(--logo-wall-delay);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.customer-logo-wall-preview__track--left {
+  animation-name: customer-logo-wall-preview-left;
+}
+
+.customer-logo-wall-preview__track--right {
+  animation-name: customer-logo-wall-preview-right;
+}
+
+[data-customer-logo-wall-preview]:hover .customer-logo-wall-preview__track,
+[data-customer-logo-wall-preview]:focus-within
+  .customer-logo-wall-preview__track {
+  animation-play-state: paused;
+}
+
+@keyframes customer-logo-wall-preview-left {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes customer-logo-wall-preview-right {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .customer-logo-wall-preview__viewport {
+    overflow-x: auto;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+
+  .customer-logo-wall-preview__track {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .customer-logo-wall-preview__track [data-logo-sequence="duplicate"] {
+    display: none;
+  }
+}
