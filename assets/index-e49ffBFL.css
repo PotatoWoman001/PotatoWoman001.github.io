@@ -29,15 +29,61 @@ html[lang="fa-IR"] body {
   font-family: Instrument Serif, serif;
 }
 
+/* JOTO copy boundary completion · 2026-07-27 */
 main
-  :is(h1, h2, h3, h4, h5, h6, p, li, label):not(.text-center):not(
-    .text-center *
+  :where(h1, h2, h3, h4, h5, h6, p, ul, ol, li, label, blockquote):not(
+    .sr-only
+  ),
+footer
+  :where(h1, h2, h3, h4, h5, h6, p, ul, ol, li, label, blockquote):not(
+    .sr-only
   ) {
-  text-align: start;
+  min-inline-size: 0;
+  text-align: start !important;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+main
+  :where(h1, h2, h3, h4, h5, h6, p, ul, ol, li, label, blockquote):not(
+    .sr-only
+  ):not([class*="max-w-"]),
+footer
+  :where(h1, h2, h3, h4, h5, h6, p, ul, ol, li, label, blockquote):not(
+    .sr-only
+  ):not([class*="max-w-"]) {
+  max-inline-size: 100%;
+}
+
+main :where(h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote):not(.sr-only),
+footer :where(h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote):not(.sr-only) {
+  margin-inline-start: 0 !important;
+  margin-inline-end: auto !important;
+}
+
+main :is(h1, h2, h3, h4, h5, h6):not(.sr-only),
+footer :is(h1, h2, h3, h4, h5, h6):not(.sr-only) {
+  justify-content: flex-start;
+}
+
+html[dir="rtl"] main :is(h1, h2, h3, h4, h5, h6):not(.sr-only),
+html[dir="rtl"] footer :is(h1, h2, h3, h4, h5, h6):not(.sr-only) {
+  justify-content: flex-end;
+}
+
+html[dir="rtl"] main > header:not(.fixed) {
+  direction: rtl;
+  text-align: right;
 }
 
 [data-hero-copy-column] {
   align-items: flex-start;
+  align-self: flex-start;
+}
+
+main :has(> [data-hero-copy-column]) {
+  margin-inline-start: 0 !important;
 }
 
 [data-hero-copy-column] [data-hero-cta] {
@@ -46,10 +92,19 @@ main
 
 html[dir="rtl"] [data-hero-copy-column] {
   align-items: flex-end;
+  align-self: flex-end;
 }
 
 html[dir="rtl"] [data-hero-copy-column] [data-hero-cta] {
   align-self: flex-end;
+}
+
+[data-hero-cta-desktop] {
+  display: none !important;
+}
+
+[data-hero-cta-mobile] {
+  display: inline-flex !important;
 }
 
 [data-testid="header-actions"] > a[href$="/contact"],
@@ -73,16 +128,28 @@ main form button[type="submit"].inline-flex.rounded-full {
   padding-bottom: 0;
   align-items: center;
   justify-content: center;
+  margin-inline-start: 0 !important;
+  margin-inline-end: auto !important;
 }
 
 main article > a.absolute.rounded-full {
-  left: 50%;
+  left: auto;
   right: auto;
-  transform: translateX(-50%);
+  inset-inline-start: 1.5rem;
+  inset-inline-end: auto;
+  max-width: calc(100% - 3rem);
+  transform: none;
 }
 
 html[dir="rtl"] main :is(a, button).rounded-full {
   flex-direction: row-reverse;
+}
+
+@media (min-width: 640px) {
+  main article > a.absolute.rounded-full {
+    inset-inline-start: 1.75rem;
+    max-width: calc(100% - 3.5rem);
+  }
 }
 
 @media (max-width: 639px) {

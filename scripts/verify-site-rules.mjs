@@ -41,11 +41,47 @@ assert.match(
 );
 assert.match(
   css,
-  /\[data-hero-copy-column\]\s*\{\s*align-items:\s*flex-start/,
+  /\[data-hero-copy-column\]\s*\{\s*align-items:\s*flex-start;\s*align-self:\s*flex-start/,
 );
 assert.match(
   css,
-  /html\[dir="rtl"\] \[data-hero-copy-column\]\s*\{\s*align-items:\s*flex-end/,
+  /main :has\(> \[data-hero-copy-column\]\)\s*\{\s*margin-inline-start:\s*0\s*!important/,
+);
+assert.match(
+  css,
+  /html\[dir="rtl"\] \[data-hero-copy-column\]\s*\{\s*align-items:\s*flex-end;\s*align-self:\s*flex-end/,
+);
+assert.match(
+  css,
+  /\[data-hero-cta-desktop\]\s*\{\s*display:\s*none\s*!important/,
+);
+assert.match(
+  css,
+  /\[data-hero-cta-mobile\]\s*\{\s*display:\s*inline-flex\s*!important/,
+);
+assert.match(css, /JOTO copy boundary completion/);
+assert.match(
+  css,
+  /:where\(h1, h2, h3, h4, h5, h6, p, ul, ol, li, label, blockquote\):not/,
+);
+assert.match(css, /text-align:\s*start\s*!important/);
+assert.match(css, /max-inline-size:\s*100%/);
+assert.match(css, /white-space:\s*normal/);
+assert.match(css, /overflow-wrap:\s*break-word/);
+assert.match(css, /margin-inline-start:\s*0\s*!important/);
+assert.match(css, /margin-inline-end:\s*auto\s*!important/);
+assert.doesNotMatch(css, /text-align:\s*justify/);
+assert.match(
+  css,
+  /main article > a\.absolute\.rounded-full\s*\{[^}]*left:\s*auto;[^}]*right:\s*auto;[^}]*inset-inline-start:\s*1\.5rem/s,
+);
+assert.match(
+  css,
+  /html\[dir="rtl"\] main > header:not\(\.fixed\)\s*\{[^}]*direction:\s*rtl/s,
+);
+assert.match(
+  css,
+  /html\[dir="rtl"\]\s+main\s+:is\(h1, h2, h3, h4, h5, h6\):not\(\.sr-only\)[^{]*\{[^}]*justify-content:\s*flex-end/s,
 );
 
 assert.doesNotMatch(
