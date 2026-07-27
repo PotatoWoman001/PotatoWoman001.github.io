@@ -1,0 +1,67 @@
+[data-customer-logo-wall-three-row="true"]
+  .customer-logo-wall__viewport[hidden] {
+  display: none;
+}
+
+.customer-logo-wall-three-row__rows {
+  display: grid;
+  gap: 0.625rem;
+  direction: ltr;
+}
+
+.customer-logo-wall-three-row__track {
+  animation-duration: var(--logo-wall-duration);
+  animation-delay: var(--logo-wall-delay);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.customer-logo-wall-three-row__track--left {
+  animation-name: customer-logo-wall-three-row-left;
+}
+
+.customer-logo-wall-three-row__track--right {
+  animation-name: customer-logo-wall-three-row-right;
+}
+
+[data-customer-logo-wall-three-row="true"]:hover
+  .customer-logo-wall-three-row__track,
+[data-customer-logo-wall-three-row="true"]:focus-within
+  .customer-logo-wall-three-row__track {
+  animation-play-state: paused;
+}
+
+@keyframes customer-logo-wall-three-row-left {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes customer-logo-wall-three-row-right {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .customer-logo-wall-three-row__viewport {
+    overflow-x: auto;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+
+  .customer-logo-wall-three-row__track {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .customer-logo-wall-three-row__track [data-logo-sequence="duplicate"] {
+    display: none;
+  }
+}
