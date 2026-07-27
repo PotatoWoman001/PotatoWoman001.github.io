@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Apply the four approved typography, alignment, button, and header-brand rules to all 105 static routes without pushing or deploying.
+**Goal:** Apply the four approved typography, alignment, button, and header-brand rules to all 105 formal static routes without pushing or deploying.
 
 **Architecture:** All route HTML files load one shared CSS bundle and one shared JavaScript bundle, so the update will be centralized in those two assets. A small Node verification script will assert the shared bundle contract and route coverage, while Playwright will verify computed styles and responsive behavior on representative English, Chinese, and Persian pages.
 
@@ -34,7 +34,7 @@
 - Consumes: the current shared CSS/JavaScript bundles and route HTML files.
 - Produces: a zero-exit verification command, `node scripts/verify-site-rules.mjs`, once all approved rules are present.
 
-- [ ] **Step 1: Create the verification script**
+- [x] **Step 1: Create the verification script**
 
 ```js
 import assert from "node:assert/strict";
@@ -49,7 +49,13 @@ const js = fs.readFileSync(jsPath, "utf8");
 
 function collectIndexFiles(directory) {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
-    if (entry.name === ".git") return [];
+    if (
+      [".git", ".superpowers", "docs", "preview", "scripts"].includes(
+        entry.name,
+      )
+    ) {
+      return [];
+    }
     const absolute = path.join(directory, entry.name);
     if (entry.isDirectory()) return collectIndexFiles(absolute);
     return entry.name === "index.html" ? [absolute] : [];
@@ -82,15 +88,17 @@ assert.match(
 );
 
 assert.doesNotMatch(js, /children:\["Tech",f\.jsx\("br",\{\}\),"Shanghai"\]/);
+assert.doesNotMatch(js, /fontFamily:"monospace"/);
 assert.match(
   js,
   /children:\["Global IT",f\.jsx\("br",\{\}\),"Service Provider"\]/,
 );
+assert.match(js, /fontFamily:"Poppins, sans-serif"/);
 
 console.log(`Verified site-wide rules across ${routeFiles.length} routes.`);
 ```
 
-- [ ] **Step 2: Run the verification script and confirm the expected failure**
+- [x] **Step 2: Run the verification script and confirm the expected failure**
 
 Run:
 
@@ -111,7 +119,7 @@ Expected: FAIL on `JOTO site-wide visual rules`, because the shared CSS override
 - Consumes: the approved rules documented in `docs/site-modification-rules.md`.
 - Produces: shared CSS custom properties and selectors used by every route, plus the updated shared header subtitle.
 
-- [ ] **Step 1: Append the approved shared CSS override**
+- [x] **Step 1: Append the approved shared CSS override**
 
 Append this exact block to `assets/index-e49ffBFL.css`:
 
@@ -127,6 +135,10 @@ Append this exact block to `assets/index-e49ffBFL.css`:
 :root,
 html,
 body,
+code,
+kbd,
+pre,
+samp,
 .font-sans,
 .font-display,
 .font-mono {
@@ -212,7 +224,7 @@ html[dir="rtl"] main :is(a, button).rounded-full {
 }
 ```
 
-- [ ] **Step 2: Replace the shared header subtitle and remove uppercase transformation**
+- [x] **Step 2: Replace the shared header subtitle and inline technical fonts**
 
 In `assets/index-DaFvN0XI.js`, replace:
 
@@ -226,7 +238,19 @@ with:
 className:"ml-2 whitespace-nowrap border-l border-white/30 pl-2 text-[8px] font-semibold leading-[1.2] tracking-[0.08em] text-white/65",children:["Global IT",f.jsx("br",{}),"Service Provider"]
 ```
 
-- [ ] **Step 3: Run static verification**
+Also replace every inline SVG style:
+
+```js
+fontFamily:"monospace"
+```
+
+with:
+
+```js
+fontFamily:"Poppins, sans-serif"
+```
+
+- [x] **Step 3: Run static verification**
 
 Run:
 
@@ -240,7 +264,7 @@ Expected:
 Verified site-wide rules across 105 routes.
 ```
 
-- [ ] **Step 4: Check file formatting and unintended changes**
+- [x] **Step 4: Check file formatting and unintended changes**
 
 Run:
 
@@ -262,7 +286,7 @@ Expected: no whitespace errors; only the shared CSS, shared JavaScript, verifica
 - Consumes: the shared bundle updates from Task 2.
 - Produces: browser evidence that computed styles, dimensions, text alignment, and header content satisfy the approved rules.
 
-- [ ] **Step 1: Start the local static server**
+- [x] **Step 1: Start the local static server**
 
 Run:
 
@@ -272,7 +296,7 @@ python3 -m http.server 3010 --bind 127.0.0.1
 
 Expected: local server available at `http://127.0.0.1:3010`.
 
-- [ ] **Step 2: Open the English homepage at desktop width**
+- [x] **Step 2: Open the English homepage at desktop width**
 
 Run:
 
@@ -284,7 +308,7 @@ Run:
 
 Expected: the shared header displays `Global IT` and `Service Provider`.
 
-- [ ] **Step 3: Verify English computed styles**
+- [x] **Step 3: Verify English computed styles**
 
 Run a Playwright evaluation that returns:
 
@@ -324,13 +348,13 @@ Expected:
 }
 ```
 
-- [ ] **Step 4: Verify the green serif exception**
+- [x] **Step 4: Verify the green serif exception**
 
 Evaluate the first visible `.font-serif.text-joto-green` element.
 
 Expected: computed `fontFamily` starts with `Instrument Serif`.
 
-- [ ] **Step 5: Verify Chinese and Persian direction**
+- [x] **Step 5: Verify Chinese and Persian direction**
 
 Open `/zh/` and `/fa/`, taking a fresh snapshot after each navigation.
 
@@ -341,7 +365,7 @@ Expected:
 - Persian standard CTA uses `flex-direction: row-reverse`.
 - Both locales display the same two-line English header subtitle.
 
-- [ ] **Step 6: Verify representative route templates**
+- [x] **Step 6: Verify representative route templates**
 
 At 1440px, open:
 
@@ -357,7 +381,7 @@ At 1440px, open:
 
 Expected: no horizontal overflow; shared header content is correct; ordinary Latin text computes to `Poppins`; applicable CTA buttons are `280 × 48px`.
 
-- [ ] **Step 7: Verify mobile layout**
+- [x] **Step 7: Verify mobile layout**
 
 Resize to `390 × 844` and repeat homepage, Contact, solution category, and vendor-detail checks in English and Persian.
 
@@ -376,11 +400,11 @@ Expected: no horizontal overflow; CTA width does not exceed 280px; header subtit
 - Consumes: passing static verification and browser verification.
 - Produces: one local commit containing the completed first website update.
 
-- [ ] **Step 1: Mark every completed plan checkbox**
+- [x] **Step 1: Mark every completed plan checkbox**
 
 Change each completed `- [ ]` entry in this plan to `- [x]`.
 
-- [ ] **Step 2: Run final verification**
+- [x] **Step 2: Run final verification**
 
 Run:
 
@@ -392,7 +416,7 @@ git status --short
 
 Expected: verification passes, no whitespace errors, and only planned files are modified or untracked.
 
-- [ ] **Step 3: Create a local commit**
+- [x] **Step 3: Create a local commit**
 
 Run:
 
