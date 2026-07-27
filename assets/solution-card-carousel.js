@@ -22,9 +22,14 @@ const labelsByLocale = {
 };
 
 function getLabels() {
-  const language = document.documentElement.lang || "en";
-  if (language.toLowerCase().startsWith("zh")) return labelsByLocale["zh-CN"];
-  if (language.toLowerCase().startsWith("fa")) return labelsByLocale["fa-IR"];
+  const language = (document.documentElement.lang || "en").toLowerCase();
+  const pathname = window.location.pathname.toLowerCase();
+  if (language.startsWith("zh") || pathname.startsWith("/zh")) {
+    return labelsByLocale["zh-CN"];
+  }
+  if (language.startsWith("fa") || pathname.startsWith("/fa")) {
+    return labelsByLocale["fa-IR"];
+  }
   return labelsByLocale.en;
 }
 

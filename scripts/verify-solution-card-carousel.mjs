@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
@@ -26,10 +26,50 @@ assert.match(script, /MutationObserver/);
 assert.match(script, /ResizeObserver/);
 assert.match(script, /上一张解决方案/);
 assert.match(script, /راهکار قبلی/);
+assert.match(script, /window\.location\.pathname/);
 
 assert.match(styles, /scrollbar-width:\s*none/);
 assert.match(styles, /solution-card-scroller::\-webkit-scrollbar/);
 assert.match(styles, /data-solution-carousel-button/);
 assert.match(styles, /prefers-reduced-motion:\s*reduce/);
 
-console.log("Verified solution carousel enhancement assets.");
+const homepagePaths = [
+  path.join(root, "index.html"),
+  path.join(root, "zh/index.html"),
+  path.join(root, "fa/index.html"),
+];
+
+for (const homepagePath of homepagePaths) {
+  const html = readFileSync(homepagePath, "utf8");
+  assert.match(html, /\/assets\/solution-card-carousel\.css/);
+  assert.match(html, /\/assets\/solution-card-carousel\.js/);
+}
+
+function collectIndexFiles(directory) {
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    if (
+      [".git", ".playwright-cli", ".superpowers", "docs", "scripts"].includes(
+        entry.name,
+      )
+    ) {
+      return [];
+    }
+    const absolute = path.join(directory, entry.name);
+    if (entry.isDirectory()) return collectIndexFiles(absolute);
+    return entry.name === "index.html" ? [absolute] : [];
+  });
+}
+
+const homepageSet = new Set(homepagePaths);
+for (const routePath of collectIndexFiles(root)) {
+  if (homepageSet.has(routePath)) continue;
+  const html = readFileSync(routePath, "utf8");
+  assert.doesNotMatch(
+    html,
+    /\/assets\/solution-card-carousel\.(?:css|js)/,
+  );
+}
+
+console.log(
+  "Verified solution carousel enhancement assets and homepage integration.",
+);
