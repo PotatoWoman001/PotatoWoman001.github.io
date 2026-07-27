@@ -329,3 +329,30 @@ git commit -m "fix: complete text box boundaries"
 ```
 
 Expected: commit succeeds locally; no push or deployment occurs.
+
+---
+
+### Task 5: Correct the visible animated hero-title start edge
+
+**Files:**
+- Modify: `assets/index-e49ffBFL.css`
+- Modify: `scripts/verify-site-rules.mjs`
+
+**Reason:** The first browser audit measured the outer
+`[data-hero-heading-shell]`. Chinese title lines still had `0.5em` left
+padding, and the Persian secondary line had mirrored start padding, so the
+visible glyphs did not align even though the shell did.
+
+- [x] **Step 1: Remove title-line start padding**
+
+Add a centralized rule for `[data-hero-heading-shell] [data-hero-line]` using
+`padding-inline-start: 0 !important`.
+
+- [x] **Step 2: Strengthen static verification**
+
+Assert that the shared CSS contains the visible-line correction.
+
+- [x] **Step 3: Re-run browser verification against visible title lines**
+
+Measure every visible `[data-hero-line]`, the description, and the visible CTA
+at desktop, tablet, and mobile widths for English, Chinese, and Persian.

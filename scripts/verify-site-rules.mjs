@@ -49,6 +49,10 @@ assert.match(
 );
 assert.match(
   css,
+  /\[data-hero-heading-shell\] \[data-hero-line\]\s*\{\s*padding-inline-start:\s*0\s*!important/,
+);
+assert.match(
+  css,
   /html\[dir="rtl"\] \[data-hero-copy-column\]\s*\{\s*align-items:\s*flex-end;\s*align-self:\s*flex-end/,
 );
 assert.match(
