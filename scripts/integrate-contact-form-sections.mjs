@@ -12,9 +12,9 @@ const finalScriptTag =
 const finalStyleTag =
   '<link rel="stylesheet" href="/assets/contact-form-sections.css?v=20260727-1">';
 const bundleScriptPattern =
-  /(<script type="module" crossorigin src="\/assets\/index-DaFvN0XI\.js"><\/script>)/;
+  /(<script type="module" crossorigin src="\/assets\/index-DaFvN0XI\.js(?:\?v=[^"]+)?"><\/script>)/;
 const bundleStylePattern =
-  /(<link rel="stylesheet" crossorigin href="\/assets\/index-e49ffBFL\.css">)/;
+  /(<link rel="stylesheet" crossorigin href="\/assets\/index-e49ffBFL\.css(?:\?v=[^"]+)?">)/;
 
 async function collectIndexFiles(directory, relativeDirectory = "") {
   const entries = await readdir(directory, { withFileTypes: true });

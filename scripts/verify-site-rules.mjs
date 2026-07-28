@@ -5,6 +5,9 @@ import path from "node:path";
 const root = process.cwd();
 const cssPath = path.join(root, "assets/index-e49ffBFL.css");
 const jsPath = path.join(root, "assets/index-DaFvN0XI.js");
+const staticAssetVersion = "20260728-1";
+const bundleScriptUrl = `/assets/index-DaFvN0XI.js?v=${staticAssetVersion}`;
+const bundleStyleUrl = `/assets/index-e49ffBFL.css?v=${staticAssetVersion}`;
 const css = fs.readFileSync(cssPath, "utf8");
 const js = fs.readFileSync(jsPath, "utf8");
 
@@ -28,9 +31,19 @@ assert.equal(routeFiles.length, 105, "expected all 105 route index files");
 
 for (const routeFile of routeFiles) {
   const html = fs.readFileSync(routeFile, "utf8");
-  assert.match(html, /\/assets\/index-e49ffBFL\.css/);
-  assert.match(html, /\/assets\/index-DaFvN0XI\.js/);
+  assert.ok(
+    html.includes(bundleStyleUrl),
+    `${path.relative(root, routeFile)} is missing ${bundleStyleUrl}`,
+  );
+  assert.ok(
+    html.includes(bundleScriptUrl),
+    `${path.relative(root, routeFile)} is missing ${bundleScriptUrl}`,
+  );
 }
+
+const notFoundHtml = fs.readFileSync(path.join(root, "404.html"), "utf8");
+assert.ok(notFoundHtml.includes(bundleStyleUrl), `404.html is missing ${bundleStyleUrl}`);
+assert.ok(notFoundHtml.includes(bundleScriptUrl), `404.html is missing ${bundleScriptUrl}`);
 
 assert.match(css, /JOTO site-wide visual rules/);
 assert.match(css, /--joto-compact-action-width:\s*96px/);
