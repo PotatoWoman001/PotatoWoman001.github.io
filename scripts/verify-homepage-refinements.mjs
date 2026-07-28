@@ -4,7 +4,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const homepages = ["index.html", "zh/index.html", "fa/index.html"];
-const version = "20260728-3";
+const version = "20260728-4";
 
 for (const route of homepages) {
   const html = readFileSync(path.join(root, route), "utf8");
@@ -73,6 +73,8 @@ assert.match(contactScript, /renderHomepageContactForm/);
 assert.match(contactScript, /data-home-contact-form/);
 assert.match(contactStyles, /width:\s*auto/);
 assert.match(contactStyles, /padding-inline:\s*28px/);
+assert.match(contactStyles, /--joto-home-hero-action-width/);
+assert.match(contactStyles, /width:\s*var\(--joto-home-hero-action-width\)/);
 assert.match(
   contactStyles,
   /grid-template-columns:\s*minmax\(0,\s*5fr\)\s+minmax\(0,\s*7fr\)/,
@@ -85,5 +87,14 @@ assert.match(carouselScript, /pointerdown/);
 assert.match(carouselScript, /touchstart/);
 assert.match(carouselScript, /wheel/);
 assert.match(carouselScript, /keydown/);
+assert.match(carouselScript, /cancelledScrollLeft/);
+assert.match(carouselScript, /HINT_INTERSECTION_RATIO\s*=\s*0\.25/);
+assert.match(carouselScript, /HINT_DISTANCE_RATIO\s*=\s*0\.42/);
+assert.match(carouselScript, /HINT_MAX_DISTANCE\s*=\s*180/);
+assert.match(carouselScript, /HINT_DELAY\s*=\s*0/);
+assert.match(carouselScript, /HINT_FORWARD_DURATION\s*=\s*700/);
+assert.match(carouselScript, /HINT_HOLD_DURATION\s*=\s*500/);
+assert.match(carouselScript, /HINT_RETURN_DURATION\s*=\s*650/);
+assert.match(homepageStyles, /max-width:\s*300px/);
 
 console.log("Verified homepage interaction and content refinements.");

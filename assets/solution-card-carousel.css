@@ -58,7 +58,8 @@
   cursor: default;
 }
 
-[data-solutions-scroller][data-solution-carousel-hint="running"] {
+[data-solutions-scroller][data-solution-carousel-hint="running"],
+[data-solutions-scroller][data-solution-carousel-hint="cancelled"] {
   scroll-behavior: auto;
   scroll-snap-type: none;
 }

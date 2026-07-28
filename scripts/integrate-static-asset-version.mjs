@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(scriptDirectory, "..");
-const staticAssetVersion = "20260728-3";
+const staticAssetVersion = "20260728-4";
 const scriptPattern = /\/assets\/index-DaFvN0XI\.js(?:\?v=[^"'<>]+)?/g;
 const stylePattern = /\/assets\/index-e49ffBFL\.css(?:\?v=[^"'<>]+)?/g;
 const scriptUrl = `/assets/index-DaFvN0XI.js?v=${staticAssetVersion}`;
@@ -52,8 +52,8 @@ function versionHtml(source, route) {
 }
 
 const routeFiles = (await collectIndexFiles(projectRoot)).sort();
-if (routeFiles.length !== 105) {
-  throw new Error(`Expected 105 formal route indexes, found ${routeFiles.length}.`);
+if (routeFiles.length !== 108) {
+  throw new Error(`Expected 108 formal route indexes, found ${routeFiles.length}.`);
 }
 
 const targetFiles = [...routeFiles, "404.html"];

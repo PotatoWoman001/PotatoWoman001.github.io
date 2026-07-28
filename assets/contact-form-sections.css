@@ -1,4 +1,5 @@
 [data-home-hero-actions] {
+  --joto-home-hero-action-width: auto;
   display: flex;
   width: auto;
   max-width: 100%;
@@ -13,8 +14,8 @@
 [data-home-hero-actions] [data-hero-cta] {
   display: inline-flex !important;
   flex: 0 0 auto;
-  width: auto !important;
-  min-width: 0;
+  width: var(--joto-home-hero-action-width) !important;
+  min-width: var(--joto-home-hero-action-width);
   max-width: 100%;
   height: 48px;
   min-height: 48px;
@@ -265,8 +266,8 @@
 
 html[dir="rtl"] [data-home-hero-actions] {
   align-self: flex-end;
-  flex-direction: row-reverse;
-  justify-content: flex-start;
+  flex-direction: row;
+  justify-content: flex-end;
 }
 
 html[dir="rtl"] .joto-solution-contact__submit {

@@ -2,13 +2,13 @@ const SCROLLER_SELECTOR = "[data-solutions-scroller]";
 const CARD_SELECTOR = "[data-solution-card]";
 const CONTROLS_SELECTOR = "[data-solution-carousel-controls]";
 const EDGE_TOLERANCE = 3;
-const HINT_INTERSECTION_RATIO = 0.35;
-const HINT_DISTANCE_RATIO = 0.35;
-const HINT_MAX_DISTANCE = 120;
-const HINT_DELAY = 180;
-const HINT_FORWARD_DURATION = 520;
-const HINT_HOLD_DURATION = 420;
-const HINT_RETURN_DURATION = 620;
+const HINT_INTERSECTION_RATIO = 0.25;
+const HINT_DISTANCE_RATIO = 0.42;
+const HINT_MAX_DISTANCE = 180;
+const HINT_DELAY = 0;
+const HINT_FORWARD_DURATION = 700;
+const HINT_HOLD_DURATION = 500;
+const HINT_RETURN_DURATION = 650;
 
 const labelsByLocale = {
   en: {
@@ -144,6 +144,7 @@ function enhanceSolutionCarousel(scroller) {
   let hintTimer = 0;
   let hintTimerResolve = null;
   let hintObserver = null;
+  let cancelledScrollLeft = null;
 
   function updateState() {
     frame = 0;
@@ -187,8 +188,21 @@ function enhanceSolutionCarousel(scroller) {
     }
 
     if (scroller.dataset.solutionCarouselHint !== "complete") {
+      cancelledScrollLeft = scroller.scrollLeft;
       scroller.dataset.solutionCarouselHint = "cancelled";
     }
+  }
+
+  function handleScroll() {
+    if (
+      scroller.dataset.solutionCarouselHint === "cancelled" &&
+      cancelledScrollLeft !== null &&
+      Math.abs(scroller.scrollLeft - cancelledScrollLeft) > 1
+    ) {
+      scroller.dataset.solutionCarouselHint = "user";
+      cancelledScrollLeft = null;
+    }
+    scheduleUpdate();
   }
 
   function waitForHint(duration) {
@@ -312,7 +326,7 @@ function enhanceSolutionCarousel(scroller) {
     markUserInteraction();
     navigate(1);
   });
-  scroller.addEventListener("scroll", scheduleUpdate, { passive: true });
+  scroller.addEventListener("scroll", handleScroll, { passive: true });
   reducedMotion.addEventListener?.("change", scheduleUpdate);
 
   ["pointerdown", "touchstart", "wheel"].forEach((eventName) => {

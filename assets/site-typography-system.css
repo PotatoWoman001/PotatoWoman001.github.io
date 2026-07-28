@@ -1,0 +1,293 @@
+/* JOTO site-wide typography system · balanced scale · 2026-07-28 */
+:root {
+  --joto-font-latin: Poppins, sans-serif;
+  --joto-font-zh: Poppins, "PingFang SC", "Microsoft YaHei", sans-serif;
+  --joto-font-fa: Poppins, Vazirmatn, sans-serif;
+  --joto-font-brand-serif: "Instrument Serif", serif;
+
+  --joto-type-t0-size: 96px;
+  --joto-type-t0-line: 0.92;
+  --joto-type-t1-size: 72px;
+  --joto-type-t1-line: 1;
+  --joto-type-t2-size: 56px;
+  --joto-type-t2-line: 1.08;
+  --joto-type-t3-size: 28px;
+  --joto-type-t3-line: 1.2;
+  --joto-type-t4-size: 20px;
+  --joto-type-t4-line: 1.3;
+  --joto-type-b1-size: 18px;
+  --joto-type-b1-line: 30px;
+  --joto-type-b2-size: 16px;
+  --joto-type-b2-line: 28px;
+  --joto-type-b3-size: 14px;
+  --joto-type-b3-line: 22px;
+  --joto-type-l1-size: 12px;
+  --joto-type-l1-line: 18px;
+  --joto-type-m1-size: 11px;
+  --joto-type-m1-line: 16px;
+}
+
+:root,
+html,
+body,
+.font-sans,
+.font-display,
+.font-mono,
+button,
+input,
+select,
+textarea {
+  font-family: var(--joto-font-latin) !important;
+}
+
+html:lang(zh),
+html:lang(zh) body,
+html:lang(zh) :where(.font-sans, .font-display, .font-mono, button, input, select, textarea) {
+  font-family: var(--joto-font-zh) !important;
+}
+
+html:lang(fa),
+html:lang(fa) body,
+html:lang(fa) :where(.font-sans, .font-display, .font-mono, button, input, select, textarea) {
+  font-family: var(--joto-font-fa) !important;
+}
+
+/*
+ * This is the only retained serif exception: green, italic brand vocabulary
+ * such as IT, Network and Collaboration.
+ */
+.font-serif {
+  font-family: inherit !important;
+  font-style: normal;
+}
+
+.font-serif.text-joto-green,
+[data-brand-serif="true"] {
+  font-family: var(--joto-font-brand-serif) !important;
+  font-style: italic;
+}
+
+/* Shared controls */
+header nav a,
+header [role="navigation"] a {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 20px !important;
+}
+
+:where(a, button).rounded-full,
+.joto-solution-contact__submit,
+[data-solution-carousel-button] {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.joto-solution-contact__field :where(input, textarea),
+.joto-solution-contact__field label {
+  font-size: 14px;
+}
+
+footer a {
+  font-size: 14px !important;
+  line-height: 22px !important;
+}
+
+footer :where(p, li):not([data-footer-tagline]) {
+  font-size: max(12px, 0.75rem);
+  line-height: 20px;
+}
+
+/* Semantic page hierarchy */
+main:not(#top):not([data-mall-page]) > section:first-of-type h1,
+main#top:not(:has([data-hero-heading-shell])) h1,
+main[data-solution-category-page] > section:first-of-type h1,
+main article > header h1 {
+  font-size: var(--joto-type-t1-size) !important;
+  font-weight: 600 !important;
+  line-height: var(--joto-type-t1-line) !important;
+}
+
+main#top [data-hero-heading-shell],
+main#top [data-hero-heading-shell] :where(h1, [data-hero-line]),
+main[data-solution-category-page] > section:first-of-type h1 {
+  font-size: var(--joto-type-t0-size) !important;
+  font-weight: 600 !important;
+  line-height: var(--joto-type-t0-line) !important;
+}
+
+main :where(section, article) > div > h2,
+main :where(section, article) header h2,
+main[data-solution-category-page] section h2,
+.joto-solution-contact__title,
+[data-mall-page] h1 {
+  font-size: var(--joto-type-t2-size) !important;
+  font-weight: 500 !important;
+  line-height: var(--joto-type-t2-line) !important;
+}
+
+main article h2,
+main section article h3,
+[data-service-card] h3,
+[data-solution-card] h3 {
+  font-size: var(--joto-type-t3-size) !important;
+  font-weight: 500 !important;
+  line-height: var(--joto-type-t3-line) !important;
+}
+
+main :where(h3, h4):not([class*="sr-only"]),
+.joto-solution-contact__form-header h3 {
+  font-size: var(--joto-type-t4-size);
+  font-weight: 500;
+  line-height: var(--joto-type-t4-line);
+}
+
+main#top [data-hero-description],
+main[data-solution-category-page] > section:first-of-type h1 ~ p:last-child,
+[data-mall-page] .joto-mall-page__body {
+  font-size: var(--joto-type-b1-size) !important;
+  line-height: var(--joto-type-b1-line) !important;
+}
+
+main :where(section, article) p:not([class*="text-[10px]"]):not([class*="text-[11px]"]),
+.joto-solution-contact__description {
+  font-size: var(--joto-type-b2-size);
+  line-height: var(--joto-type-b2-line);
+}
+
+main :where([data-service-card], [data-solution-card]) p,
+.joto-solution-contact__form-header p,
+.joto-solution-contact__status {
+  font-size: var(--joto-type-b3-size);
+  line-height: var(--joto-type-b3-line);
+}
+
+main
+  :where(
+    [class*="tracking-[0.2"],
+    [class*="tracking-[0.24"],
+    [class*="uppercase"]
+  ):not(h1):not(h2):not(h3) {
+  font-size: var(--joto-type-l1-size) !important;
+  line-height: var(--joto-type-l1-line) !important;
+}
+
+main [class*="text-[10px]"],
+main [class*="text-[9px]"] {
+  font-size: var(--joto-type-m1-size) !important;
+  line-height: var(--joto-type-m1-line) !important;
+}
+
+/* Mall route */
+[data-mall-page] {
+  min-height: 100svh;
+  overflow-x: clip;
+  background:
+    radial-gradient(circle at 78% 24%, rgba(94, 210, 156, 0.14), transparent 34%),
+    #070b0a;
+  color: #fff;
+}
+
+.joto-mall-page__hero {
+  display: flex;
+  min-height: 72svh;
+  align-items: flex-end;
+  padding: 144px 20px 96px;
+}
+
+.joto-mall-page__inner {
+  width: min(100%, 1440px);
+  margin-inline: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  padding-top: 24px;
+}
+
+.joto-mall-page__eyebrow {
+  margin: 0;
+  color: #5ed29c;
+  font-size: var(--joto-type-l1-size);
+  font-weight: 600;
+  line-height: var(--joto-type-l1-line);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.joto-mall-page__title {
+  max-width: 900px;
+  margin: 48px 0 0 !important;
+  letter-spacing: -0.06em;
+}
+
+.joto-mall-page__body {
+  max-width: 680px;
+  margin: 32px 0 0 !important;
+  color: rgba(255, 255, 255, 0.64);
+}
+
+.joto-mall-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 44px;
+}
+
+.joto-mall-page__action {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(94, 210, 156, 0.58);
+  border-radius: 999px;
+  padding: 0 22px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.joto-mall-page__action:first-child {
+  background: #5ed29c;
+  color: #07110d;
+}
+
+html[dir="rtl"] .joto-mall-page__actions {
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+
+@media (max-width: 1279px) {
+  :root {
+    --joto-type-t0-size: 68px;
+    --joto-type-t1-size: 56px;
+    --joto-type-t2-size: 44px;
+    --joto-type-t3-size: 26px;
+    --joto-type-t4-size: 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --joto-type-t0-size: 48px;
+    --joto-type-t1-size: 40px;
+    --joto-type-t2-size: 34px;
+    --joto-type-t3-size: 22px;
+    --joto-type-t4-size: 18px;
+    --joto-type-b1-size: 17px;
+    --joto-type-b1-line: 28px;
+    --joto-type-b2-size: 16px;
+    --joto-type-b2-line: 27px;
+  }
+
+  header nav a,
+  header [role="navigation"] a {
+    font-size: 16px !important;
+    line-height: 24px !important;
+  }
+
+  .joto-mall-page__hero {
+    min-height: 68svh;
+    padding: 120px 20px 72px;
+  }
+
+  .joto-mall-page__title {
+    margin-top: 32px !important;
+  }
+}

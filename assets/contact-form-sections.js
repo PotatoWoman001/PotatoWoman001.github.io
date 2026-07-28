@@ -125,6 +125,23 @@ function enhanceHomepageActions(primaryCta, locale) {
   }
 
   actions.append(contactLink);
+
+  const equalizeActionWidths = () => {
+    const actionLinks = Array.from(actions.querySelectorAll(":scope > a"));
+    actions.style.removeProperty("--joto-home-hero-action-width");
+    const sharedWidth = Math.ceil(
+      Math.max(...actionLinks.map((link) => link.getBoundingClientRect().width)),
+    );
+    if (sharedWidth > 0) {
+      actions.style.setProperty(
+        "--joto-home-hero-action-width",
+        `${sharedWidth}px`,
+      );
+    }
+  };
+
+  window.requestAnimationFrame(equalizeActionWidths);
+  document.fonts?.ready.then(equalizeActionWidths);
 }
 
 function escapeHtml(value) {

@@ -7,6 +7,41 @@
   color: #5ed29c;
 }
 
+#services [data-service-card],
+[data-solution-category-page] [data-service-card] {
+  align-items: center;
+}
+
+#services [data-service-card] > div:last-child,
+[data-solution-category-page] [data-service-card] > div:last-child,
+[data-solution-category-page] section [data-service-card] > div:last-child {
+  width: 100%;
+  max-width: 300px !important;
+  margin-inline: auto !important;
+  text-align: start !important;
+}
+
+#services [data-service-card] [data-service-icon],
+[data-solution-category-page] [data-service-card] [data-service-icon] {
+  margin-inline: auto;
+}
+
+#case-studies .group > .flex-1 {
+  width: 100%;
+  max-width: 300px !important;
+  margin-inline: auto !important;
+  align-items: stretch !important;
+  text-align: start !important;
+}
+
+#case-studies .group > .flex-1 > div:first-child {
+  align-self: center;
+}
+
+#case-studies .group > .flex-1 :where(h3, ul, li) {
+  text-align: start !important;
+}
+
 #about [data-about-layout] {
   align-items: start;
 }
