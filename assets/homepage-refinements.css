@@ -26,6 +26,17 @@
   margin-inline: auto;
 }
 
+#services [data-service-card] h3,
+#services [data-service-card] p {
+  width: 100%;
+  margin-inline: auto !important;
+  text-align: start !important;
+}
+
+#services [data-service-card] h3 {
+  justify-content: flex-start;
+}
+
 #case-studies .group > .flex-1 {
   width: 100%;
   max-width: 300px !important;
@@ -35,7 +46,14 @@
 }
 
 #case-studies .group > .flex-1 > div:first-child {
+  width: 100%;
   align-self: center;
+}
+
+#case-studies .group > .flex-1 :where(h3, ul) {
+  width: 100%;
+  max-width: none !important;
+  margin-inline: auto !important;
 }
 
 #case-studies .group > .flex-1 :where(h3, ul, li) {

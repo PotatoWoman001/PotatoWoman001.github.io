@@ -96,5 +96,14 @@ assert.match(carouselScript, /HINT_FORWARD_DURATION\s*=\s*700/);
 assert.match(carouselScript, /HINT_HOLD_DURATION\s*=\s*500/);
 assert.match(carouselScript, /HINT_RETURN_DURATION\s*=\s*650/);
 assert.match(homepageStyles, /max-width:\s*300px/);
+assert.match(
+  homepageStyles,
+  /#services \[data-service-card\] h3,\s*#services \[data-service-card\] p/,
+);
+assert.match(
+  homepageStyles,
+  /#case-studies \.group > \.flex-1 :where\(h3, ul\)/,
+);
+assert.match(homepageStyles, /max-width:\s*none !important/);
 
 console.log("Verified homepage interaction and content refinements.");
