@@ -69,14 +69,22 @@ html[dir="rtl"]
 }
 
 #services [data-service-card] h3,
-#services [data-service-card] p {
+[data-solution-category-page] [data-service-card] h3,
+#services [data-service-card] p,
+[data-solution-category-page] [data-service-card] p {
   width: 100%;
   margin-inline: auto !important;
-  text-align: start !important;
 }
 
-#services [data-service-card] h3 {
-  justify-content: flex-start;
+#services [data-service-card] h3,
+[data-solution-category-page] [data-service-card] h3 {
+  text-align: center !important;
+  justify-content: center;
+}
+
+#services [data-service-card] p,
+[data-solution-category-page] [data-service-card] p {
+  text-align: start !important;
 }
 
 #case-studies .group > .flex-1 {

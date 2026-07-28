@@ -4,7 +4,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const homepages = ["index.html", "zh/index.html", "fa/index.html"];
-const version = "20260728-6";
+const version = "20260729-1";
 
 for (const route of homepages) {
   const html = readFileSync(path.join(root, route), "utf8");
@@ -109,7 +109,11 @@ assert.match(carouselScript, /event\.shiftKey/);
 assert.match(homepageStyles, /max-width:\s*300px/);
 assert.match(
   homepageStyles,
-  /#services \[data-service-card\] h3,\s*#services \[data-service-card\] p/,
+  /#services \[data-service-card\] h3,[\s\S]*?\[data-solution-category-page\] \[data-service-card\] h3\s*\{[\s\S]*?text-align:\s*center !important;[\s\S]*?justify-content:\s*center;/,
+);
+assert.match(
+  homepageStyles,
+  /#services \[data-service-card\] p,[\s\S]*?\[data-solution-category-page\] \[data-service-card\] p\s*\{[\s\S]*?text-align:\s*start !important;/,
 );
 assert.match(
   homepageStyles,
