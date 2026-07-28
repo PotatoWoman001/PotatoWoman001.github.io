@@ -1,0 +1,6 @@
+.git
+.superpowers
+docs
+Dockerfile.local
+.DS_Store
+._*
