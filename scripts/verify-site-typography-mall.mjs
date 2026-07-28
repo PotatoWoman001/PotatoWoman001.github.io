@@ -3,7 +3,7 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const version = "20260728-4";
+const version = "20260728-6";
 const expectedRouteCount = 108;
 const excludedDirectories = new Set([
   ".git",
@@ -46,7 +46,11 @@ for (const routeFile of [...routeFiles, path.join(root, "404.html")]) {
     `${route} contains an unversioned browser asset`,
   );
   for (const match of html.matchAll(/\/assets\/[^"'<>]+\.(?:js|css)\?v=([^"'<>]+)/g)) {
-    assert.equal(match[1], version, `${route} contains a non-v4 browser asset`);
+    assert.equal(
+      match[1],
+      version,
+      `${route} contains a mismatched browser asset version`,
+    );
   }
 }
 
@@ -112,6 +116,10 @@ assert.match(typography, /--joto-font-latin:\s*Poppins,\s*sans-serif/);
 assert.match(typography, /--joto-font-zh:\s*Poppins,/);
 assert.match(typography, /--joto-font-fa:\s*Poppins,\s*Vazirmatn/);
 assert.match(typography, /--joto-font-brand-serif:\s*"Instrument Serif",\s*serif/);
+assert.match(
+  typography,
+  /html:lang\(zh\)\s*\{[\s\S]*--joto-type-t0-line:\s*1\.2;[\s\S]*--joto-type-t1-line:\s*1\.2;[\s\S]*--joto-type-t2-line:\s*1\.2;/,
+);
 assert.match(
   typography,
   /\.font-serif\.text-joto-green,[\s\S]*font-family:\s*var\(--joto-font-brand-serif\)/,

@@ -4,7 +4,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const homepages = ["index.html", "zh/index.html", "fa/index.html"];
-const version = "20260728-4";
+const version = "20260728-6";
 
 for (const route of homepages) {
   const html = readFileSync(path.join(root, route), "utf8");
@@ -60,10 +60,19 @@ const sharedStyles = readFileSync(
 
 assert.match(homepageScript, /data-about-copy/);
 assert.match(homepageScript, /homepageSecondaryCopyRemoved/);
+assert.match(homepageScript, /removeHeroEyebrow/);
+assert.match(homepageScript, /removeHeroProofCard/);
+assert.match(homepageScript, /enhancePersianIranPresence/);
+assert.match(homepageScript, /ایران/);
+assert.match(homepageScript, /تهران/);
+assert.match(homepageScript, /35\.71219607/);
+assert.match(homepageScript, /51\.36844735/);
 assert.match(homepageStyles, /service-card__icon-mark--accent/);
 assert.match(homepageStyles, /data-about-stats/);
 assert.match(homepageStyles, /grid-template-columns:\s*repeat\(2/);
 assert.match(homepageStyles, /@media \(max-width:\s*479px\)/);
+assert.match(homepageStyles, /data-home-hero-refined/);
+assert.match(homepageStyles, /data-iran-presence/);
 
 assert.match(sharedStyles, /data-testid="header-actions"/);
 assert.match(sharedStyles, /aria-haspopup="menu"/);
@@ -88,13 +97,15 @@ assert.match(carouselScript, /touchstart/);
 assert.match(carouselScript, /wheel/);
 assert.match(carouselScript, /keydown/);
 assert.match(carouselScript, /cancelledScrollLeft/);
-assert.match(carouselScript, /HINT_INTERSECTION_RATIO\s*=\s*0\.25/);
-assert.match(carouselScript, /HINT_DISTANCE_RATIO\s*=\s*0\.42/);
-assert.match(carouselScript, /HINT_MAX_DISTANCE\s*=\s*180/);
+assert.match(carouselScript, /HINT_INTERSECTION_RATIO\s*=\s*0\.32/);
+assert.match(carouselScript, /HINT_DISTANCE_RATIO\s*=\s*0\.3/);
+assert.match(carouselScript, /HINT_MAX_DISTANCE\s*=\s*120/);
 assert.match(carouselScript, /HINT_DELAY\s*=\s*0/);
-assert.match(carouselScript, /HINT_FORWARD_DURATION\s*=\s*700/);
-assert.match(carouselScript, /HINT_HOLD_DURATION\s*=\s*500/);
-assert.match(carouselScript, /HINT_RETURN_DURATION\s*=\s*650/);
+assert.match(carouselScript, /scrollTo\(\{/);
+assert.match(carouselScript, /behavior:\s*"smooth"/);
+assert.doesNotMatch(carouselScript, /scroller\.scrollLeft\s*=/);
+assert.match(carouselScript, /Math\.abs\(event\.deltaX\)/);
+assert.match(carouselScript, /event\.shiftKey/);
 assert.match(homepageStyles, /max-width:\s*300px/);
 assert.match(
   homepageStyles,

@@ -2,13 +2,13 @@ const SCROLLER_SELECTOR = "[data-solutions-scroller]";
 const CARD_SELECTOR = "[data-solution-card]";
 const CONTROLS_SELECTOR = "[data-solution-carousel-controls]";
 const EDGE_TOLERANCE = 3;
-const HINT_INTERSECTION_RATIO = 0.25;
-const HINT_DISTANCE_RATIO = 0.42;
-const HINT_MAX_DISTANCE = 180;
+const HINT_INTERSECTION_RATIO = 0.32;
+const HINT_DISTANCE_RATIO = 0.3;
+const HINT_MAX_DISTANCE = 120;
 const HINT_DELAY = 0;
-const HINT_FORWARD_DURATION = 700;
-const HINT_HOLD_DURATION = 500;
-const HINT_RETURN_DURATION = 650;
+const HINT_FORWARD_DURATION = 520;
+const HINT_HOLD_DURATION = 260;
+const HINT_RETURN_DURATION = 520;
 
 const labelsByLocale = {
   en: {
@@ -139,10 +139,11 @@ function enhanceSolutionCarousel(scroller) {
   let currentIndex = 0;
   let userInteracted = false;
   let hintStarted = false;
-  let hintAnimationFrame = 0;
-  let hintAnimationResolve = null;
   let hintTimer = 0;
   let hintTimerResolve = null;
+  let hintScrollTimer = 0;
+  let hintScrollResolve = null;
+  let hintScrollEndHandler = null;
   let hintObserver = null;
   let cancelledScrollLeft = null;
 
@@ -159,13 +160,6 @@ function enhanceSolutionCarousel(scroller) {
     frame = window.requestAnimationFrame(updateState);
   }
 
-  function finishHintAnimation(completed) {
-    const resolve = hintAnimationResolve;
-    hintAnimationResolve = null;
-    hintAnimationFrame = 0;
-    resolve?.(completed);
-  }
-
   function cancelHintTimer() {
     if (hintTimer) {
       window.clearTimeout(hintTimer);
@@ -176,21 +170,44 @@ function enhanceSolutionCarousel(scroller) {
     resolve?.(false);
   }
 
+  function finishHintScroll(completed) {
+    if (hintScrollEndHandler) {
+      scroller.removeEventListener("scrollend", hintScrollEndHandler);
+      hintScrollEndHandler = null;
+    }
+    if (hintScrollTimer) {
+      window.clearTimeout(hintScrollTimer);
+      hintScrollTimer = 0;
+    }
+    const resolve = hintScrollResolve;
+    hintScrollResolve = null;
+    resolve?.(completed);
+  }
+
   function markUserInteraction() {
     userInteracted = true;
     hintObserver?.disconnect();
     hintObserver = null;
     cancelHintTimer();
 
-    if (hintAnimationFrame) {
-      window.cancelAnimationFrame(hintAnimationFrame);
-      finishHintAnimation(false);
+    if (hintScrollResolve) {
+      scroller.scrollTo({
+        left: scroller.scrollLeft,
+        behavior: "auto",
+      });
+      finishHintScroll(false);
     }
 
     if (scroller.dataset.solutionCarouselHint !== "complete") {
       cancelledScrollLeft = scroller.scrollLeft;
       scroller.dataset.solutionCarouselHint = "cancelled";
     }
+  }
+
+  function handleWheelIntent(event) {
+    const isHorizontalIntent =
+      Math.abs(event.deltaX) > Math.abs(event.deltaY) || event.shiftKey;
+    if (isHorizontalIntent) markUserInteraction();
   }
 
   function handleScroll() {
@@ -216,33 +233,26 @@ function enhanceSolutionCarousel(scroller) {
     });
   }
 
-  function animateScrollLeft(target, duration) {
-    const start = scroller.scrollLeft;
-    const distance = target - start;
-    const startedAt = window.performance.now();
-
+  function scrollForHint(target, duration) {
     return new Promise((resolve) => {
-      hintAnimationResolve = resolve;
-
-      function step(now) {
-        if (userInteracted) {
-          finishHintAnimation(false);
-          return;
-        }
-
-        const progress = Math.min(1, (now - startedAt) / duration);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        scroller.scrollLeft = start + distance * eased;
-
-        if (progress < 1) {
-          hintAnimationFrame = window.requestAnimationFrame(step);
-          return;
-        }
-
-        finishHintAnimation(true);
+      if (userInteracted) {
+        resolve(false);
+        return;
       }
 
-      hintAnimationFrame = window.requestAnimationFrame(step);
+      hintScrollResolve = resolve;
+      hintScrollEndHandler = () => finishHintScroll(!userInteracted);
+      scroller.addEventListener("scrollend", hintScrollEndHandler, {
+        once: true,
+      });
+      hintScrollTimer = window.setTimeout(
+        () => finishHintScroll(!userInteracted),
+        duration + 180,
+      );
+      scroller.scrollTo({
+        left: target,
+        behavior: "smooth",
+      });
     });
   }
 
@@ -273,11 +283,11 @@ function enhanceSolutionCarousel(scroller) {
     const hintedScrollLeft =
       startScrollLeft + Math.sign(itemDelta || 1) * distance;
 
-    if (!(await animateScrollLeft(hintedScrollLeft, HINT_FORWARD_DURATION))) {
+    if (!(await scrollForHint(hintedScrollLeft, HINT_FORWARD_DURATION))) {
       return;
     }
     if (!(await waitForHint(HINT_HOLD_DURATION))) return;
-    if (!(await animateScrollLeft(startScrollLeft, HINT_RETURN_DURATION))) {
+    if (!(await scrollForHint(startScrollLeft, HINT_RETURN_DURATION))) {
       return;
     }
 
@@ -329,12 +339,13 @@ function enhanceSolutionCarousel(scroller) {
   scroller.addEventListener("scroll", handleScroll, { passive: true });
   reducedMotion.addEventListener?.("change", scheduleUpdate);
 
-  ["pointerdown", "touchstart", "wheel"].forEach((eventName) => {
+  ["pointerdown", "touchstart"].forEach((eventName) => {
     scroller.addEventListener(eventName, markUserInteraction, {
       passive: true,
       once: true,
     });
   });
+  scroller.addEventListener("wheel", handleWheelIntent, { passive: true });
   scroller.addEventListener("keydown", markUserInteraction, { once: true });
 
   if ("IntersectionObserver" in window) {

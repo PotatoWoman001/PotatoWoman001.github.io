@@ -27,6 +27,12 @@
   --joto-type-m1-line: 16px;
 }
 
+html:lang(zh) {
+  --joto-type-t0-line: 1.2;
+  --joto-type-t1-line: 1.2;
+  --joto-type-t2-line: 1.2;
+}
+
 :root,
 html,
 body,
