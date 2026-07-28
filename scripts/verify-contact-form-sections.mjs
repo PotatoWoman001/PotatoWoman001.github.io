@@ -10,9 +10,9 @@ const solutionRoutePattern =
   /^(?:(?:zh|fa)\/)?solutions\/[^/]+(?:\/[^/]+)?\/index\.html$/;
 const expectedSolutionRouteCount = 75;
 const scriptTag =
-  '<script type="module" src="/assets/contact-form-sections.js?v=20260727-1"></script>';
+  '<script type="module" src="/assets/contact-form-sections.js?v=20260728-3"></script>';
 const styleTag =
-  '<link rel="stylesheet" href="/assets/contact-form-sections.css?v=20260727-1">';
+  '<link rel="stylesheet" href="/assets/contact-form-sections.css?v=20260728-3">';
 
 async function collectIndexFiles(directory, relativeDirectory = "") {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -63,6 +63,7 @@ for (const locale of ["en", "zh-CN", "fa-IR"]) {
 
 assert.match(script, /CONTACT_ENDPOINT\s*=\s*"\/api\/contact"/);
 assert.match(script, /dataset\.homeHeroActions/);
+assert.match(script, /data-home-contact-form/);
 assert.match(script, /data-solution-contact-form/);
 assert.match(script, /window\.location\.hash\s*===\s*"#contact"/);
 assert.doesNotMatch(script, /安全咨询|提交即表示/);
@@ -72,6 +73,8 @@ assert.match(styles, /height:\s*48px/);
 assert.match(styles, /white-space:\s*nowrap/);
 assert.match(styles, /html\[dir="rtl"\]/);
 assert.match(styles, /@media \(max-width:\s*639px\)/);
+assert.match(styles, /clip:\s*rect\(0,\s*0,\s*0,\s*0\)/);
+assert.doesNotMatch(styles, /left:\s*-9999px/);
 
 console.log(
   `Verified homepage contact CTA and Solution forms across ${targetRoutes.length} routes.`,

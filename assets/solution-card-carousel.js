@@ -2,6 +2,13 @@ const SCROLLER_SELECTOR = "[data-solutions-scroller]";
 const CARD_SELECTOR = "[data-solution-card]";
 const CONTROLS_SELECTOR = "[data-solution-carousel-controls]";
 const EDGE_TOLERANCE = 3;
+const HINT_INTERSECTION_RATIO = 0.35;
+const HINT_DISTANCE_RATIO = 0.35;
+const HINT_MAX_DISTANCE = 120;
+const HINT_DELAY = 180;
+const HINT_FORWARD_DURATION = 520;
+const HINT_HOLD_DURATION = 420;
+const HINT_RETURN_DURATION = 620;
 
 const labelsByLocale = {
   en: {
@@ -130,6 +137,13 @@ function enhanceSolutionCarousel(scroller) {
   );
   let frame = 0;
   let currentIndex = 0;
+  let userInteracted = false;
+  let hintStarted = false;
+  let hintAnimationFrame = 0;
+  let hintAnimationResolve = null;
+  let hintTimer = 0;
+  let hintTimerResolve = null;
+  let hintObserver = null;
 
   function updateState() {
     frame = 0;
@@ -142,6 +156,137 @@ function enhanceSolutionCarousel(scroller) {
   function scheduleUpdate() {
     if (frame) return;
     frame = window.requestAnimationFrame(updateState);
+  }
+
+  function finishHintAnimation(completed) {
+    const resolve = hintAnimationResolve;
+    hintAnimationResolve = null;
+    hintAnimationFrame = 0;
+    resolve?.(completed);
+  }
+
+  function cancelHintTimer() {
+    if (hintTimer) {
+      window.clearTimeout(hintTimer);
+      hintTimer = 0;
+    }
+    const resolve = hintTimerResolve;
+    hintTimerResolve = null;
+    resolve?.(false);
+  }
+
+  function markUserInteraction() {
+    userInteracted = true;
+    hintObserver?.disconnect();
+    hintObserver = null;
+    cancelHintTimer();
+
+    if (hintAnimationFrame) {
+      window.cancelAnimationFrame(hintAnimationFrame);
+      finishHintAnimation(false);
+    }
+
+    if (scroller.dataset.solutionCarouselHint !== "complete") {
+      scroller.dataset.solutionCarouselHint = "cancelled";
+    }
+  }
+
+  function waitForHint(duration) {
+    return new Promise((resolve) => {
+      hintTimerResolve = resolve;
+      hintTimer = window.setTimeout(() => {
+        hintTimer = 0;
+        hintTimerResolve = null;
+        resolve(!userInteracted);
+      }, duration);
+    });
+  }
+
+  function animateScrollLeft(target, duration) {
+    const start = scroller.scrollLeft;
+    const distance = target - start;
+    const startedAt = window.performance.now();
+
+    return new Promise((resolve) => {
+      hintAnimationResolve = resolve;
+
+      function step(now) {
+        if (userInteracted) {
+          finishHintAnimation(false);
+          return;
+        }
+
+        const progress = Math.min(1, (now - startedAt) / duration);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        scroller.scrollLeft = start + distance * eased;
+
+        if (progress < 1) {
+          hintAnimationFrame = window.requestAnimationFrame(step);
+          return;
+        }
+
+        finishHintAnimation(true);
+      }
+
+      hintAnimationFrame = window.requestAnimationFrame(step);
+    });
+  }
+
+  async function runHint() {
+    if (
+      userInteracted ||
+      reducedMotion.matches ||
+      !getEdgeState(scroller, items).atStart
+    ) {
+      return;
+    }
+
+    const startScrollLeft = scroller.scrollLeft;
+    const itemDelta =
+      items[1].getBoundingClientRect().left -
+      items[0].getBoundingClientRect().left;
+    const distance = Math.min(
+      Math.abs(itemDelta) * HINT_DISTANCE_RATIO,
+      HINT_MAX_DISTANCE,
+    );
+
+    if (!distance) {
+      scroller.dataset.solutionCarouselHint = "complete";
+      return;
+    }
+
+    scroller.dataset.solutionCarouselHint = "running";
+    const hintedScrollLeft =
+      startScrollLeft + Math.sign(itemDelta || 1) * distance;
+
+    if (!(await animateScrollLeft(hintedScrollLeft, HINT_FORWARD_DURATION))) {
+      return;
+    }
+    if (!(await waitForHint(HINT_HOLD_DURATION))) return;
+    if (!(await animateScrollLeft(startScrollLeft, HINT_RETURN_DURATION))) {
+      return;
+    }
+
+    scroller.dataset.solutionCarouselHint = "complete";
+    scheduleUpdate();
+  }
+
+  function scheduleHint() {
+    if (hintStarted || userInteracted) return;
+    hintStarted = true;
+    hintObserver?.disconnect();
+    hintObserver = null;
+
+    if (reducedMotion.matches) {
+      scroller.dataset.solutionCarouselHint = "reduced";
+      return;
+    }
+
+    hintTimerResolve = null;
+    hintTimer = window.setTimeout(() => {
+      hintTimer = 0;
+      runHint();
+    }, HINT_DELAY);
   }
 
   function navigate(offset) {
@@ -159,10 +304,41 @@ function enhanceSolutionCarousel(scroller) {
     scheduleUpdate();
   }
 
-  previousButton.addEventListener("click", () => navigate(-1));
-  nextButton.addEventListener("click", () => navigate(1));
+  previousButton.addEventListener("click", () => {
+    markUserInteraction();
+    navigate(-1);
+  });
+  nextButton.addEventListener("click", () => {
+    markUserInteraction();
+    navigate(1);
+  });
   scroller.addEventListener("scroll", scheduleUpdate, { passive: true });
   reducedMotion.addEventListener?.("change", scheduleUpdate);
+
+  ["pointerdown", "touchstart", "wheel"].forEach((eventName) => {
+    scroller.addEventListener(eventName, markUserInteraction, {
+      passive: true,
+      once: true,
+    });
+  });
+  scroller.addEventListener("keydown", markUserInteraction, { once: true });
+
+  if ("IntersectionObserver" in window) {
+    hintObserver = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (
+          !entry?.isIntersecting ||
+          entry.intersectionRatio < HINT_INTERSECTION_RATIO
+        ) {
+          return;
+        }
+        scheduleHint();
+      },
+      { threshold: [HINT_INTERSECTION_RATIO] },
+    );
+    hintObserver.observe(scroller.closest("section") || scroller);
+  }
 
   if ("ResizeObserver" in window) {
     const resizeObserver = new ResizeObserver(scheduleUpdate);

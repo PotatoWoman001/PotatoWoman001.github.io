@@ -6,6 +6,7 @@ const root = process.cwd();
 const scriptPath = path.join(root, "assets/solution-card-carousel.js");
 const stylesPath = path.join(root, "assets/solution-card-carousel.css");
 const mainBundlePath = path.join(root, "assets/index-DaFvN0XI.js");
+const assetVersion = "20260728-3";
 
 assert.equal(existsSync(scriptPath), true, "carousel script must exist");
 assert.equal(existsSync(stylesPath), true, "carousel stylesheet must exist");
@@ -24,6 +25,19 @@ assert.match(script, /scrollIntoView/);
 assert.match(script, /prefers-reduced-motion: reduce/);
 assert.match(script, /MutationObserver/);
 assert.match(script, /ResizeObserver/);
+assert.match(script, /IntersectionObserver/);
+assert.match(script, /HINT_INTERSECTION_RATIO\s*=\s*0\.35/);
+assert.match(script, /HINT_DISTANCE_RATIO\s*=\s*0\.35/);
+assert.match(script, /HINT_MAX_DISTANCE\s*=\s*120/);
+assert.match(script, /requestAnimationFrame/);
+assert.match(script, /pointerdown/);
+assert.match(script, /touchstart/);
+assert.match(script, /wheel/);
+assert.match(script, /keydown/);
+assert.match(script, /solutionCarouselHint\s*=\s*"running"/);
+assert.match(script, /solutionCarouselHint\s*=\s*"complete"/);
+assert.match(script, /solutionCarouselHint\s*=\s*"cancelled"/);
+assert.match(script, /solutionCarouselHint\s*=\s*"reduced"/);
 assert.match(script, /上一张解决方案/);
 assert.match(script, /راهکار قبلی/);
 assert.match(script, /window\.location\.pathname/);
@@ -31,6 +45,8 @@ assert.match(script, /window\.location\.pathname/);
 assert.match(styles, /scrollbar-width:\s*none/);
 assert.match(styles, /solution-card-scroller::\-webkit-scrollbar/);
 assert.match(styles, /data-solution-carousel-button/);
+assert.match(styles, /data-solution-carousel-hint="running"/);
+assert.match(styles, /scroll-snap-type:\s*none/);
 assert.match(styles, /prefers-reduced-motion:\s*reduce/);
 
 const homepagePaths = [
@@ -41,8 +57,12 @@ const homepagePaths = [
 
 for (const homepagePath of homepagePaths) {
   const html = readFileSync(homepagePath, "utf8");
-  assert.match(html, /\/assets\/solution-card-carousel\.css/);
-  assert.match(html, /\/assets\/solution-card-carousel\.js/);
+  assert.ok(
+    html.includes(`/assets/solution-card-carousel.css?v=${assetVersion}`),
+  );
+  assert.ok(
+    html.includes(`/assets/solution-card-carousel.js?v=${assetVersion}`),
+  );
 }
 
 function collectIndexFiles(directory) {

@@ -58,6 +58,11 @@
   cursor: default;
 }
 
+[data-solutions-scroller][data-solution-carousel-hint="running"] {
+  scroll-behavior: auto;
+  scroll-snap-type: none;
+}
+
 @media (max-width: 639px) {
   [data-solution-carousel-controls] {
     margin-top: 2rem;
@@ -74,5 +79,9 @@
 @media (prefers-reduced-motion: reduce) {
   [data-solution-carousel-button] {
     transition: none;
+  }
+
+  [data-solutions-scroller] {
+    scroll-behavior: auto;
   }
 }

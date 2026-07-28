@@ -1,0 +1,45 @@
+/* Homepage content refinements · 2026-07-28 */
+#services .service-card__icon-mark--accent {
+  display: none !important;
+}
+
+#services .service-card__icon {
+  color: #5ed29c;
+}
+
+#about [data-about-layout] {
+  align-items: start;
+}
+
+#about [data-about-stats] {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+#about [data-about-stat-card] {
+  min-height: 9.5rem;
+}
+
+#about [data-about-stat-value] {
+  font-size: clamp(1.65rem, 2.75vw, 2.8rem);
+}
+
+html[lang="fa-IR"] #about [data-about-stat-value] {
+  font-size: clamp(1.45rem, 2.4vw, 2.45rem);
+}
+
+@media (min-width: 1024px) {
+  #about [data-about-layout] {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  #about [data-about-layout] > :first-child,
+  #about [data-about-stats] {
+    grid-column: span 6 / span 6;
+  }
+}
+
+@media (max-width: 479px) {
+  #about [data-about-stats] {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}

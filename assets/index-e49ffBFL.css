@@ -119,10 +119,24 @@ html[dir="rtl"] [data-hero-copy-column] [data-hero-cta] {
 [data-testid="header-actions"] > a[href$="/contact"],
 [data-testid="header-actions"] > a[href="/contact"] {
   width: var(--joto-compact-action-width);
+  min-width: var(--joto-compact-action-width);
   height: var(--joto-compact-action-height);
+  min-height: var(--joto-compact-action-height);
   padding: 0;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
+}
+
+[data-testid="header-actions"] > div[aria-label] > button[aria-haspopup="menu"] {
+  width: var(--joto-compact-action-width);
+  min-width: var(--joto-compact-action-width);
+  height: var(--joto-compact-action-height);
+  min-height: var(--joto-compact-action-height);
+  padding-inline: 0;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
 }
 
 [data-hero-cta],

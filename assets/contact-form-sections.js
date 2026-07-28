@@ -170,58 +170,47 @@ function fieldMarkup({
   `;
 }
 
-function renderSolutionContactForm(section, locale, routeParts) {
-  if (section.dataset.solutionContactSection === "true") return;
-
+function contactFormMarkup(locale, idPrefix, formKind) {
   const copy = COPY[locale];
-  const idPrefix = `solution-contact-${locale.toLowerCase()}-${routeParts.slice(1).join("-")}`;
+  const formDataAttribute =
+    formKind === "home"
+      ? "data-home-contact-form"
+      : "data-solution-contact-form";
 
-  section.id = "contact";
-  section.dataset.solutionContactSection = "true";
-  section.innerHTML = `
-    <div class="joto-solution-contact">
-      <div class="joto-solution-contact__grid">
-        <div>
-          <p class="joto-solution-contact__eyebrow">${escapeHtml(copy.eyebrow)}</p>
-          <h2 class="joto-solution-contact__title">${escapeHtml(copy.title)}</h2>
-          <p class="joto-solution-contact__description">${escapeHtml(copy.description)}</p>
-        </div>
-        <form class="joto-solution-contact__form" data-solution-contact-form>
-          <div class="joto-solution-contact__form-header">
-            <h3>${escapeHtml(copy.formTitle)}</h3>
-            <p>${escapeHtml(copy.requiredHint)}</p>
-          </div>
-          <div class="joto-solution-contact__fields">
-            ${fieldMarkup({ id: `${idPrefix}-name`, label: copy.name, name: "name", placeholder: copy.namePlaceholder, required: true, maxLength: 100 })}
-            ${fieldMarkup({ id: `${idPrefix}-company`, label: copy.company, name: "company", placeholder: copy.companyPlaceholder, required: true, maxLength: 160 })}
-            ${fieldMarkup({ id: `${idPrefix}-email`, label: copy.email, name: "email", type: "email", placeholder: "name@company.com", required: true, maxLength: 254 })}
-            ${fieldMarkup({ id: `${idPrefix}-phone`, label: copy.phone, name: "phoneOrWechat", placeholder: copy.phonePlaceholder, maxLength: 100 })}
-            ${fieldMarkup({ id: `${idPrefix}-message`, label: copy.message, name: "message", type: "textarea", placeholder: copy.messagePlaceholder, required: true, full: true, maxLength: 5000 })}
-          </div>
-          <div class="joto-solution-contact__honeypot" aria-hidden="true">
-            <label for="${idPrefix}-website">Website</label>
-            <input id="${idPrefix}-website" name="website" type="text" autocomplete="off" tabindex="-1">
-          </div>
-          <div class="joto-solution-contact__actions">
-            <button class="joto-solution-contact__submit" data-solution-contact-submit type="submit">
-              <span data-solution-contact-submit-label>${escapeHtml(copy.submit)}</span>
-              <span class="joto-solution-contact__submit-icon" aria-hidden="true">↗</span>
-            </button>
-          </div>
-          <p class="joto-solution-contact__status" data-solution-contact-status aria-live="polite"></p>
-        </form>
+  return `
+    <form class="joto-solution-contact__form" ${formDataAttribute}>
+      <div class="joto-solution-contact__form-header">
+        <h3>${escapeHtml(copy.formTitle)}</h3>
+        <p>${escapeHtml(copy.requiredHint)}</p>
       </div>
-    </div>
+      <div class="joto-solution-contact__fields">
+        ${fieldMarkup({ id: `${idPrefix}-name`, label: copy.name, name: "name", placeholder: copy.namePlaceholder, required: true, maxLength: 100 })}
+        ${fieldMarkup({ id: `${idPrefix}-company`, label: copy.company, name: "company", placeholder: copy.companyPlaceholder, required: true, maxLength: 160 })}
+        ${fieldMarkup({ id: `${idPrefix}-email`, label: copy.email, name: "email", type: "email", placeholder: "name@company.com", required: true, maxLength: 254 })}
+        ${fieldMarkup({ id: `${idPrefix}-phone`, label: copy.phone, name: "phoneOrWechat", placeholder: copy.phonePlaceholder, maxLength: 100 })}
+        ${fieldMarkup({ id: `${idPrefix}-message`, label: copy.message, name: "message", type: "textarea", placeholder: copy.messagePlaceholder, required: true, full: true, maxLength: 5000 })}
+      </div>
+      <div class="joto-solution-contact__honeypot" aria-hidden="true">
+        <label for="${idPrefix}-website">Website</label>
+        <input id="${idPrefix}-website" name="website" type="text" autocomplete="off" tabindex="-1">
+      </div>
+      <div class="joto-solution-contact__actions">
+        <button class="joto-solution-contact__submit" data-solution-contact-submit type="submit">
+          <span data-solution-contact-submit-label>${escapeHtml(copy.submit)}</span>
+          <span class="joto-solution-contact__submit-icon" aria-hidden="true">↗</span>
+        </button>
+      </div>
+      <p class="joto-solution-contact__status" data-solution-contact-status aria-live="polite"></p>
+    </form>
   `;
+}
 
-  if (window.location.hash === "#contact") {
-    window.setTimeout(() => section.scrollIntoView({ block: "start" }), 100);
-  }
-
-  const form = section.querySelector("[data-solution-contact-form]");
-  const status = section.querySelector("[data-solution-contact-status]");
-  const submitButton = section.querySelector("[data-solution-contact-submit]");
-  const submitLabel = section.querySelector("[data-solution-contact-submit-label]");
+function bindContactForm(form, copy) {
+  const status = form.querySelector("[data-solution-contact-status]");
+  const submitButton = form.querySelector("[data-solution-contact-submit]");
+  const submitLabel = form.querySelector(
+    "[data-solution-contact-submit-label]",
+  );
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -267,6 +256,77 @@ function renderSolutionContactForm(section, locale, routeParts) {
   });
 }
 
+function createContactForm(locale, idPrefix, formKind) {
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = contactFormMarkup(locale, idPrefix, formKind);
+  const form = wrapper.firstElementChild;
+  bindContactForm(form, COPY[locale]);
+  return form;
+}
+
+function renderSolutionContactForm(section, locale, routeParts) {
+  if (section.dataset.solutionContactSection === "true") return;
+
+  const copy = COPY[locale];
+  const idPrefix = `solution-contact-${locale.toLowerCase()}-${routeParts.slice(1).join("-")}`;
+
+  section.id = "contact";
+  section.dataset.solutionContactSection = "true";
+  section.innerHTML = `
+    <div class="joto-solution-contact">
+      <div class="joto-solution-contact__grid">
+        <div>
+          <p class="joto-solution-contact__eyebrow">${escapeHtml(copy.eyebrow)}</p>
+          <h2 class="joto-solution-contact__title">${escapeHtml(copy.title)}</h2>
+          <p class="joto-solution-contact__description">${escapeHtml(copy.description)}</p>
+        </div>
+        <div data-solution-contact-form-slot></div>
+      </div>
+    </div>
+  `;
+
+  const formSlot = section.querySelector("[data-solution-contact-form-slot]");
+  formSlot.replaceWith(createContactForm(locale, idPrefix, "solution"));
+
+  if (window.location.hash === "#contact") {
+    window.setTimeout(() => section.scrollIntoView({ block: "start" }), 100);
+  }
+}
+
+function renderHomepageContactForm(section, locale) {
+  if (section.querySelector("[data-home-contact-form]")) return;
+
+  const container = section.firstElementChild;
+  const intro = container?.firstElementChild;
+  const links = intro?.nextElementSibling;
+  const eyebrow = intro?.firstElementChild;
+  const headingCopy = eyebrow?.nextElementSibling;
+
+  if (!container || !intro || !links || !eyebrow || !headingCopy) return;
+
+  const copyPanel = document.createElement("div");
+  copyPanel.className = "joto-home-contact__copy";
+  copyPanel.append(eyebrow, ...Array.from(headingCopy.children));
+
+  const formPanel = document.createElement("div");
+  formPanel.className = "joto-home-contact__form-panel";
+  formPanel.append(
+    createContactForm(
+      locale,
+      `home-contact-${locale.toLowerCase()}`,
+      "home",
+    ),
+  );
+
+  intro.replaceChildren(copyPanel, formPanel);
+  intro.dataset.homeContactLayout = "";
+  links.dataset.homeContactLinks = "";
+
+  if (window.location.hash === "#contact") {
+    window.setTimeout(() => section.scrollIntoView({ block: "start" }), 100);
+  }
+}
+
 function findSolutionContactSection(routeParts) {
   if (routeParts[0] !== "solutions") return null;
 
@@ -289,6 +349,10 @@ if (routeParts.length === 0) {
   waitForElement(
     () => document.querySelector("[aria-labelledby=\"hero-title\"] [data-hero-cta-mobile]"),
     (primaryCta) => enhanceHomepageActions(primaryCta, locale),
+  );
+  waitForElement(
+    () => document.querySelector("main > section#contact"),
+    (section) => renderHomepageContactForm(section, locale),
   );
 }
 
