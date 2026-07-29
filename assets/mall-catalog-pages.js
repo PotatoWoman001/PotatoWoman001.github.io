@@ -9,6 +9,7 @@ import { getMallLocale } from "./mall-i18n.js?v=20260729-6";
 const locale = getMallLocale();
 const SITE_ORIGIN = "https://jotoglobal.com";
 let activeRequest;
+let selectControlId = 0;
 
 function element(tag, options = {}, children = []) {
   const node = document.createElement(tag);
@@ -339,15 +340,80 @@ function renderHome(mount, index) {
   installCatalogSeo("home");
 }
 
-function selectControl(labelText, name, values, selected, allLabel) {
-  const wrapper = element("label", { className: "joto-mall__filter" });
-  wrapper.append(element("span", { text: labelText }));
-  const select = element("select", { name });
-  select.append(element("option", { value: "", text: allLabel }));
-  values.forEach((value) =>
-    select.append(element("option", { value, text: value, selected: value === selected })),
+function selectControl(labelText, name, options, selected) {
+  const id = `joto-mall-filter-${name}-${selectControlId += 1}`;
+  const selectedOption =
+    options.find((option) => option.value === selected) || options[0];
+  const wrapper = element("div", {
+    className: "joto-mall__filter joto-mall__custom-select",
+    dataset: { selectName: name },
+  });
+  const label = element("span", {
+    id: `${id}-label`,
+    text: labelText || "\u00a0",
+    "aria-hidden": labelText ? undefined : "true",
+  });
+  const select = element("select", {
+    name,
+    className: "joto-mall__native-select",
+    tabIndex: -1,
+    "aria-hidden": "true",
+  });
+  options.forEach((option) =>
+    select.append(
+      element("option", {
+        value: option.value,
+        text: option.label,
+        selected: option.value === selectedOption.value,
+      }),
+    ),
   );
-  wrapper.append(select);
+  const value = element("span", {
+    id: `${id}-value`,
+    text: selectedOption.label,
+    dir: selectedOption.dir,
+  });
+  const trigger = element(
+    "button",
+    {
+      type: "button",
+      className: "joto-mall__select-trigger",
+      "aria-haspopup": "listbox",
+      "aria-expanded": "false",
+      "aria-controls": `${id}-menu`,
+      "aria-labelledby": labelText
+        ? `${id}-label ${id}-value`
+        : `${id}-value`,
+    },
+    [
+      value,
+      element("span", {
+        className: "joto-mall__select-chevron",
+        "aria-hidden": "true",
+      }),
+    ],
+  );
+  const menu = element("div", {
+    id: `${id}-menu`,
+    className: "joto-mall__select-menu",
+    role: "listbox",
+    hidden: true,
+  });
+  options.forEach((option) =>
+    menu.append(
+      element("button", {
+        type: "button",
+        className: "joto-mall__select-option",
+        role: "option",
+        text: option.label,
+        dir: option.dir,
+        tabIndex: -1,
+        dataset: { value: option.value },
+        "aria-selected": String(option.value === selectedOption.value),
+      }),
+    ),
+  );
+  wrapper.append(label, select, trigger, menu);
   return wrapper;
 }
 
@@ -392,6 +458,68 @@ function renderList(mount, index) {
     viewControls.append(button);
   }
 
+  const filterOptions = (allLabel, values, dir = "ltr") => [
+    { value: "", label: allLabel },
+    ...values.map((value) => ({ value, label: value, dir })),
+  ];
+
+  function closeSelect(wrapper, options = {}) {
+    if (!wrapper) return;
+    const trigger = wrapper.querySelector(".joto-mall__select-trigger");
+    const menu = wrapper.querySelector(".joto-mall__select-menu");
+    trigger?.setAttribute("aria-expanded", "false");
+    if (menu) menu.hidden = true;
+    menu
+      ?.querySelectorAll(".joto-mall__select-option")
+      .forEach((option) => {
+        option.tabIndex = -1;
+      });
+    if (options.restoreFocus) trigger?.focus();
+  }
+
+  function closeAllSelects(except) {
+    controls.querySelectorAll(".joto-mall__custom-select").forEach((wrapper) => {
+      if (wrapper !== except) closeSelect(wrapper);
+    });
+  }
+
+  function focusOption(menu, index) {
+    const options = [...menu.querySelectorAll(".joto-mall__select-option")];
+    if (!options.length) return;
+    const boundedIndex = Math.max(0, Math.min(index, options.length - 1));
+    options.forEach((option, optionIndex) => {
+      option.tabIndex = optionIndex === boundedIndex ? 0 : -1;
+    });
+    options[boundedIndex].focus();
+  }
+
+  function openSelect(wrapper, options = {}) {
+    if (!wrapper) return;
+    closeAllSelects(wrapper);
+    const trigger = wrapper.querySelector(".joto-mall__select-trigger");
+    const menu = wrapper.querySelector(".joto-mall__select-menu");
+    const selected = menu?.querySelector('[aria-selected="true"]');
+    trigger?.setAttribute("aria-expanded", "true");
+    if (menu) menu.hidden = false;
+    if (options.focusOption && menu) {
+      const menuOptions = [...menu.querySelectorAll(".joto-mall__select-option")];
+      focusOption(menu, Math.max(0, menuOptions.indexOf(selected)));
+    }
+  }
+
+  function chooseOption(option) {
+    const wrapper = option.closest(".joto-mall__custom-select");
+    const select = wrapper?.querySelector(".joto-mall__native-select");
+    const name = select?.name;
+    if (!select || !name) return;
+    select.value = option.dataset.value;
+    closeSelect(wrapper);
+    select.dispatchEvent(new Event("change", { bubbles: true }));
+    controls
+      .querySelector(`[data-select-name="${CSS.escape(name)}"] .joto-mall__select-trigger`)
+      ?.focus();
+  }
+
   function update(next, options = {}) {
     state = { ...state, ...next };
     const params = serializeCatalogState(state);
@@ -409,18 +537,23 @@ function renderList(mount, index) {
     const result = queryProducts(index, state);
     state = result.state;
     searchInput.value = state.q;
+    closeAllSelects();
     controls.replaceChildren(
       selectControl(
         locale.category,
         "category",
-        result.facets.categories,
+        filterOptions(locale.allCategories, result.facets.categories),
         state.category,
-        locale.allCategories,
       ),
     );
     if (result.facets.brands.length) {
       controls.append(
-        selectControl(locale.brand, "brand", result.facets.brands, state.brand, locale.allBrands),
+        selectControl(
+          locale.brand,
+          "brand",
+          filterOptions(locale.allBrands, result.facets.brands),
+          state.brand,
+        ),
       );
     }
     if (result.facets.statuses.length) {
@@ -428,9 +561,8 @@ function renderList(mount, index) {
         selectControl(
           locale.status,
           "status",
-          result.facets.statuses,
+          filterOptions(locale.allStatuses, result.facets.statuses),
           state.status,
-          locale.allStatuses,
         ),
       );
     }
@@ -439,9 +571,8 @@ function renderList(mount, index) {
         selectControl(
           locale.condition,
           "condition",
-          result.facets.conditions,
+          filterOptions(locale.allConditions, result.facets.conditions),
           state.condition,
-          locale.allConditions,
         ),
       );
     }
@@ -449,23 +580,23 @@ function renderList(mount, index) {
       selectControl(
         locale.sort,
         "sort",
-        ["title", "brand", "recent"],
+        [
+          { value: "title", label: locale.sortTitle },
+          { value: "brand", label: locale.sortBrand },
+          { value: "recent", label: locale.sortRecent },
+        ],
         state.sort,
-        locale.sortTitle,
       ),
       selectControl(
         "",
         "direction",
-        ["asc", "desc"],
+        [
+          { value: "asc", label: locale.ascending },
+          { value: "desc", label: locale.descending },
+        ],
         state.direction,
-        locale.ascending,
       ),
     );
-    controls.querySelector('[name="sort"] option[value="title"]').textContent = locale.sortTitle;
-    controls.querySelector('[name="sort"] option[value="brand"]').textContent = locale.sortBrand;
-    controls.querySelector('[name="sort"] option[value="recent"]').textContent = locale.sortRecent;
-    controls.querySelector('[name="direction"] option[value="asc"]').textContent = locale.ascending;
-    controls.querySelector('[name="direction"] option[value="desc"]').textContent = locale.descending;
 
     const countText = `${result.total} ${locale.results}`;
     resultsHeading.textContent = countText;
@@ -503,6 +634,52 @@ function renderList(mount, index) {
   controls.addEventListener("change", (event) => {
     const select = event.target.closest("select");
     if (select) update({ [select.name]: select.value, page: 1 });
+  });
+  controls.addEventListener("click", (event) => {
+    const option = event.target.closest(".joto-mall__select-option");
+    if (option) {
+      chooseOption(option);
+      return;
+    }
+    const trigger = event.target.closest(".joto-mall__select-trigger");
+    if (!trigger) return;
+    const wrapper = trigger.closest(".joto-mall__custom-select");
+    if (trigger.getAttribute("aria-expanded") === "true") closeSelect(wrapper);
+    else openSelect(wrapper);
+  });
+  controls.addEventListener("keydown", (event) => {
+    const trigger = event.target.closest(".joto-mall__select-trigger");
+    if (trigger && ["Enter", " ", "ArrowDown", "ArrowUp"].includes(event.key)) {
+      event.preventDefault();
+      openSelect(trigger.closest(".joto-mall__custom-select"), {
+        focusOption: true,
+      });
+      return;
+    }
+    const option = event.target.closest(".joto-mall__select-option");
+    if (!option) return;
+    const wrapper = option.closest(".joto-mall__custom-select");
+    const menu = option.closest(".joto-mall__select-menu");
+    const options = [...menu.querySelectorAll(".joto-mall__select-option")];
+    const index = options.indexOf(option);
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      focusOption(menu, index + (event.key === "ArrowDown" ? 1 : -1));
+    } else if (event.key === "Home" || event.key === "End") {
+      event.preventDefault();
+      focusOption(menu, event.key === "Home" ? 0 : options.length - 1);
+    } else if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      chooseOption(option);
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      closeSelect(wrapper, { restoreFocus: true });
+    } else if (event.key === "Tab") {
+      closeSelect(wrapper);
+    }
+  });
+  document.addEventListener("pointerdown", (event) => {
+    if (!controls.contains(event.target)) closeAllSelects();
   });
   searchSlot.querySelector("form").addEventListener("submit", (event) => {
     event.preventDefault();
