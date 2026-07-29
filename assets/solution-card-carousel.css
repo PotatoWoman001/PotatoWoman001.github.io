@@ -1,8 +1,11 @@
 .solution-card-carousel-enhanced .solution-card-scroller {
   margin-top: 1.25rem !important;
   padding-bottom: 0 !important;
+  scroll-snap-type: x proximity !important;
   scrollbar-width: none !important;
   -ms-overflow-style: none;
+  overscroll-behavior-inline: contain;
+  touch-action: pan-x pan-y;
 }
 
 .solution-card-carousel-enhanced .solution-card-scroller::-webkit-scrollbar {
@@ -60,8 +63,86 @@
 
 [data-solutions-scroller][data-solution-carousel-hint="running"],
 [data-solutions-scroller][data-solution-carousel-hint="cancelled"] {
-  scroll-behavior: auto;
-  scroll-snap-type: none;
+  scroll-behavior: auto !important;
+  scroll-snap-type: none !important;
+}
+
+.solution-card-carousel-enhanced [data-solution-card] {
+  height: 410px !important;
+  contain: layout paint;
+}
+
+.solution-card-carousel-enhanced [data-solution-card] > div:first-child,
+.solution-card-carousel-enhanced
+  [data-solution-card]:hover
+  > div:first-child,
+.solution-card-carousel-enhanced
+  [data-solution-card]:focus-within
+  > div:first-child {
+  height: 320px !important;
+  transition-property: none !important;
+}
+
+.solution-card-carousel-enhanced [data-solution-card] > a:last-child,
+.solution-card-carousel-enhanced
+  [data-solution-card]:hover
+  > a:last-child,
+.solution-card-carousel-enhanced
+  [data-solution-card]:focus-within
+  > a:last-child {
+  bottom: 1.25rem !important;
+  transition-property: border-color, background-color, color !important;
+}
+
+.solution-card-carousel-enhanced [data-solution-card] img {
+  transition-duration: 320ms !important;
+}
+
+.solution-card-carousel-enhanced [data-solution-card]:hover img,
+.solution-card-carousel-enhanced [data-solution-card]:focus-within img {
+  transform: scale(1.015) !important;
+}
+
+@media (min-width: 640px) {
+  .solution-card-carousel-enhanced [data-solution-card] {
+    height: 430px !important;
+  }
+
+  .solution-card-carousel-enhanced [data-solution-card] > div:first-child,
+  .solution-card-carousel-enhanced
+    [data-solution-card]:hover
+    > div:first-child,
+  .solution-card-carousel-enhanced
+    [data-solution-card]:focus-within
+    > div:first-child {
+    height: 340px !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  .solution-card-carousel-enhanced [data-solution-card] {
+    height: 440px !important;
+  }
+
+  .solution-card-carousel-enhanced [data-solution-card] > div:first-child,
+  .solution-card-carousel-enhanced
+    [data-solution-card]:hover
+    > div:first-child,
+  .solution-card-carousel-enhanced
+    [data-solution-card]:focus-within
+    > div:first-child {
+    height: 350px !important;
+  }
+
+  .solution-card-carousel-enhanced [data-solution-card] > a:last-child,
+  .solution-card-carousel-enhanced
+    [data-solution-card]:hover
+    > a:last-child,
+  .solution-card-carousel-enhanced
+    [data-solution-card]:focus-within
+    > a:last-child {
+    bottom: 0 !important;
+  }
 }
 
 @media (max-width: 639px) {

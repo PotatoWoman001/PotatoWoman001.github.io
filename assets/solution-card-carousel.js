@@ -4,11 +4,17 @@ const CONTROLS_SELECTOR = "[data-solution-carousel-controls]";
 const EDGE_TOLERANCE = 3;
 const HINT_INTERSECTION_RATIO = 0.32;
 const HINT_DISTANCE_RATIO = 0.3;
-const HINT_MAX_DISTANCE = 120;
+const HINT_MAX_DISTANCE = 72;
 const HINT_DELAY = 0;
-const HINT_FORWARD_DURATION = 520;
-const HINT_HOLD_DURATION = 260;
-const HINT_RETURN_DURATION = 520;
+const HINT_FORWARD_DURATION = 260;
+const HINT_HOLD_DURATION = 80;
+const HINT_RETURN_DURATION = 260;
+
+function easeInOutCubic(progress) {
+  return progress < 0.5
+    ? 4 * progress * progress * progress
+    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+}
 
 const labelsByLocale = {
   en: {
@@ -143,7 +149,7 @@ function enhanceSolutionCarousel(scroller) {
   let hintTimerResolve = null;
   let hintScrollTimer = 0;
   let hintScrollResolve = null;
-  let hintScrollEndHandler = null;
+  let hintScrollFrame = 0;
   let hintObserver = null;
   let cancelledScrollLeft = null;
 
@@ -171,9 +177,9 @@ function enhanceSolutionCarousel(scroller) {
   }
 
   function finishHintScroll(completed) {
-    if (hintScrollEndHandler) {
-      scroller.removeEventListener("scrollend", hintScrollEndHandler);
-      hintScrollEndHandler = null;
+    if (hintScrollFrame) {
+      window.cancelAnimationFrame(hintScrollFrame);
+      hintScrollFrame = 0;
     }
     if (hintScrollTimer) {
       window.clearTimeout(hintScrollTimer);
@@ -204,10 +210,30 @@ function enhanceSolutionCarousel(scroller) {
     }
   }
 
-  function handleWheelIntent(event) {
-    const isHorizontalIntent =
-      Math.abs(event.deltaX) > Math.abs(event.deltaY) || event.shiftKey;
-    if (isHorizontalIntent) markUserInteraction();
+  function handleWheelInteraction(event) {
+    const isVerticalIntent =
+      Math.abs(event.deltaY) >= Math.abs(event.deltaX) && !event.shiftKey;
+    const shouldForwardVerticalScroll =
+      isVerticalIntent &&
+      scroller.dataset.solutionCarouselHint === "running";
+    const hasWheelInput =
+      Math.abs(event.deltaX) + Math.abs(event.deltaY) > 0 || event.shiftKey;
+
+    if (shouldForwardVerticalScroll) event.preventDefault();
+    if (hasWheelInput) markUserInteraction();
+    if (shouldForwardVerticalScroll) {
+      const deltaScale =
+        event.deltaMode === 1
+          ? 16
+          : event.deltaMode === 2
+            ? window.innerHeight
+            : 1;
+      window.scrollBy({
+        top: event.deltaY * deltaScale,
+        left: 0,
+        behavior: "instant",
+      });
+    }
   }
 
   function handleScroll() {
@@ -241,18 +267,35 @@ function enhanceSolutionCarousel(scroller) {
       }
 
       hintScrollResolve = resolve;
-      hintScrollEndHandler = () => finishHintScroll(!userInteracted);
-      scroller.addEventListener("scrollend", hintScrollEndHandler, {
-        once: true,
-      });
+      const startScrollLeft = scroller.scrollLeft;
+      const scrollDistance = target - startScrollLeft;
+      const startTime = window.performance.now();
+
       hintScrollTimer = window.setTimeout(
         () => finishHintScroll(!userInteracted),
         duration + 180,
       );
-      scroller.scrollTo({
-        left: target,
-        behavior: "smooth",
-      });
+
+      function step(timestamp) {
+        if (userInteracted) {
+          finishHintScroll(false);
+          return;
+        }
+
+        const progress = Math.min((timestamp - startTime) / duration, 1);
+        scroller.scrollTo({
+          left: startScrollLeft + scrollDistance * easeInOutCubic(progress),
+          behavior: "auto",
+        });
+
+        if (progress >= 1) {
+          finishHintScroll(true);
+          return;
+        }
+        hintScrollFrame = window.requestAnimationFrame(step);
+      }
+
+      hintScrollFrame = window.requestAnimationFrame(step);
     });
   }
 
@@ -345,7 +388,9 @@ function enhanceSolutionCarousel(scroller) {
       once: true,
     });
   });
-  scroller.addEventListener("wheel", handleWheelIntent, { passive: true });
+  scroller.addEventListener("wheel", handleWheelInteraction, {
+    passive: false,
+  });
   scroller.addEventListener("keydown", markUserInteraction, { once: true });
 
   if ("IntersectionObserver" in window) {

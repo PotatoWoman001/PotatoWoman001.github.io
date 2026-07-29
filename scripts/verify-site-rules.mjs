@@ -5,7 +5,7 @@ import path from "node:path";
 const root = process.cwd();
 const cssPath = path.join(root, "assets/index-e49ffBFL.css");
 const jsPath = path.join(root, "assets/index-DaFvN0XI.js");
-const staticAssetVersion = "20260729-1";
+const staticAssetVersion = "20260729-2";
 const bundleScriptUrl = `/assets/index-DaFvN0XI.js?v=${staticAssetVersion}`;
 const bundleStyleUrl = `/assets/index-e49ffBFL.css?v=${staticAssetVersion}`;
 const css = fs.readFileSync(cssPath, "utf8");

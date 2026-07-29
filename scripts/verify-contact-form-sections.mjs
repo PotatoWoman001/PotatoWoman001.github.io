@@ -10,9 +10,9 @@ const solutionRoutePattern =
   /^(?:(?:zh|fa)\/)?solutions\/[^/]+(?:\/[^/]+)?\/index\.html$/;
 const expectedSolutionRouteCount = 75;
 const scriptTag =
-  '<script type="module" src="/assets/contact-form-sections.js?v=20260729-1"></script>';
+  '<script type="module" src="/assets/contact-form-sections.js?v=20260729-2"></script>';
 const styleTag =
-  '<link rel="stylesheet" href="/assets/contact-form-sections.css?v=20260729-1">';
+  '<link rel="stylesheet" href="/assets/contact-form-sections.css?v=20260729-2">';
 
 async function collectIndexFiles(directory, relativeDirectory = "") {
   const entries = await readdir(directory, { withFileTypes: true });
