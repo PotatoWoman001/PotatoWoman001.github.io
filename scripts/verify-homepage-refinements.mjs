@@ -4,7 +4,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const homepages = ["index.html", "zh/index.html", "fa/index.html"];
-const version = "20260729-6";
+const version = "20260729-7";
 
 for (const route of homepages) {
   const html = readFileSync(path.join(root, route), "utf8");

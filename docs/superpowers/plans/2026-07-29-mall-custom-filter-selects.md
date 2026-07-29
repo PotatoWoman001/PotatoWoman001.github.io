@@ -372,7 +372,7 @@ node scripts/verify-mall-catalog-pages.mjs
 node scripts/verify-site-typography-mall.mjs
 node scripts/verify-site-rules.mjs
 node scripts/verify-mall-data-client.mjs
-node scripts/verify-mall-snapshot.mjs
+node scripts/verify-mall-snapshot.mjs fixtures/mall-snapshot-v1
 node --test scripts/verify-mall-snapshot.test.mjs scripts/publish-mall-snapshot.test.mjs
 git diff --check
 ```

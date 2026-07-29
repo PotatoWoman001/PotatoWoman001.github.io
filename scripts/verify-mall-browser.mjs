@@ -229,11 +229,83 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
 
   await page.goto(`${origin}${productsPath}`, { waitUntil: "domcontentloaded" });
   await waitForCatalog(page, "[data-joto-mall-products]");
+  const sortControl = page.locator('[data-select-name="sort"]');
+  const directionControl = page.locator('[data-select-name="direction"]');
+  const sortValues = await sortControl
+    .locator("select option")
+    .evaluateAll((options) => options.map((option) => option.value));
+  const directionValues = await directionControl
+    .locator("select option")
+    .evaluateAll((options) => options.map((option) => option.value));
+  assert(
+    JSON.stringify(sortValues) === JSON.stringify(["title", "brand", "recent"]),
+    `${testCase.locale}/${viewport.name}: sort values were ${sortValues.join(",")}`,
+  );
+  assert(
+    JSON.stringify(directionValues) === JSON.stringify(["asc", "desc"]),
+    `${testCase.locale}/${viewport.name}: direction values were ${directionValues.join(",")}`,
+  );
+  const sortLabels = await sortControl
+    .locator('[role="option"]')
+    .allTextContents();
+  const directionLabels = await directionControl
+    .locator('[role="option"]')
+    .allTextContents();
+  assert(
+    new Set(sortLabels).size === sortLabels.length,
+    `${testCase.locale}/${viewport.name}: duplicate sort labels rendered`,
+  );
+  assert(
+    new Set(directionLabels).size === directionLabels.length,
+    `${testCase.locale}/${viewport.name}: duplicate direction labels rendered`,
+  );
+
+  const sortTrigger = sortControl.locator(".joto-mall__select-trigger");
+  await sortTrigger.click();
+  const sortMenuStyle = await sortControl
+    .locator(".joto-mall__select-menu")
+    .evaluate((menu) => ({
+      background: getComputedStyle(menu).backgroundColor,
+      hidden: menu.hidden,
+      role: menu.getAttribute("role"),
+    }));
+  assert(
+    !sortMenuStyle.hidden
+      && sortMenuStyle.background === "rgb(12, 23, 18)"
+      && sortMenuStyle.role === "listbox",
+    `${testCase.locale}/${viewport.name}: sort menu was not the dark listbox`,
+  );
+  await page.locator(".joto-mall__list-header h1").click();
+  assert(
+    await sortControl.locator(".joto-mall__select-menu").isHidden(),
+    `${testCase.locale}/${viewport.name}: outside click did not close sort menu`,
+  );
+
+  await sortTrigger.click();
+  await sortControl
+    .locator('.joto-mall__select-option[data-value="recent"]')
+    .click();
+  assert(
+    (await searchParam(page, "sort")) === "recent",
+    `${testCase.locale}/${viewport.name}: custom sort option did not update URL`,
+  );
+
+  await page.goto(`${origin}${productsPath}`, { waitUntil: "domcontentloaded" });
+  await waitForCatalog(page, "[data-joto-mall-products]");
   const ascendingTitle = await page
     .locator(".joto-mall__card-title")
     .first()
     .innerText();
-  await page.locator('select[name="direction"]').selectOption("desc");
+  const directionTrigger = page.locator(
+    '[data-select-name="direction"] .joto-mall__select-trigger',
+  );
+  await directionTrigger.focus();
+  await directionTrigger.press("Enter");
+  await page.keyboard.press("End");
+  await page.keyboard.press("Enter");
+  await page.waitForFunction(
+    () => new URL(window.location.href).searchParams.get("direction") === "desc",
+  );
   const descendingTitle = await page
     .locator(".joto-mall__card-title")
     .first()
@@ -247,6 +319,20 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
     `${testCase.locale}/${viewport.name}: sort state missing from URL`,
   );
 
+  const categoryTrigger = page.locator(
+    '[data-select-name="category"] .joto-mall__select-trigger',
+  );
+  await categoryTrigger.focus();
+  await categoryTrigger.press("ArrowDown");
+  await page.keyboard.press("End");
+  await page.keyboard.press("Home");
+  await page.keyboard.press("Escape");
+  assert(
+    (await categoryTrigger.getAttribute("aria-expanded")) === "false"
+      && (await categoryTrigger.evaluate((node) => document.activeElement === node)),
+    `${testCase.locale}/${viewport.name}: keyboard close did not restore category trigger`,
+  );
+
   const categorySelect = page.locator('select[name="category"]');
   const categoryValues = await categorySelect.locator("option").evaluateAll(
     (options) => options.map((option) => option.value).filter(Boolean),
@@ -255,6 +341,22 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
     categoryValues.length >= 2,
     `${testCase.locale}/${viewport.name}: category filter has insufficient values`,
   );
+  if (testCase.dir === "rtl") {
+    const rtlDirections = await page
+      .locator('[data-select-name="category"]')
+      .evaluate((control) => ({
+        trigger: getComputedStyle(
+          control.querySelector(".joto-mall__select-trigger"),
+        ).direction,
+        technicalOption: control.querySelector(
+          '.joto-mall__select-option[data-value]:not([data-value=""])',
+        )?.dir,
+      }));
+    assert(
+      rtlDirections.trigger === "rtl" && rtlDirections.technicalOption === "ltr",
+      `${testCase.locale}/${viewport.name}: RTL control or LTR technical option is incorrect`,
+    );
+  }
   await categorySelect.selectOption(categoryValues[0]);
   assert(
     (await searchParam(page, "category")) === categoryValues[0],

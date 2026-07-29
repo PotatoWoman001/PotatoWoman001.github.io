@@ -1,5 +1,5 @@
-import { loadProduct } from "./mall-data-client.js?v=20260729-6";
-import { getMallLocale } from "./mall-i18n.js?v=20260729-6";
+import { loadProduct } from "./mall-data-client.js?v=20260729-7";
+import { getMallLocale } from "./mall-i18n.js?v=20260729-7";
 
 const SITE_ORIGIN = "https://jotoglobal.com";
 const ALLOWED_DESCRIPTION_TAGS = new Set([
