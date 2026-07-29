@@ -140,6 +140,67 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
     (await page.locator(".joto-mall__category").count()) >= 2,
     `${testCase.locale}/${viewport.name}: real categories were not rendered`,
   );
+  const categoryLayout = await page
+    .locator(".joto-mall__section--categories")
+    .evaluate((section) => {
+      const track = section.querySelector(".joto-mall__category-grid");
+      const links = [...track.querySelectorAll(".joto-mall__category")];
+      const first = links[0];
+      const last = links.at(-1);
+      const trackStyle = getComputedStyle(track);
+      return {
+        sectionHeight: section.getBoundingClientRect().height,
+        display: trackStyle.display,
+        flexWrap: trackStyle.flexWrap,
+        overflowX: trackStyle.overflowX,
+        trackScrollWidth: track.scrollWidth,
+        trackClientWidth: track.clientWidth,
+        firstHeight: first.getBoundingClientRect().height,
+        firstHref: first.getAttribute("href"),
+        firstActive: first.classList.contains("joto-mall__category--active"),
+        secondHref: links[1]?.getAttribute("href") || "",
+        lastHref: last.getAttribute("href"),
+        linkCount: links.length,
+      };
+    });
+  assert(
+    categoryLayout.sectionHeight <= 180,
+    `${testCase.locale}/${viewport.name}: category section is ${categoryLayout.sectionHeight}px tall`,
+  );
+  assert(
+    categoryLayout.display === "flex" && categoryLayout.flexWrap === "nowrap",
+    `${testCase.locale}/${viewport.name}: category track is not a single flex row`,
+  );
+  assert(
+    ["auto", "scroll"].includes(categoryLayout.overflowX),
+    `${testCase.locale}/${viewport.name}: category track is not horizontally scrollable`,
+  );
+  assert(
+    Math.abs(categoryLayout.firstHeight - 40) <= 1,
+    `${testCase.locale}/${viewport.name}: first category pill is ${categoryLayout.firstHeight}px tall`,
+  );
+  assert(
+    categoryLayout.firstHref === productsPath && categoryLayout.lastHref === productsPath,
+    `${testCase.locale}/${viewport.name}: all-products links are not localized`,
+  );
+  assert(
+    categoryLayout.firstActive,
+    `${testCase.locale}/${viewport.name}: first category pill is not active`,
+  );
+  assert(
+    categoryLayout.secondHref.includes("category="),
+    `${testCase.locale}/${viewport.name}: category link lost its filter query`,
+  );
+  assert(
+    categoryLayout.linkCount >= 4,
+    `${testCase.locale}/${viewport.name}: category navigation is incomplete`,
+  );
+  if (viewport.name === "mobile") {
+    assert(
+      categoryLayout.trackScrollWidth > categoryLayout.trackClientWidth,
+      `${testCase.locale}/mobile: category track does not expose horizontal discovery`,
+    );
+  }
   assert(
     (await page.locator(".joto-mall__card").count()) >= 6,
     `${testCase.locale}/${viewport.name}: recent products were not rendered`,

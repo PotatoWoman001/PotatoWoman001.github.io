@@ -83,6 +83,42 @@ assert.match(product, /hreflang|upsertLink\("alternate"/);
 assert.match(product, /"x-default"/);
 assert.doesNotMatch(product, /\boffers\b|\bprice\b|\bcurrency\b|\bsku\b/i);
 assert.doesNotMatch(i18n, /\b(?:price|currency|cart|checkout|payment)\b/i);
+for (const expected of [
+  "joto-mall__section--categories",
+  "joto-mall__category--active",
+  "locale.allProducts",
+  "locale.viewAllProducts",
+]) {
+  assert.ok(pages.includes(expected), `Mall category renderer missing ${expected}`);
+}
+for (const expected of [
+  "allProducts:",
+  "viewAllProducts:",
+]) {
+  assert.equal(
+    [...i18n.matchAll(new RegExp(`^\\s*${expected}`, "gm"))].length,
+    3,
+    `Mall locale copy missing three ${expected} entries`,
+  );
+}
+assert.match(
+  styles,
+  /\.joto-mall__section--categories\s*\{[\s\S]*padding-block:\s*32px/,
+);
+assert.match(
+  styles,
+  /\.joto-mall__category-grid\s*\{[\s\S]*display:\s*flex[\s\S]*overflow-x:\s*auto/,
+);
+assert.match(
+  styles,
+  /\.joto-mall__category\s*\{[\s\S]*min-height:\s*40px[\s\S]*font-size:\s*14px/,
+);
+assert.match(styles, /scrollbar-width:\s*none/);
+assert.match(styles, /white-space:\s*nowrap/);
+assert.doesNotMatch(
+  styles,
+  /\.joto-mall__category\s*\{[\s\S]*?min-height:\s*144px[\s\S]*?\}/,
+);
 assert.match(styles, /grid-template-columns:\s*repeat\(3/);
 assert.match(styles, /grid-template-columns:\s*repeat\(2/);
 assert.match(styles, /grid-template-columns:\s*1fr/);
