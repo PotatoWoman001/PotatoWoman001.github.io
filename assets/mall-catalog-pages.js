@@ -3,8 +3,8 @@ import {
   parseCatalogState,
   queryProducts,
   serializeCatalogState,
-} from "./mall-data-client.js?v=20260729-4";
-import { getMallLocale } from "./mall-i18n.js?v=20260729-4";
+} from "./mall-data-client.js?v=20260729-5";
+import { getMallLocale } from "./mall-i18n.js?v=20260729-5";
 
 const locale = getMallLocale();
 const SITE_ORIGIN = "https://jotoglobal.com";
