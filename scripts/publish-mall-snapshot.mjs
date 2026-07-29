@@ -201,8 +201,10 @@ function buildPublicationCommands(snapshotRoot, version, remote) {
     }],
     verifyHttps: {
       label: "HTTPS manifest verification",
-      command: "curl",
+      command: "ssh",
       args: [
+        ...connection,
+        "curl",
         "--fail",
         "--silent",
         "--show-error",

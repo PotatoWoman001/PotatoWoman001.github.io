@@ -22,13 +22,21 @@ const remote = {
   currentLink: "/var/www/jotoglobal/catalog-releases/current",
 };
 
+function isHttpsVerification(command, args) {
+  return command === "ssh"
+    && args.includes("curl")
+    && args.includes("https://jotoglobal.com/mall-data/manifest.json");
+}
+
 function successfulCommandResult(command, args) {
   const checksExistingRelease = command === "ssh"
     && args.includes("test")
     && args.includes("-e");
   return {
     status: checksExistingRelease ? 1 : 0,
-    stdout: command === "curl" ? JSON.stringify(fixtureManifest) : "",
+    stdout: isHttpsVerification(command, args)
+      ? JSON.stringify(fixtureManifest)
+      : "",
     stderr: "",
   };
 }
@@ -62,7 +70,7 @@ async function assertMissing(filePath) {
   assert.equal(first.published, true);
   assert.ok(calls.some(([command]) => command === "rsync"));
   assert.ok(calls.some(([command]) => command === "ssh"));
-  assert.ok(calls.some(([command]) => command === "curl"));
+  assert.ok(calls.some(([command, args]) => isHttpsVerification(command, args)));
 
   const callCount = calls.length;
   const second = await publishSnapshot({
@@ -146,7 +154,9 @@ async function assertMissing(filePath) {
           );
         return {
           status: isRemoteVerification ? 1 : 0,
-          stdout: command === "curl" ? JSON.stringify(fixtureManifest) : "",
+          stdout: isHttpsVerification(command, args)
+            ? JSON.stringify(fixtureManifest)
+            : "",
           stderr: isRemoteVerification ? "invalid snapshot" : "",
         };
       },
@@ -182,7 +192,11 @@ async function assertMissing(filePath) {
   assert.equal(executed, false);
   assert.ok(result.commands.some(({ command }) => command === "rsync"));
   assert.ok(result.commands.some(({ command }) => command === "ssh"));
-  assert.ok(result.commands.some(({ command }) => command === "curl"));
+  assert.ok(
+    result.commands.some(({ command, args }) =>
+      isHttpsVerification(command, args)
+    ),
+  );
   assert.ok(
     result.commands.some(
       ({ command, args }) =>
@@ -305,7 +319,7 @@ for (const [field, wrongValue] of [
       dryRun: false,
       runner: async (command, args) => {
         const result = successfulCommandResult(command, args);
-        if (command === "curl") {
+        if (isHttpsVerification(command, args)) {
           result.stdout = JSON.stringify({
             ...fixtureManifest,
             [field]: wrongValue,
