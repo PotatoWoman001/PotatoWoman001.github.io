@@ -256,11 +256,25 @@ function renderHome(mount, index) {
   hero.append(heroInner);
 
   const categories = normalizedCategories(index);
-  const categorySection = element("section", { className: "joto-mall__section" });
+  const productsHref = localizedPath("/mall/products/");
+  const categorySection = element("section", {
+    className: "joto-mall__section joto-mall__section--categories",
+  });
   categorySection.append(sectionHeading("", locale.categories));
-  const categoryGrid = element("div", { className: "joto-mall__category-grid" });
+  const categoryGrid = element("div", {
+    className: "joto-mall__category-grid",
+    role: "navigation",
+    "aria-label": locale.categories,
+  });
+  categoryGrid.append(
+    element("a", {
+      href: productsHref,
+      className: "joto-mall__category joto-mall__category--active",
+      text: locale.allProducts,
+    }),
+  );
   categories.forEach((category) => {
-    const href = `${localizedPath("/mall/products/")}?${new URLSearchParams({
+    const href = `${productsHref}?${new URLSearchParams({
       category: category.name,
     })}`;
     categoryGrid.append(
@@ -272,6 +286,13 @@ function renderHome(mount, index) {
       }),
     );
   });
+  categoryGrid.append(
+    element("a", {
+      href: productsHref,
+      className: "joto-mall__category joto-mall__category--all",
+      text: locale.viewAllProducts,
+    }),
+  );
   if (categories.length) categorySection.append(categoryGrid);
 
   const recentSection = element("section", { className: "joto-mall__section" });
