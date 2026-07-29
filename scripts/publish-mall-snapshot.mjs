@@ -125,6 +125,18 @@ function buildPublicationCommands(snapshotRoot, version, remote) {
         `${remote.user}@${remote.host}:${incoming}/`,
       ],
     },
+    normalizeIncomingPermissions: {
+      label: "remote incoming snapshot permissions",
+      command: "ssh",
+      args: [
+        ...connection,
+        "chmod",
+        "-R",
+        "u=rwX,go=rX",
+        "--",
+        incoming,
+      ],
+    },
     verifyIncoming: {
       label: "remote snapshot verification",
       command: "ssh",
@@ -152,6 +164,18 @@ function buildPublicationCommands(snapshotRoot, version, remote) {
         ...connection,
         "node",
         remote.verifierPath,
+        release,
+      ],
+    },
+    normalizeReleasePermissions: {
+      label: "existing remote release permissions",
+      command: "ssh",
+      args: [
+        ...connection,
+        "chmod",
+        "-R",
+        "u=rwX,go=rX",
+        "--",
         release,
       ],
     },
@@ -307,9 +331,11 @@ export async function publishSnapshot({
   if (dryRun) {
     const dryRunCommands = [
       commands.upload,
+      commands.normalizeIncomingPermissions,
       commands.verifyIncoming,
       commands.releaseExists,
       commands.finalizeRelease,
+      commands.normalizeReleasePermissions,
       commands.verifyRelease,
       commands.discardIncoming,
       ...commands.switchCommands,
@@ -327,12 +353,14 @@ export async function publishSnapshot({
   }
 
   await runChecked(runner, commands.upload);
+  await runChecked(runner, commands.normalizeIncomingPermissions);
   await runChecked(runner, commands.verifyIncoming);
   const releaseStatus = await runner(
     commands.releaseExists.command,
     commands.releaseExists.args,
   );
   if (releaseStatus?.status === 0) {
+    await runChecked(runner, commands.normalizeReleasePermissions);
     await runChecked(runner, commands.verifyRelease);
     await runChecked(runner, commands.discardIncoming);
   } else if (releaseStatus?.status === 1) {

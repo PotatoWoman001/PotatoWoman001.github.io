@@ -183,6 +183,15 @@ async function assertMissing(filePath) {
   assert.ok(result.commands.some(({ command }) => command === "rsync"));
   assert.ok(result.commands.some(({ command }) => command === "ssh"));
   assert.ok(result.commands.some(({ command }) => command === "curl"));
+  assert.ok(
+    result.commands.some(
+      ({ command, args }) =>
+        command === "ssh"
+        && args.includes("chmod")
+        && args.includes("u=rwX,go=rX"),
+    ),
+    "remote snapshot permissions must be normalized for Nginx",
+  );
   const existenceCheck = result.commands.find(
     ({ command, args }) =>
       command === "ssh" && args.includes("test") && args.includes("-e"),
@@ -271,6 +280,15 @@ async function assertMissing(filePath) {
       && args.includes(release)
     ),
     "an existing release must be verified before reuse",
+  );
+  assert.ok(
+    calls.some(
+      ([command, args]) =>
+        command === "ssh"
+        && args.includes("chmod")
+        && args.includes(release),
+    ),
+    "an existing release must have web-readable permissions restored",
   );
 }
 
