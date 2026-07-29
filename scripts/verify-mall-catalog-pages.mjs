@@ -4,7 +4,7 @@ import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 
 const root = process.cwd();
-const version = "20260729-4";
+const version = "20260729-5";
 const routes = [
   ["mall/index.html", "en", "ltr", "home", "mall-catalog-pages.js"],
   ["zh/mall/index.html", "zh-CN", "ltr", "home", "mall-catalog-pages.js"],
@@ -71,7 +71,8 @@ assert.match(product, /technicalDirection|dir:\s*"ltr"|dir:\s*"ltr"/);
 assert.match(product, /joto:mall-product-ready/);
 assert.match(product, /description_html/);
 assert.match(product, /if \(product\.brand\)|product\.brand\s*\?/);
-assert.match(product, /if \(product\.source_url\)/);
+assert.doesNotMatch(product, /product\.source_url|locale\.source/);
+assert.doesNotMatch(i18n, /^\s*source:\s*/m);
 assert.doesNotMatch(`${pages}\n${product}`, /\.innerHTML\s*=/);
 for (const asset of [pages, product]) {
   assert.match(asset, /\.js\?v=20260729-4/);
@@ -90,6 +91,28 @@ assert.doesNotMatch(styles, /height\s+\d+ms|transition:\s*height/);
 assert.match(styles, /prefers-reduced-motion/);
 assert.match(styles, /aspect-ratio/);
 assert.match(styles, /object-fit:\s*contain/);
+for (const expected of [
+  "--mall-bg: #050a08",
+  "--mall-surface: #08110d",
+  "--mall-green: #5dd3a0",
+  'html[lang^="en"] [data-joto-mall]',
+  'html[lang^="zh"] [data-joto-mall]',
+  'html[lang^="fa"] [data-joto-mall]',
+  "font-family: Poppins, sans-serif",
+  'font-family: Poppins, "PingFang SC", "Microsoft YaHei", sans-serif',
+  "font-family: Poppins, Vazirmatn, sans-serif",
+]) {
+  assert.ok(styles.includes(expected), `Mall styles missing ${expected}`);
+}
+assert.doesNotMatch(styles, /background-size:\s*32px 32px/);
+assert.match(
+  styles,
+  /\.joto-mall__hero-title[\s\S]*font-size:\s*clamp\(34px,\s*5vw,\s*56px\)/,
+);
+assert.match(
+  styles,
+  /\.joto-mall__card-title[\s\S]*font-size:\s*18px/,
+);
 for (const route of [
   "/zh/mall/product/index.html",
   "/fa/mall/product/index.html",

@@ -342,17 +342,6 @@ function renderProduct(mount, product) {
   const documentSection = documents(product);
   if (specificationSection) details.append(specificationSection);
   if (documentSection) details.append(documentSection);
-  if (product.source_url) {
-    details.append(element("section", { className: "joto-mall__detail-section", dir: "ltr" }, [
-      element("h2", { text: locale.source }),
-      element("a", {
-        href: product.source_url,
-        target: "_blank",
-        rel: "noopener noreferrer",
-        text: product.source_url,
-      }),
-    ]));
-  }
   const relatedSection = relatedProducts(product);
   if (relatedSection) details.append(relatedSection);
   const sticky = element("a", {

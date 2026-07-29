@@ -77,6 +77,35 @@ async function assertPageBasics(page, testCase, viewport, selector) {
     attributes.canonical.includes(`${testCase.prefix}/mall/`),
     `${testCase.locale}/${viewport.name}: localized canonical missing`,
   );
+  const mallStyles = await page.locator("[data-joto-mall]").evaluate((node) => {
+    const style = getComputedStyle(node);
+    const title = node.querySelector(
+      ".joto-mall__hero-title, .joto-mall__list-header h1, .joto-mall__product-summary h1",
+    );
+    return {
+      backgroundColor: style.backgroundColor,
+      backgroundImage: style.backgroundImage,
+      fontFamily: style.fontFamily,
+      titleSize: title ? Number.parseFloat(getComputedStyle(title).fontSize) : 0,
+    };
+  });
+  assert(
+    mallStyles.backgroundColor === "rgb(5, 10, 8)",
+    `${testCase.locale}/${viewport.name}: Mall background is not dark`,
+  );
+  assert(
+    mallStyles.backgroundImage === "none",
+    `${testCase.locale}/${viewport.name}: Mall grid background remains`,
+  );
+  assert(
+    mallStyles.fontFamily.startsWith("Poppins"),
+    `${testCase.locale}/${viewport.name}: Mall font is not Poppins-first`,
+  );
+  const titleMaximum = viewport.name === "desktop" ? 56 : viewport.name === "tablet" ? 48 : 34;
+  assert(
+    mallStyles.titleSize > 0 && mallStyles.titleSize <= titleMaximum,
+    `${testCase.locale}/${viewport.name}: Mall title size ${mallStyles.titleSize}px exceeds ${titleMaximum}px`,
+  );
   const mallLinks = page.locator("a[data-joto-mall-link]");
   assert(
     (await mallLinks.count()) > 0,
@@ -241,6 +270,19 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
   assert(
     (await page.locator(".joto-mall__detail-section").count()) > 0,
     `${testCase.locale}/${viewport.name}: product details missing`,
+  );
+  assert(
+    (await page
+      .locator('a[href^="http"]')
+      .filter({ hasText: /https?:\/\// })
+      .count()) === 0,
+    `${testCase.locale}/${viewport.name}: visible source URL remains`,
+  );
+  assert(
+    !/^(Source|来源|منبع)$/m.test(
+      await page.locator("[data-joto-mall-product]").innerText(),
+    ),
+    `${testCase.locale}/${viewport.name}: visible source label remains`,
   );
 
   const contactCta = page
