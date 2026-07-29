@@ -101,6 +101,27 @@ for (const expected of [
     `Mall locale copy missing three ${expected} entries`,
   );
 }
+for (const expected of [
+  "joto-mall__custom-select",
+  "joto-mall__native-select",
+  "joto-mall__select-trigger",
+  "joto-mall__select-menu",
+  'role: "listbox"',
+  'role: "option"',
+  '"aria-haspopup": "listbox"',
+  '"aria-selected"',
+]) {
+  assert.ok(pages.includes(expected), `Mall custom select renderer missing ${expected}`);
+}
+assert.doesNotMatch(pages, /function selectControl\([^)]*values[^)]*allLabel/);
+assert.match(pages, /\{\s*value:\s*"title",\s*label:\s*locale\.sortTitle/);
+assert.match(pages, /\{\s*value:\s*"brand",\s*label:\s*locale\.sortBrand/);
+assert.match(pages, /\{\s*value:\s*"recent",\s*label:\s*locale\.sortRecent/);
+assert.match(pages, /\{\s*value:\s*"asc",\s*label:\s*locale\.ascending/);
+assert.match(pages, /\{\s*value:\s*"desc",\s*label:\s*locale\.descending/);
+assert.match(styles, /\.joto-mall__native-select[\s\S]*position:\s*absolute/);
+assert.match(styles, /\.joto-mall__select-menu[\s\S]*background:\s*#0c1712/);
+assert.match(styles, /\.joto-mall__select-option[\s\S]*min-height:\s*44px/);
 assert.match(
   styles,
   /\.joto-mall__section--categories\s*\{[\s\S]*padding-block:\s*32px/,
