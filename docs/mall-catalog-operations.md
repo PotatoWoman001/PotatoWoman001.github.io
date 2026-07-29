@@ -58,10 +58,13 @@ chmod 600 "$HOME/Library/Application Support/JOTO/mall-publisher.env"
 编辑实际值。默认切换点必须保持为：
 
 ```text
+PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
 JOTO_MALL_REMOTE_CURRENT_LINK=/var/www/jotoglobal/catalog-releases/current
 ```
 
-私钥文件只保存私钥路径，环境文件中不得粘贴私钥正文或密码。私钥建议权限为 `600`。
+`PATH` 必须包含 Mac Mini 上的 `node` 与 `docker`，避免 LaunchAgent
+使用精简系统路径时找不到命令。私钥文件只保存私钥路径，环境文件中不得
+粘贴私钥正文或密码。私钥建议权限为 `600`。
 
 ## 4. 首次人工验收
 

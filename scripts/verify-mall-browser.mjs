@@ -243,7 +243,20 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
     `${testCase.locale}/${viewport.name}: product details missing`,
   );
 
-  await page.locator(".joto-mall__product-summary .joto-mall__button").click();
+  const contactCta = page
+    .locator(
+      ".joto-mall__product-summary .joto-mall__button:visible, .joto-mall__sticky-contact:visible",
+    )
+    .first();
+  assert(
+    (await contactCta.count()) === 1,
+    `${testCase.locale}/${viewport.name}: visible product contact target missing`,
+  );
+  assert(
+    (await contactCta.getAttribute("href"))?.includes("?product="),
+    `${testCase.locale}/${viewport.name}: product contact target missing`,
+  );
+  await contactCta.click();
   await page.waitForSelector("textarea", { timeout: 15_000 });
   await page.waitForFunction(
     () => document.querySelector("textarea")?.value.length > 0,
@@ -358,5 +371,6 @@ async function verifyMallBrowser(
   };
 }
 
-return verifyMallBrowser();
+const runtimeOrigin = await page.evaluate(() => window.location.origin);
+return verifyMallBrowser(runtimeOrigin);
 }
