@@ -408,7 +408,8 @@ No crawler snapshot data, credentials, or local runtime files are modified.
 
 ```bash
 git add 404.html assets scripts \
-  about blog contact fa index.html mall services solutions zh
+  about blog contact fa index.html mall solutions zh \
+  docs/superpowers/plans/2026-07-29-mall-compact-category-tabs.md
 git commit -m "chore: version compact Mall category assets"
 ```
 
