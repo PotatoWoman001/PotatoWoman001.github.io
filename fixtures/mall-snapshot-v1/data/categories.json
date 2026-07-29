@@ -1,0 +1,19 @@
+[
+  {
+    "name": "Network",
+    "path": [
+      "Network"
+    ],
+    "product_count": 1,
+    "slug": "network"
+  },
+  {
+    "name": "Routers",
+    "path": [
+      "Network",
+      "Routers"
+    ],
+    "product_count": 1,
+    "slug": "routers"
+  }
+]

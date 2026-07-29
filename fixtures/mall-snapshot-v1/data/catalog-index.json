@@ -1,0 +1,30 @@
+{
+  "schema_version": "joto-mall-v1",
+  "products": [
+    {
+      "id": 1,
+      "slug": "c881-k9",
+      "title": "Cisco C881-K9 Integrated Services Router",
+      "brand": "Cisco",
+      "model": "C881-K9",
+      "category_path": [
+        "Network",
+        "Routers"
+      ],
+      "stock_status": null,
+      "condition": "Original New",
+      "demand_tags": [
+        "Branch networking"
+      ],
+      "rating": null,
+      "review_count": null,
+      "summary": "Compact integrated services router for branch environments.",
+      "images": [
+        "/mall-data/media/images/c881-k9.svg"
+      ],
+      "first_seen_at": "2026-07-29T00:00:00Z",
+      "last_success_at": "2026-07-29T00:00:00Z",
+      "effective_status": "active"
+    }
+  ]
+}

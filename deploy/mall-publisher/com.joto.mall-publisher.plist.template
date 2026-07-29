@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.joto.mall-publisher</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>__WEBSITE_ROOT__/scripts/run-mall-publication.sh</string>
+  </array>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>JOTO_MALL_PUBLISHER_ENV_FILE</key>
+    <string>__PUBLISHER_ENV_FILE__</string>
+  </dict>
+
+  <key>WorkingDirectory</key>
+  <string>__WEBSITE_ROOT__</string>
+
+  <key>StartInterval</key>
+  <integer>60</integer>
+  <key>RunAtLoad</key>
+  <true/>
+
+  <key>ProcessType</key>
+  <string>Background</string>
+  <key>StandardOutPath</key>
+  <string>__LOG_DIRECTORY__/launch-agent.stdout.log</string>
+  <key>StandardErrorPath</key>
+  <string>__LOG_DIRECTORY__/launch-agent.stderr.log</string>
+</dict>
+</plist>

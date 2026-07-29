@@ -1,3 +1,5 @@
+import { loadProduct } from "./mall-data-client.js?v=20260729-4";
+
 const CONTACT_ENDPOINT = "/api/contact";
 
 const COPY = {
@@ -24,6 +26,7 @@ const COPY = {
     success:
       "Thank you. Your project brief has been sent, and our team will reply within one business day.",
     error: "We could not send your enquiry. Please try again or email",
+    productInquiryPrefix: "Product inquiry:",
   },
   "zh-CN": {
     homeContact: "联系我们",
@@ -45,6 +48,7 @@ const COPY = {
     sending: "正在发送…",
     success: "感谢您的咨询。JOTO 团队将在一个工作日内回复。",
     error: "暂时无法发送，请稍后重试或发送邮件至",
+    productInquiryPrefix: "产品咨询：",
   },
   "fa-IR": {
     homeContact: "تماس با ما",
@@ -67,6 +71,7 @@ const COPY = {
     sending: "در حال ارسال…",
     success: "سپاسگزاریم. درخواست شما ارسال شد و تیم ما ظرف یک روز کاری پاسخ می‌دهد.",
     error: "ارسال درخواست ممکن نشد. دوباره تلاش کنید یا ایمیل بزنید به",
+    productInquiryPrefix: "درخواست محصول:",
   },
 };
 
@@ -81,6 +86,26 @@ function getRouteContext(pathname) {
   const locale = parts[0] === "zh" ? "zh-CN" : parts[0] === "fa" ? "fa-IR" : "en";
   const routeParts = locale === "en" ? parts : parts.slice(1);
   return { locale, routeParts };
+}
+
+export function parseProductInquirySlug(searchParams) {
+  const params =
+    searchParams instanceof URLSearchParams
+      ? searchParams
+      : new URLSearchParams(searchParams);
+  const values = params.getAll("product");
+  if (values.length !== 1 || !/^[a-z0-9-]{1,500}$/.test(values[0])) return "";
+  return values[0];
+}
+
+export function formatProductInquiry(locale, product) {
+  const title = String(product?.title || "").trim();
+  const model = String(product?.model || "").trim();
+  if (!title) return "";
+  if (locale === "zh-CN") {
+    return `${COPY[locale].productInquiryPrefix}${title}${model ? `（${model}）` : ""}`;
+  }
+  return `${COPY[locale].productInquiryPrefix} ${title}${model ? ` (${model})` : ""}`;
 }
 
 function waitForElement(getElement, callback) {
@@ -99,6 +124,31 @@ function waitForElement(getElement, callback) {
 
   observer.observe(document.documentElement, { childList: true, subtree: true });
   window.setTimeout(() => observer.disconnect(), 10000);
+}
+
+function setControlledTextareaValue(field, value) {
+  const setter = Object.getOwnPropertyDescriptor(
+    HTMLTextAreaElement.prototype,
+    "value",
+  )?.set;
+  if (setter) setter.call(field, value);
+  else field.value = value;
+  field.dataset.productPrefilled = "true";
+  field.dispatchEvent(new Event("input", { bubbles: true }));
+}
+
+async function prefillProductInquiry(field, locale) {
+  if (field.value || field.dataset.productPrefilled === "true") return;
+  const slug = parseProductInquirySlug(window.location.search);
+  if (!slug) return;
+  try {
+    const product = await loadProduct(slug);
+    const value = formatProductInquiry(locale, product);
+    if (!value || field.value) return;
+    setControlledTextareaValue(field, value);
+  } catch {
+    // Contact remains fully usable when catalog data is unavailable.
+  }
 }
 
 function enhanceHomepageActions(primaryCta, locale) {
@@ -360,22 +410,31 @@ function findSolutionContactSection(routeParts) {
   return null;
 }
 
-const { locale, routeParts } = getRouteContext(window.location.pathname);
+if (typeof window !== "undefined") {
+  const { locale, routeParts } = getRouteContext(window.location.pathname);
 
-if (routeParts.length === 0) {
-  waitForElement(
-    () => document.querySelector("[aria-labelledby=\"hero-title\"] [data-hero-cta-mobile]"),
-    (primaryCta) => enhanceHomepageActions(primaryCta, locale),
-  );
-  waitForElement(
-    () => document.querySelector("main > section#contact"),
-    (section) => renderHomepageContactForm(section, locale),
-  );
-}
+  if (routeParts.length === 0) {
+    waitForElement(
+      () => document.querySelector("[aria-labelledby=\"hero-title\"] [data-hero-cta-mobile]"),
+      (primaryCta) => enhanceHomepageActions(primaryCta, locale),
+    );
+    waitForElement(
+      () => document.querySelector("main > section#contact"),
+      (section) => renderHomepageContactForm(section, locale),
+    );
+  }
 
-if (routeParts[0] === "solutions" && [2, 3].includes(routeParts.length)) {
-  waitForElement(
-    () => findSolutionContactSection(routeParts),
-    (section) => renderSolutionContactForm(section, locale, routeParts),
-  );
+  if (routeParts[0] === "solutions" && [2, 3].includes(routeParts.length)) {
+    waitForElement(
+      () => findSolutionContactSection(routeParts),
+      (section) => renderSolutionContactForm(section, locale, routeParts),
+    );
+  }
+
+  if (routeParts[0] === "contact" && routeParts.length === 1) {
+    waitForElement(
+      () => document.querySelector("#contact-message"),
+      (field) => prefillProductInquiry(field, locale),
+    );
+  }
 }

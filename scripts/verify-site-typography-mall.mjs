@@ -3,8 +3,8 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const version = "20260729-3";
-const expectedRouteCount = 108;
+const version = "20260729-4";
+const expectedRouteCount = 114;
 const excludedDirectories = new Set([
   ".git",
   ".playwright-cli",
@@ -59,24 +59,22 @@ const mallRoutes = [
     route: "mall/index.html",
     lang: "en",
     dir: "ltr",
-    title: "JOTO Mall | JOTO TECH",
-    description:
-      "Product models and product categories are being prepared. Please check back soon.",
+    title: "Mall | JOTO TECH",
+    description: "Explore technology products, models and technical details from JOTO TECH.",
   },
   {
     route: "zh/mall/index.html",
     lang: "zh-CN",
     dir: "ltr",
-    title: "JOTO 产品商城 | JOTO TECH",
-    description: "产品型号与产品分类内容正在整理中，敬请期待。",
+    title: "商城 | JOTO TECH",
+    description: "浏览 JOTO TECH 整理的技术产品、型号与技术资料。",
   },
   {
     route: "fa/mall/index.html",
     lang: "fa-IR",
     dir: "rtl",
-    title: "فروشگاه محصولات JOTO | JOTO TECH",
-    description:
-      "مدل‌ها و دسته‌بندی‌های محصولات در حال آماده‌سازی هستند. به‌زودی دوباره مراجعه کنید.",
+    title: "فروشگاه | JOTO TECH",
+    description: "محصولات فناوری، مدل‌ها و جزئیات فنی JOTO TECH را مرور کنید.",
   },
 ];
 
@@ -88,10 +86,8 @@ for (const config of mallRoutes) {
   assert.ok(html.includes(`<title>${config.title}</title>`));
   assert.ok(html.includes(config.description));
   assert.match(html, /rel="canonical"/);
-  assert.match(html, /hreflang="en"/);
-  assert.match(html, /hreflang="zh-CN"/);
-  assert.match(html, /hreflang="fa-IR"/);
-  assert.match(html, /hreflang="x-default"/);
+  assert.match(html, /data-joto-mall-shell="home"/);
+  assert.match(html, /data-joto-mall-home/);
 }
 
 const typography = readFileSync(

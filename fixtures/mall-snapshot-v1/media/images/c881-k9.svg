@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640" role="img" aria-labelledby="title desc">
+  <title id="title">Cisco C881-K9 Integrated Services Router</title>
+  <desc id="desc">Neutral fixture illustration of a branch router.</desc>
+  <rect width="960" height="640" fill="#101814"/>
+  <rect x="170" y="218" width="620" height="204" rx="28" fill="#1b2d24" stroke="#73e2a7" stroke-width="8"/>
+  <rect x="228" y="276" width="300" height="88" rx="12" fill="#0a0f0c"/>
+  <g fill="#73e2a7">
+    <circle cx="586" cy="320" r="13"/>
+    <circle cx="632" cy="320" r="13"/>
+    <circle cx="678" cy="320" r="13"/>
+  </g>
+  <path d="M222 438h516" stroke="#73e2a7" stroke-width="12" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,18 @@
+{
+  "schema_version": "joto-mall-v1",
+  "generated_at": "2026-07-29T00:00:00Z",
+  "crawl_run_id": 1,
+  "record_count": 1,
+  "category_count": 2,
+  "brand_count": 1,
+  "image_count": 1,
+  "document_count": 0,
+  "source_build": "fixture",
+  "files": {
+    "data/brands.json": "sha256:b9e70b4808ac36674f945828217912e8f8c4769d94af5b9f1d89b141239bdda9",
+    "data/catalog-index.json": "sha256:c949ec01e841a4e6a1ffd09d5361d2e54b6a97b6497d681191d1a60dcb4d5958",
+    "data/categories.json": "sha256:b993ad6c70557e6cc59a0dfab314738213f779cd0940482d7b8b111bb69b7a65",
+    "data/products/c881-k9.json": "sha256:458567cab60a2e9440a933d8a9029368d5e0a25a4547c0348fc692798545d4c1",
+    "media/images/c881-k9.svg": "sha256:ae650132981dc4a036068f50a28bab71c475d7ac5691b2ec6af86294b020edbf"
+  }
+}

@@ -5,7 +5,7 @@ import path from "node:path";
 const root = process.cwd();
 const cssPath = path.join(root, "assets/index-e49ffBFL.css");
 const jsPath = path.join(root, "assets/index-DaFvN0XI.js");
-const staticAssetVersion = "20260729-3";
+const staticAssetVersion = "20260729-4";
 const bundleScriptUrl = `/assets/index-DaFvN0XI.js?v=${staticAssetVersion}`;
 const bundleStyleUrl = `/assets/index-e49ffBFL.css?v=${staticAssetVersion}`;
 const css = fs.readFileSync(cssPath, "utf8");
@@ -27,7 +27,7 @@ function collectIndexFiles(directory) {
 }
 
 const routeFiles = collectIndexFiles(root);
-assert.equal(routeFiles.length, 108, "expected all 108 route index files");
+assert.equal(routeFiles.length, 114, "expected all 114 route index files");
 
 for (const routeFile of routeFiles) {
   const html = fs.readFileSync(routeFile, "utf8");

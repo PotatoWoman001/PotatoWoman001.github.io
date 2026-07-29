@@ -1,0 +1,104 @@
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import {
+  MallDataError,
+  loadManifest,
+  parseCatalogState,
+  queryProducts,
+  serializeCatalogState,
+} from "../assets/mall-data-client.js";
+import { MALL_COPY, getMallLocale } from "../assets/mall-i18n.js";
+
+const [navigation, client, i18n] = await Promise.all([
+  readFile("assets/mall-navigation-and-page.js", "utf8"),
+  readFile("assets/mall-data-client.js", "utf8"),
+  readFile("assets/mall-i18n.js", "utf8"),
+]);
+
+assert.doesNotMatch(navigation, /mallMarkup|prepared|正在整理|در حال آماده/);
+for (const token of [
+  'label: "Mall"',
+  'label: "商城"',
+  'label: "فروشگاه"',
+  'path: "/mall/"',
+  'path: "/zh/mall/"',
+  'path: "/fa/mall/"',
+  "MutationObserver",
+  "aria-current",
+]) {
+  assert.ok(navigation.includes(token), `navigation missing ${token}`);
+}
+assert.doesNotMatch(client, /fetch\((?!publicPath|`\$\{DATA_ROOT\})/);
+assert.match(client, /\/mall-data\//);
+assert.match(client, /schema-mismatch/);
+assert.ok(new MallDataError("schema-mismatch").code === "schema-mismatch");
+const originalFetch = globalThis.fetch;
+globalThis.fetch = async () => ({
+  ok: true,
+  json: async () => ({ schema_version: "unsupported" }),
+});
+await assert.rejects(
+  loadManifest(),
+  (error) => error instanceof MallDataError && error.code === "schema-mismatch",
+);
+globalThis.fetch = originalFetch;
+
+const products = [
+  {
+    slug: "z-router",
+    title: "Router Z",
+    brand: "Cisco",
+    model: "",
+    category_path: ["Network", "Routers"],
+    stock_status: "In stock",
+    condition: "Original New",
+    summary: "",
+    images: [],
+    demand_tags: [],
+    last_success_at: "2026-07-29T00:00:00Z",
+  },
+  {
+    slug: "a-switch",
+    title: "Switch A",
+    brand: "",
+    model: "A1",
+    category_path: ["Network", "Switches"],
+    stock_status: null,
+    condition: "",
+    summary: "",
+    images: [],
+    demand_tags: ["Campus"],
+    last_success_at: "2026-07-28T00:00:00Z",
+  },
+];
+const state = parseCatalogState(
+  new URLSearchParams(
+    "q=router&category=Network&brand=Cisco&status=In+stock&condition=Original+New&sort=brand&direction=desc&page=3&size=24&view=list",
+  ),
+);
+assert.deepEqual(state, {
+  q: "router",
+  category: "Network",
+  brand: "Cisco",
+  status: "In stock",
+  condition: "Original New",
+  sort: "brand",
+  direction: "desc",
+  page: 3,
+  pageSize: 24,
+  view: "list",
+});
+assert.equal(serializeCatalogState(state).get("view"), "list");
+const result = queryProducts({ products }, state);
+assert.equal(result.total, 1);
+assert.equal(result.page, 1);
+assert.deepEqual(result.facets.brands, ["Cisco"]);
+const emptyBrand = queryProducts({ products }, {});
+assert.deepEqual(emptyBrand.facets.brands, ["Cisco"]);
+assert.deepEqual(queryProducts({ products: [products[1]] }, {}).facets.brands, []);
+assert.equal(emptyBrand.products.find((item) => item.slug === "a-switch").summary, "");
+assert.equal(getMallLocale("/fa/mall/"), MALL_COPY.fa);
+assert.equal(MALL_COPY.fa.technicalDirection, "ltr");
+assert.match(i18n, /در حال بارگذاری/);
+
+console.log("Verified Mall navigation, locale copy, and catalog data client.");

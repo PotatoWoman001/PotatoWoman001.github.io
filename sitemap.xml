@@ -736,7 +736,7 @@
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/safeguarding/verkada" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/safeguarding/verkada" />
   </url>
-  <!-- JOTO Mall routes · 2026-07-28 -->
+  <!-- JOTO Mall static routes · 2026-07-29 -->
   <url>
     <loc>https://jotoglobal.com/mall/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/mall/" />
@@ -757,5 +757,26 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/mall/" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/mall/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/mall/" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/mall/products/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/mall/products/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/mall/products/" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/mall/products/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/mall/products/" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh/mall/products/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/mall/products/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/mall/products/" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/mall/products/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/mall/products/" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/fa/mall/products/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/mall/products/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/mall/products/" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/mall/products/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/mall/products/" />
   </url>
 </urlset>

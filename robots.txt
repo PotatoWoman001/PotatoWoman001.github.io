@@ -5,3 +5,4 @@ Disallow: /zh/preview/
 Disallow: /fa/preview/
 
 Sitemap: https://jotoglobal.com/sitemap.xml
+Sitemap: https://jotoglobal.com/mall-sitemap.xml

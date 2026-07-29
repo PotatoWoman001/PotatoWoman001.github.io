@@ -4,8 +4,8 @@ import { fileURLToPath } from "node:url";
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(scriptDirectory, "..");
-const version = "20260729-3";
-const expectedRouteCount = 108;
+const version = "20260729-4";
+const expectedRouteCount = 114;
 
 const excludedDirectories = new Set([
   ".git",
@@ -16,50 +16,57 @@ const excludedDirectories = new Set([
   "scripts",
 ]);
 
-const mallRoutes = [
-  {
-    source: "about/index.html",
-    route: "mall/index.html",
-    lang: "en",
-    dir: "ltr",
-    title: "JOTO Mall | JOTO TECH",
-    description:
-      "Product models and product categories are being prepared. Please check back soon.",
-    canonical: "https://jotoglobal.com/mall/",
+const mallCatalogRoutes = [
+  ["about/index.html", "mall/index.html", "en", "ltr", "home"],
+  ["zh/about/index.html", "zh/mall/index.html", "zh-CN", "ltr", "home"],
+  ["fa/about/index.html", "fa/mall/index.html", "fa-IR", "rtl", "home"],
+  ["about/index.html", "mall/products/index.html", "en", "ltr", "products"],
+  ["zh/about/index.html", "zh/mall/products/index.html", "zh-CN", "ltr", "products"],
+  ["fa/about/index.html", "fa/mall/products/index.html", "fa-IR", "rtl", "products"],
+  ["about/index.html", "mall/product/index.html", "en", "ltr", "product"],
+  ["zh/about/index.html", "zh/mall/product/index.html", "zh-CN", "ltr", "product"],
+  ["fa/about/index.html", "fa/mall/product/index.html", "fa-IR", "rtl", "product"],
+].map(([source, route, lang, dir, mode]) => ({
+  source,
+  route,
+  lang,
+  dir,
+  mode,
+}));
+
+const routeCopy = {
+  en: {
+    mall: "Mall",
+    products: "Products",
+    loading: "Loading product catalog…",
+    description: "Explore technology products, models and technical details from JOTO TECH.",
   },
-  {
-    source: "zh/about/index.html",
-    route: "zh/mall/index.html",
-    lang: "zh-CN",
-    dir: "ltr",
-    title: "JOTO 产品商城 | JOTO TECH",
-    description: "产品型号与产品分类内容正在整理中，敬请期待。",
-    canonical: "https://jotoglobal.com/zh/mall/",
+  "zh-CN": {
+    mall: "商城",
+    products: "产品",
+    loading: "正在加载产品目录…",
+    description: "浏览 JOTO TECH 整理的技术产品、型号与技术资料。",
   },
-  {
-    source: "fa/about/index.html",
-    route: "fa/mall/index.html",
-    lang: "fa-IR",
-    dir: "rtl",
-    title: "فروشگاه محصولات JOTO | JOTO TECH",
-    description:
-      "مدل‌ها و دسته‌بندی‌های محصولات در حال آماده‌سازی هستند. به‌زودی دوباره مراجعه کنید.",
-    canonical: "https://jotoglobal.com/fa/mall/",
+  "fa-IR": {
+    mall: "فروشگاه",
+    products: "محصولات",
+    loading: "در حال بارگذاری فهرست محصولات…",
+    description: "محصولات فناوری، مدل‌ها و جزئیات فنی JOTO TECH را مرور کنید.",
   },
-];
+};
 
 const typographyTag =
   `<link rel="stylesheet" href="/assets/site-typography-system.css?v=${version}">`;
-const mallScriptTag =
+const mallNavigationTag =
   `<script type="module" src="/assets/mall-navigation-and-page.js?v=${version}"></script>`;
+const mallCatalogStyleTag =
+  `<link rel="stylesheet" href="/assets/mall-catalog.css?v=${version}">`;
 
 async function collectIndexFiles(directory, relativeDirectory = "") {
   const entries = await readdir(directory, { withFileTypes: true });
   const files = [];
-
   for (const entry of entries) {
     if (excludedDirectories.has(entry.name)) continue;
-
     const absolutePath = path.join(directory, entry.name);
     const relativePath = path.posix.join(relativeDirectory, entry.name);
     if (entry.isDirectory()) {
@@ -68,51 +75,91 @@ async function collectIndexFiles(directory, relativeDirectory = "") {
       files.push(relativePath);
     }
   }
-
   return files;
 }
 
+function routePrefix(route) {
+  return route.startsWith("zh/") ? "/zh" : route.startsWith("fa/") ? "/fa" : "";
+}
+
+function routeMetadata(config) {
+  const copy = routeCopy[config.lang];
+  const prefix = routePrefix(config.route);
+  const routePath =
+    config.mode === "home"
+      ? `${prefix}/mall/`
+      : config.mode === "products"
+        ? `${prefix}/mall/products/`
+        : `${prefix}/mall/product/`;
+  const pageName = config.mode === "home" ? copy.mall : copy.products;
+  return {
+    ...copy,
+    title: `${pageName} | JOTO TECH`,
+    canonical: `https://jotoglobal.com${routePath}`,
+    mount:
+      config.mode === "home"
+        ? "data-joto-mall-home"
+        : config.mode === "products"
+          ? "data-joto-mall-products"
+          : "data-joto-mall-product",
+    script:
+      config.mode === "product"
+        ? "mall-product-page.js"
+        : "mall-catalog-pages.js",
+  };
+}
+
+function removeGeneratedMallTags(html) {
+  return html
+    .replace(/\s*<template data-joto-mall-shell[\s\S]*?<\/template>/g, "")
+    .replace(/\s*<(?:link|meta)[^>]+data-joto-mall-seed[^>]*>/g, "")
+    .replace(
+      /\s*<script type="module" src="\/assets\/(?:mall-catalog-pages|mall-product-page)\.js(?:\?v=[^"]+)?"><\/script>/g,
+      "",
+    )
+    .replace(
+      /\s*<link rel="stylesheet" href="\/assets\/mall-catalog\.css(?:\?v=[^"]+)?">/g,
+      "",
+    );
+}
+
 function seedMallShell(source, config) {
-  let html = source
+  const metadata = routeMetadata(config);
+  let html = removeGeneratedMallTags(source)
     .replace(/<html\b[^>]*>/, `<html lang="${config.lang}" dir="${config.dir}">`)
-    .replace(/<title>[^<]*<\/title>/, `<title>${config.title}</title>`)
+    .replace(/<title>[^<]*<\/title>/, `<title>${metadata.title}</title>`)
     .replace(
       /<meta name="description" content="[^"]*"\s*\/?>/,
-      `<meta name="description" content="${config.description}" />`,
+      `<meta name="description" content="${metadata.description}" />`,
     )
     .replace(
       /<meta name="robots" content="[^"]*"\s*\/?>/,
-      '<meta name="robots" content="index, follow" />',
-    )
-    .replace(
-      /^\s*<link[^>]+data-joto-mall-seed[^>]*>\s*$/gm,
-      "",
-    )
-    .replace(
-      /^\s*<meta[^>]+data-joto-mall-seed[^>]*>\s*$/gm,
-      "",
+      `<meta name="robots" content="${config.mode === "product" ? "noindex, follow" : "index, follow"}" />`,
     );
 
-  const seoSeed = [
-    `<link rel="canonical" href="${config.canonical}" data-joto-mall-seed>`,
-    `<link rel="alternate" hreflang="en" href="https://jotoglobal.com/mall/" data-joto-mall-seed>`,
-    `<link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/mall/" data-joto-mall-seed>`,
-    `<link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/mall/" data-joto-mall-seed>`,
-    `<link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/mall/" data-joto-mall-seed>`,
-    `<meta property="og:title" content="${config.title}" data-joto-mall-seed>`,
-    `<meta property="og:description" content="${config.description}" data-joto-mall-seed>`,
-    `<meta property="og:url" content="${config.canonical}" data-joto-mall-seed>`,
+  const headSeed = [
+    `<link rel="canonical" href="${metadata.canonical}" data-joto-mall-seed>`,
+    `<meta property="og:title" content="${metadata.title}" data-joto-mall-seed>`,
+    `<meta property="og:description" content="${metadata.description}" data-joto-mall-seed>`,
+    `<meta property="og:url" content="${metadata.canonical}" data-joto-mall-seed>`,
+    mallCatalogStyleTag,
+    `<script type="module" src="/assets/${metadata.script}?v=${version}"></script>`,
   ].join("\n    ");
+  html = html.replace(/(\s*<\/head>)/, `\n    ${headSeed}$1`);
 
-  html = html.replace(
-    /(\s*<title>[^<]*<\/title>)/,
-    `$1\n    ${seoSeed}`,
-  );
+  const shell = [
+    `<template data-joto-mall-shell="${config.mode}">`,
+    `  <section ${metadata.mount} data-joto-mall aria-busy="true">`,
+    `    <p role="status" aria-live="polite">${metadata.loading}</p>`,
+    "  </section>",
+    "</template>",
+  ].join("\n    ");
+  html = html.replace(/(\s*<\/body>)/, `\n    ${shell}$1`);
   return html.replace(/\n{3,}/g, "\n\n");
 }
 
 async function generateMallShells() {
-  for (const config of mallRoutes) {
+  for (const config of mallCatalogRoutes) {
     const source = await readFile(path.join(projectRoot, config.source), "utf8");
     const target = path.join(projectRoot, config.route);
     await mkdir(path.dirname(target), { recursive: true });
@@ -122,7 +169,6 @@ async function generateMallShells() {
 
 function integrateGlobalAssets(source, route) {
   let html = source;
-
   const bundleScriptPattern =
     /<script type="module" crossorigin src="\/assets\/index-DaFvN0XI\.js(?:\?v=[^"]+)?"><\/script>/;
   const bundleStylePattern =
@@ -131,21 +177,18 @@ function integrateGlobalAssets(source, route) {
     /<script type="module" src="\/assets\/mall-navigation-and-page\.js(?:\?v=[^"]+)?"><\/script>/;
   const typographyPattern =
     /<link rel="stylesheet" href="\/assets\/site-typography-system\.css(?:\?v=[^"]+)?">/;
-
   if (!bundleScriptPattern.test(html)) {
     throw new Error(`${route} is missing the shared JavaScript bundle.`);
   }
   if (!bundleStylePattern.test(html)) {
     throw new Error(`${route} is missing the shared stylesheet.`);
   }
-
   html = mallScriptPattern.test(html)
-    ? html.replace(mallScriptPattern, mallScriptTag)
-    : html.replace(bundleScriptPattern, `$&\n    ${mallScriptTag}`);
+    ? html.replace(mallScriptPattern, mallNavigationTag)
+    : html.replace(bundleScriptPattern, `$&\n    ${mallNavigationTag}`);
   html = typographyPattern.test(html)
     ? html.replace(typographyPattern, typographyTag)
     : html.replace(bundleStylePattern, `$&\n    ${typographyTag}`);
-
   return html
     .replace(
       /\/assets\/([^"'?<>]+\.(?:js|css))(?:\?v=[^"'<>]+)?/g,
@@ -154,45 +197,36 @@ function integrateGlobalAssets(source, route) {
     .replace(/\n{3,}/g, "\n\n");
 }
 
-const sitemapBlock = `  <!-- JOTO Mall routes · 2026-07-28 -->
-  <url>
-    <loc>https://jotoglobal.com/mall/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/mall/" />
-    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/mall/" />
-    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/mall/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/mall/" />
-  </url>
-  <url>
-    <loc>https://jotoglobal.com/zh/mall/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/mall/" />
-    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/mall/" />
-    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/mall/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/mall/" />
-  </url>
-  <url>
-    <loc>https://jotoglobal.com/fa/mall/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/mall/" />
-    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/mall/" />
-    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/mall/" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/mall/" />
+function sitemapEntry(route, base) {
+  return `  <url>
+    <loc>https://jotoglobal.com${route}</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com${base}" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh${base}" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa${base}" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com${base}" />
   </url>`;
+}
+
+const sitemapBlock = `  <!-- JOTO Mall static routes · 2026-07-29 -->
+${["/mall/", "/mall/products/"]
+  .flatMap((base) =>
+    ["", "/zh", "/fa"].map((prefix) => sitemapEntry(`${prefix}${base}`, base)),
+  )
+  .join("\n")}`;
 
 async function updateSitemap() {
   const sitemapPath = path.join(projectRoot, "sitemap.xml");
   const source = await readFile(sitemapPath, "utf8");
-  const withoutExistingBlock = source.replace(
-    /\s*<!-- JOTO Mall routes · 2026-07-28 -->[\s\S]*?(?=\n<\/urlset>)/,
-    "",
+  const withoutExistingBlock = source
+    .replace(/\s*<!-- JOTO Mall routes · 2026-07-28 -->[\s\S]*?(?=\n<\/urlset>)/, "")
+    .replace(/\s*<!-- JOTO Mall static routes · 2026-07-29 -->[\s\S]*?(?=\n<\/urlset>)/, "");
+  await writeFile(
+    sitemapPath,
+    withoutExistingBlock.replace("\n</urlset>", `\n${sitemapBlock}\n</urlset>`),
   );
-  const integrated = withoutExistingBlock.replace(
-    "\n</urlset>",
-    `\n${sitemapBlock}\n</urlset>`,
-  );
-  await writeFile(sitemapPath, integrated);
 }
 
 await generateMallShells();
-
 const routeFiles = (await collectIndexFiles(projectRoot)).sort();
 if (routeFiles.length !== expectedRouteCount) {
   throw new Error(
@@ -209,9 +243,7 @@ for (const route of [...routeFiles, "404.html"]) {
   await writeFile(target, integrated);
   changedFiles += 1;
 }
-
 await updateSitemap();
-
 console.log(
   `Integrated typography and Mall assets across ${routeFiles.length} routes plus 404.html.`,
 );

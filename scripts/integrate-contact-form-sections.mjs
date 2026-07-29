@@ -5,12 +5,17 @@ import { fileURLToPath } from "node:url";
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(scriptDirectory, "..");
 const homeRoutes = new Set(["index.html", "zh/index.html", "fa/index.html"]);
+const contactRoutes = new Set([
+  "contact/index.html",
+  "zh/contact/index.html",
+  "fa/contact/index.html",
+]);
 const solutionRoutePattern =
   /^(?:(?:zh|fa)\/)?solutions\/[^/]+(?:\/[^/]+)?\/index\.html$/;
 const finalScriptTag =
-  '<script type="module" src="/assets/contact-form-sections.js?v=20260729-3"></script>';
+  '<script type="module" src="/assets/contact-form-sections.js?v=20260729-4"></script>';
 const finalStyleTag =
-  '<link rel="stylesheet" href="/assets/contact-form-sections.css?v=20260729-3">';
+  '<link rel="stylesheet" href="/assets/contact-form-sections.css?v=20260729-4">';
 const bundleScriptPattern =
   /(<script type="module" crossorigin src="\/assets\/index-DaFvN0XI\.js(?:\?v=[^"]+)?"><\/script>)/;
 const bundleStylePattern =
@@ -68,11 +73,16 @@ function integrateHtml(source, route) {
 
 const indexFiles = await collectIndexFiles(projectRoot);
 const targetRoutes = indexFiles
-  .filter((route) => homeRoutes.has(route) || solutionRoutePattern.test(route))
+  .filter(
+    (route) =>
+      homeRoutes.has(route) ||
+      contactRoutes.has(route) ||
+      solutionRoutePattern.test(route),
+  )
   .sort();
 
-if (targetRoutes.length !== 78) {
-  throw new Error(`Expected 78 target routes, found ${targetRoutes.length}.`);
+if (targetRoutes.length !== 81) {
+  throw new Error(`Expected 81 target routes, found ${targetRoutes.length}.`);
 }
 
 let changedFiles = 0;

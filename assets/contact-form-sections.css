@@ -150,6 +150,10 @@
   resize: vertical;
 }
 
+textarea[data-product-prefilled="true"] {
+  border-bottom-color: rgba(128, 211, 165, 0.72);
+}
+
 .joto-solution-contact__field--full {
   grid-column: 1 / -1;
 }
