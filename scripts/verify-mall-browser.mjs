@@ -77,6 +77,10 @@ async function assertPageBasics(page, testCase, viewport, selector) {
     attributes.canonical.includes(`${testCase.prefix}/mall/`),
     `${testCase.locale}/${viewport.name}: localized canonical missing`,
   );
+  await page.waitForSelector("a[data-joto-mall-link]", {
+    state: "attached",
+    timeout: 15_000,
+  });
   const mallStyles = await page.locator("[data-joto-mall]").evaluate((node) => {
     const style = getComputedStyle(node);
     const title = node.querySelector(

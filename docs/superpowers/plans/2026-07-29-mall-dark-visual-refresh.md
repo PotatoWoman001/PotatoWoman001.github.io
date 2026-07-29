@@ -397,7 +397,7 @@ Expected: 不包含 `.playwright-cli/`、`.superpowers/` 或其他目录。
 Run:
 
 ```bash
-docker build -t jotoglobal-mall:20260729-5 .
+docker build -f Dockerfile.local -t jotoglobal-mall:20260729-5 .
 ```
 
 Expected: 镜像构建成功。

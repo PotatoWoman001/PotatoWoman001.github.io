@@ -97,12 +97,12 @@ html[lang^="fa"] [data-joto-mall] {
   text-transform: uppercase;
 }
 
-[data-joto-mall] .joto-mall__hero-title {
+#root [data-joto-mall] .joto-mall__hero-title {
   max-width: 760px;
   margin: 0;
-  font-size: clamp(34px, 5vw, 56px);
-  font-weight: 500;
-  line-height: 1.12;
+  font-size: clamp(34px, 5vw, 56px) !important;
+  font-weight: 500 !important;
+  line-height: 1.12 !important;
   letter-spacing: -0.035em;
   text-wrap: balance;
 }
@@ -189,20 +189,20 @@ html[lang^="fa"] [data-joto-mall] {
   font-weight: 600;
 }
 
-[data-joto-mall] .joto-mall__section-heading h2 {
+#root [data-joto-mall] .joto-mall__section-heading h2 {
   margin: 0;
-  font-size: clamp(28px, 4vw, 40px);
-  font-weight: 500;
-  line-height: 1.18;
+  font-size: clamp(28px, 4vw, 40px) !important;
+  font-weight: 500 !important;
+  line-height: 1.18 !important;
   letter-spacing: -0.035em;
 }
 
-[data-joto-mall] .joto-mall__list-header h1,
-[data-joto-mall] .joto-mall__product-summary h1 {
+#root [data-joto-mall] .joto-mall__list-header h1,
+#root [data-joto-mall] .joto-mall__product-summary h1 {
   margin: 0;
-  font-size: clamp(32px, 4.5vw, 48px);
-  font-weight: 500;
-  line-height: 1.12;
+  font-size: clamp(32px, 4.5vw, 48px) !important;
+  font-weight: 500 !important;
+  line-height: 1.12 !important;
   letter-spacing: -0.035em;
 }
 
@@ -357,11 +357,11 @@ html[lang^="fa"] [data-joto-mall] {
   padding: clamp(28px, 5vw, 64px);
 }
 
-[data-joto-mall] .joto-mall__contact-panel h2 {
+#root [data-joto-mall] .joto-mall__contact-panel h2 {
   margin: 0;
-  font-size: clamp(28px, 3.5vw, 40px);
-  font-weight: 500;
-  line-height: 1.18;
+  font-size: clamp(28px, 3.5vw, 40px) !important;
+  font-weight: 500 !important;
+  line-height: 1.18 !important;
   letter-spacing: -0.035em;
 }
 
@@ -564,11 +564,11 @@ html[lang^="fa"] [data-joto-mall] {
   padding-block: clamp(36px, 5vw, 64px);
 }
 
-[data-joto-mall] .joto-mall__detail-section h2 {
+#root [data-joto-mall] .joto-mall__detail-section h2 {
   margin: 0 0 26px;
-  font-size: clamp(22px, 2.5vw, 28px);
-  font-weight: 500;
-  line-height: 1.24;
+  font-size: clamp(22px, 2.5vw, 28px) !important;
+  font-weight: 500 !important;
+  line-height: 1.24 !important;
   letter-spacing: -0.025em;
 }
 
@@ -631,21 +631,21 @@ html[lang^="fa"] [data-joto-mall] {
 }
 
 @media (max-width: 1023px) {
-  [data-joto-mall] .joto-mall__hero-title {
-    font-size: 44px;
+  #root [data-joto-mall] .joto-mall__hero-title {
+    font-size: 44px !important;
   }
 
-  [data-joto-mall] .joto-mall__section-heading h2 {
-    font-size: 34px;
+  #root [data-joto-mall] .joto-mall__section-heading h2 {
+    font-size: 34px !important;
   }
 
-  [data-joto-mall] .joto-mall__list-header h1,
-  [data-joto-mall] .joto-mall__product-summary h1 {
-    font-size: 40px;
+  #root [data-joto-mall] .joto-mall__list-header h1,
+  #root [data-joto-mall] .joto-mall__product-summary h1 {
+    font-size: 40px !important;
   }
 
-  [data-joto-mall] .joto-mall__detail-section h2 {
-    font-size: 26px;
+  #root [data-joto-mall] .joto-mall__detail-section h2 {
+    font-size: 26px !important;
   }
 
   [data-joto-mall] .joto-mall__category-grid,
@@ -668,24 +668,24 @@ html[lang^="fa"] [data-joto-mall] {
 
 @media (max-width: 639px) {
   [data-joto-mall] .joto-mall__hero {
-    padding-block: 64px 48px;
+    padding-block: 104px 48px;
   }
 
-  [data-joto-mall] .joto-mall__hero-title {
-    font-size: 34px;
+  #root [data-joto-mall] .joto-mall__hero-title {
+    font-size: 34px !important;
   }
 
-  [data-joto-mall] .joto-mall__section-heading h2 {
-    font-size: 28px;
+  #root [data-joto-mall] .joto-mall__section-heading h2 {
+    font-size: 28px !important;
   }
 
-  [data-joto-mall] .joto-mall__list-header h1,
-  [data-joto-mall] .joto-mall__product-summary h1 {
-    font-size: 32px;
+  #root [data-joto-mall] .joto-mall__list-header h1,
+  #root [data-joto-mall] .joto-mall__product-summary h1 {
+    font-size: 32px !important;
   }
 
-  [data-joto-mall] .joto-mall__detail-section h2 {
-    font-size: 22px;
+  #root [data-joto-mall] .joto-mall__detail-section h2 {
+    font-size: 22px !important;
   }
 
   [data-joto-mall] .joto-mall__inner,
@@ -694,6 +694,11 @@ html[lang^="fa"] [data-joto-mall] {
   [data-joto-mall][data-joto-mall-products],
   [data-joto-mall][data-joto-mall-product] {
     width: min(100% - 28px, 1380px);
+  }
+
+  [data-joto-mall][data-joto-mall-products],
+  [data-joto-mall][data-joto-mall-product] {
+    padding-block: 104px 64px;
   }
 
   [data-joto-mall] .joto-mall__category-grid,
