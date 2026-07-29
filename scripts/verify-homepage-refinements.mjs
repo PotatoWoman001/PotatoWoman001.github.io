@@ -4,7 +4,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const homepages = ["index.html", "zh/index.html", "fa/index.html"];
-const version = "20260729-2";
+const version = "20260729-3";
 
 for (const route of homepages) {
   const html = readFileSync(path.join(root, route), "utf8");
@@ -90,6 +90,8 @@ assert.match(
 );
 
 assert.match(carouselScript, /IntersectionObserver/);
+assert.match(carouselScript, /hintObserver\.observe\(scroller\)/);
+assert.doesNotMatch(carouselScript, /hintObserver\.observe\(scroller\.closest/);
 assert.match(carouselScript, /HINT_DISTANCE_RATIO/);
 assert.match(carouselScript, /prefers-reduced-motion:\s*reduce/);
 assert.match(carouselScript, /pointerdown/);

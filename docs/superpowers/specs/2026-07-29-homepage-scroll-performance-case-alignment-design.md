@@ -57,7 +57,7 @@
 - 通过现有增强层 `assets/homepage-refinements.css`、`assets/solution-card-carousel.css` 和 `assets/solution-card-carousel.js` 完成覆盖。
 - 不改变卡片文案、图片、顺序、链接和左右按钮逻辑。
 - 英文、中文、波斯语首页共用同一套性能优化；英文案例标题宽度仅对 `lang="en"` 生效。
-- 静态资源版本统一升级为 `20260729-2`，确保本地与线上浏览器不会继续使用旧缓存。
+- 静态资源版本统一升级为 `20260729-3`，确保本地与线上浏览器不会继续使用旧缓存。
 
 ## 验收标准
 

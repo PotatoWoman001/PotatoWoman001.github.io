@@ -6,7 +6,7 @@ const root = process.cwd();
 const scriptPath = path.join(root, "assets/solution-card-carousel.js");
 const stylesPath = path.join(root, "assets/solution-card-carousel.css");
 const mainBundlePath = path.join(root, "assets/index-DaFvN0XI.js");
-const assetVersion = "20260729-2";
+const assetVersion = "20260729-3";
 
 assert.equal(existsSync(scriptPath), true, "carousel script must exist");
 assert.equal(existsSync(stylesPath), true, "carousel stylesheet must exist");
@@ -26,6 +26,8 @@ assert.match(script, /prefers-reduced-motion: reduce/);
 assert.match(script, /MutationObserver/);
 assert.match(script, /ResizeObserver/);
 assert.match(script, /IntersectionObserver/);
+assert.match(script, /hintObserver\.observe\(scroller\)/);
+assert.doesNotMatch(script, /hintObserver\.observe\(scroller\.closest/);
 assert.match(script, /HINT_INTERSECTION_RATIO\s*=\s*0\.32/);
 assert.match(script, /HINT_DISTANCE_RATIO\s*=\s*0\.3/);
 assert.match(script, /HINT_MAX_DISTANCE\s*=\s*72/);

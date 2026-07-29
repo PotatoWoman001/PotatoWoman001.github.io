@@ -407,7 +407,7 @@ function enhanceSolutionCarousel(scroller) {
       },
       { threshold: [HINT_INTERSECTION_RATIO] },
     );
-    hintObserver.observe(scroller.closest("section") || scroller);
+    hintObserver.observe(scroller);
   }
 
   if ("ResizeObserver" in window) {

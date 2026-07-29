@@ -16,7 +16,7 @@
 - 任意滚轮输入都必须取消提示，横向吸附使用 `proximity`。
 - 英文案例标题容器最大宽度为 `235px`，文字内部左对齐，容器与 Logo 居中对齐。
 - 三个 Tag 必须单行，间距为 `4px`。
-- 静态资源版本统一为 `20260729-2`。
+- 静态资源版本统一为 `20260729-3`。
 
 ---
 
@@ -221,14 +221,14 @@ Expected: PASS，输出 `Verified homepage interaction and content refinements.`
 
 **Interfaces:**
 - Consumes: 当前版本 `20260729-1`
-- Produces: 全站一致的新版本 `20260729-2`
+- Produces: 全站一致的新版本 `20260729-3`
 
 - [ ] **Step 1: 机械升级版本**
 
 对 HTML 与集成/验证脚本执行精确替换：
 
 ```text
-20260729-1 → 20260729-2
+20260729-1 → 20260729-3
 ```
 
 - [ ] **Step 2: 验证版本唯一性**
@@ -237,7 +237,7 @@ Run:
 
 ```bash
 rg -l '20260729-1' --glob '*.html' --glob 'scripts/*.mjs'
-rg -l '20260729-2' --glob '*.html' --glob 'scripts/*.mjs' | wc -l
+rg -l '20260729-3' --glob '*.html' --glob 'scripts/*.mjs' | wc -l
 ```
 
 Expected: 第一条无输出；第二条包含所有维护 HTML 与相关脚本。
@@ -275,8 +275,8 @@ Expected: 所有命令退出码为 `0`。
 Run:
 
 ```bash
-docker build -t jotoglobal-maintenance:20260729-2 .
-docker run -d --name jotoglobal-local-20260729-v2 -p 3009:80 jotoglobal-maintenance:20260729-2
+docker build -t jotoglobal-maintenance:20260729-3 .
+docker run -d --name jotoglobal-local-20260729-v2 -p 3009:80 jotoglobal-maintenance:20260729-3
 ```
 
 Expected: `http://127.0.0.1:3009/` 返回 `200`。
@@ -362,4 +362,4 @@ Expected: 新提交创建成功。
 
 - [ ] **Step 4: 验证生产页面**
 
-在 `https://jotoglobal.com/`、`/zh/`、`/fa/` 重复 Task 5 的关键桌面/手机断言，并确认响应中引用 `v=20260729-2`。
+在 `https://jotoglobal.com/`、`/zh/`、`/fa/` 重复 Task 5 的关键桌面/手机断言，并确认响应中引用 `v=20260729-3`。
