@@ -230,7 +230,7 @@ git commit -m "test: verify Mall image filtering and English typography"
 - [ ] **步骤 1：重建并替换本地预览容器**
 
 ```bash
-docker build -t jotoglobal-mall:20260730-1-dev .
+docker build -f Dockerfile.local -t jotoglobal-mall:20260730-1-dev .
 docker stop jotoglobal-mall-20260729-7-dev
 docker run --name jotoglobal-mall-20260730-1-dev --rm -d -p 127.0.0.1:3009:80 -v "/Users/cuihua/Documents/jotoglobal 信息获取站/data/exports/jotoglobal/20260729T033844Z-run-8:/usr/share/nginx/html/mall-data:ro" jotoglobal-mall:20260730-1-dev
 ```

@@ -11,6 +11,11 @@ const VIEWPORTS = [
   { name: "mobile", width: 390, height: 844 },
 ];
 
+const HIDDEN_PRODUCT = {
+  slug: "di-7008-mini-d-link-di-7008-series-router-1xwan-7xlan-400mbps-ipsec-vpn",
+  titleToken: "DI-7008-MINI",
+};
+
 function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
@@ -205,6 +210,12 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
     (await page.locator(".joto-mall__card").count()) >= 6,
     `${testCase.locale}/${viewport.name}: recent products were not rendered`,
   );
+  assert(
+    !(await page.locator(".joto-mall__card-title").allTextContents())
+      .join("\n")
+      .includes(HIDDEN_PRODUCT.titleToken),
+    `${testCase.locale}/${viewport.name}: no-image product rendered on Mall home`,
+  );
   await assertPageBasics(
     page,
     testCase,
@@ -225,6 +236,32 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
   assert(
     (await page.locator(".joto-mall__card").count()) > 0,
     `${testCase.locale}/${viewport.name}: search returned no results`,
+  );
+
+  await page.goto(`${origin}${productsPath}`, { waitUntil: "domcontentloaded" });
+  await waitForCatalog(page, "[data-joto-mall-products]");
+  assert(
+    (await page.locator(".joto-mall__result-count").innerText()).trim().startsWith("15 "),
+    `${testCase.locale}/${viewport.name}: filtered product total is not 15`,
+  );
+  assert(
+    !(await page.locator(".joto-mall__card-title").allTextContents())
+      .join("\n")
+      .includes(HIDDEN_PRODUCT.titleToken),
+    `${testCase.locale}/${viewport.name}: no-image product rendered in catalog`,
+  );
+
+  await page.goto(
+    `${origin}${productsPath}?q=${encodeURIComponent(HIDDEN_PRODUCT.titleToken)}`,
+    { waitUntil: "domcontentloaded" },
+  );
+  await waitForCatalog(page, "[data-joto-mall-products]");
+  assert(
+    (await page.locator(".joto-mall__card").count()) === 0
+      && (await page.locator(".joto-mall__result-count").innerText())
+        .trim()
+        .startsWith("0 "),
+    `${testCase.locale}/${viewport.name}: no-image product remains searchable`,
   );
 
   await page.goto(`${origin}${productsPath}`, { waitUntil: "domcontentloaded" });
@@ -482,6 +519,60 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
     (await message.inputValue()).endsWith("Browser verification"),
     `${testCase.locale}/${viewport.name}: contact message is not editable`,
   );
+
+  await page.goto(
+    `${origin}${testCase.prefix}/mall/products/${HIDDEN_PRODUCT.slug}/`,
+    { waitUntil: "domcontentloaded" },
+  );
+  await waitForCatalog(page, "[data-joto-mall-product]");
+  assert(
+    (await page.locator(".joto-mall__product-summary h1").innerText())
+      .includes(HIDDEN_PRODUCT.titleToken),
+    `${testCase.locale}/${viewport.name}: hidden listing product detail is inaccessible`,
+  );
+}
+
+async function verifyEnglishHomepageTypography(page, origin, viewport) {
+  await page.goto(`${origin}/#case-studies`, { waitUntil: "domcontentloaded" });
+  await page.waitForSelector("#case-studies .group > .flex-1 h3", {
+    timeout: 15_000,
+  });
+  await page.waitForSelector("#contact .joto-home-contact__copy h2", {
+    timeout: 15_000,
+  });
+  const styles = await page.evaluate(() => {
+    const caseTitle = document.querySelector(
+      "#case-studies .group > .flex-1 h3",
+    );
+    const contactTitle = document.querySelector(
+      "#contact .joto-home-contact__copy h2",
+    );
+    const caseStyle = getComputedStyle(caseTitle);
+    const contactStyle = getComputedStyle(contactTitle);
+    return {
+      caseFontFamily: caseStyle.fontFamily,
+      caseFontSize: Number.parseFloat(caseStyle.fontSize),
+      caseLineHeight: Number.parseFloat(caseStyle.lineHeight),
+      caseFontWeight: caseStyle.fontWeight,
+      contactFontSize: Number.parseFloat(contactStyle.fontSize),
+      contactLineHeight: Number.parseFloat(contactStyle.lineHeight),
+      contactMaxWidth: Number.parseFloat(contactStyle.maxWidth),
+    };
+  });
+  assert(
+    styles.caseFontFamily.startsWith("Poppins")
+      && styles.caseFontSize === 16
+      && styles.caseLineHeight === 24
+      && styles.caseFontWeight === "500",
+    `en/${viewport.name}: case title typography is ${JSON.stringify(styles)}`,
+  );
+  assert(
+    styles.contactFontSize >= 36
+      && styles.contactFontSize <= 48
+      && Math.abs(styles.contactLineHeight / styles.contactFontSize - 1.12) < 0.02
+      && styles.contactMaxWidth === 512,
+    `en/${viewport.name}: contact title typography is ${JSON.stringify(styles)}`,
+  );
 }
 
 async function exerciseErrorStates(page, origin, testCase) {
@@ -535,6 +626,9 @@ async function verifyMallBrowser(
         const problemStart = consoleProblems.length;
         const errorStart = pageErrors.length;
         await exerciseCatalog(page, origin, testCase, viewport);
+        if (testCase.locale === "en") {
+          await verifyEnglishHomepageTypography(page, origin, viewport);
+        }
         assert(
           consoleProblems.length === problemStart,
           `${testCase.locale}/${viewport.name}: console problems: ${consoleProblems

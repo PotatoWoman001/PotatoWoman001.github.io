@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(scriptDirectory, "..");
-const version = "20260729-7";
+const version = "20260730-1";
 const expectedRouteCount = 114;
 
 const excludedDirectories = new Set([

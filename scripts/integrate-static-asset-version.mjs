@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(scriptDirectory, "..");
-const staticAssetVersion = "20260729-7";
+const staticAssetVersion = "20260730-1";
 const scriptPattern = /\/assets\/index-DaFvN0XI\.js(?:\?v=[^"'<>]+)?/g;
 const stylePattern = /\/assets\/index-e49ffBFL\.css(?:\?v=[^"'<>]+)?/g;
 const scriptUrl = `/assets/index-DaFvN0XI.js?v=${staticAssetVersion}`;

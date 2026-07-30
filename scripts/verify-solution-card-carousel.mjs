@@ -6,7 +6,7 @@ const root = process.cwd();
 const scriptPath = path.join(root, "assets/solution-card-carousel.js");
 const stylesPath = path.join(root, "assets/solution-card-carousel.css");
 const mainBundlePath = path.join(root, "assets/index-DaFvN0XI.js");
-const assetVersion = "20260729-7";
+const assetVersion = "20260730-1";
 
 assert.equal(existsSync(scriptPath), true, "carousel script must exist");
 assert.equal(existsSync(stylesPath), true, "carousel stylesheet must exist");

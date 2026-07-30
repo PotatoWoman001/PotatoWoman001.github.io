@@ -4,7 +4,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const homepages = ["index.html", "zh/index.html", "fa/index.html"];
-const version = "20260729-7";
+const version = "20260730-1";
 
 for (const route of homepages) {
   const html = readFileSync(path.join(root, route), "utf8");
@@ -141,7 +141,7 @@ assert.match(
 assert.match(homepageStyles, /max-width:\s*none !important/);
 assert.match(
   homepageStyles,
-  /html:lang\(en\) #case-studies \.group > \.flex-1 h3\s*\{[\s\S]*?max-width:\s*none !important;[\s\S]*?font-family:\s*"Poppins",\s*sans-serif;[\s\S]*?font-size:\s*16px;[\s\S]*?line-height:\s*24px;[\s\S]*?font-weight:\s*500;/,
+  /html:lang\(en\) #case-studies \.group > \.flex-1 h3\s*\{[\s\S]*?max-width:\s*none !important;[\s\S]*?font-family:\s*"Poppins",\s*sans-serif;[\s\S]*?font-size:\s*16px !important;[\s\S]*?line-height:\s*24px !important;[\s\S]*?font-weight:\s*500 !important;/,
 );
 assert.match(
   contactStyles,
