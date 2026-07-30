@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import {
+  hasProductImage,
   MallDataError,
   loadManifest,
   parseCatalogState,
@@ -53,7 +54,7 @@ const products = [
     stock_status: "In stock",
     condition: "Original New",
     summary: "",
-    images: [],
+    images: ["/mall-data/media/images/router-z.webp"],
     demand_tags: [],
     last_success_at: "2026-07-29T00:00:00Z",
   },
@@ -66,7 +67,7 @@ const products = [
     stock_status: null,
     condition: "",
     summary: "",
-    images: [],
+    images: ["/mall-data/media/images/switch-a.webp"],
     demand_tags: ["Campus"],
     last_success_at: "2026-07-28T00:00:00Z",
   },
@@ -97,6 +98,47 @@ const emptyBrand = queryProducts({ products }, {});
 assert.deepEqual(emptyBrand.facets.brands, ["Cisco"]);
 assert.deepEqual(queryProducts({ products: [products[1]] }, {}).facets.brands, []);
 assert.equal(emptyBrand.products.find((item) => item.slug === "a-switch").summary, "");
+
+const placeholderFilename =
+  "cd6a5082346e186283e0cf0f632762a1172f6ad74da5d9b7a9689974a7afbc84.webp";
+assert.equal(
+  hasProductImage({ images: ["/mall-data/media/images/real-router.webp"] }),
+  true,
+);
+assert.equal(hasProductImage({ images: [] }), false);
+assert.equal(
+  hasProductImage({
+    images: [`/mall-data/media/images/${placeholderFilename}?v=1#preview`],
+  }),
+  false,
+);
+
+const imageFiltered = queryProducts(
+  {
+    products: [
+      products[0],
+      {
+        ...products[1],
+        slug: "no-image-switch",
+        brand: "Hidden Brand",
+        category_path: ["Hidden Category"],
+        images: [],
+      },
+      {
+        ...products[1],
+        slug: "placeholder-switch",
+        brand: "Placeholder Brand",
+        category_path: ["Placeholder Category"],
+        images: [`/mall-data/media/images/${placeholderFilename}`],
+      },
+    ],
+  },
+  {},
+);
+assert.equal(imageFiltered.total, 1);
+assert.deepEqual(imageFiltered.products.map((product) => product.slug), ["z-router"]);
+assert.deepEqual(imageFiltered.facets.brands, ["Cisco"]);
+assert.deepEqual(imageFiltered.facets.categories, ["Network"]);
 assert.equal(getMallLocale("/fa/mall/"), MALL_COPY.fa);
 assert.equal(MALL_COPY.fa.technicalDirection, "ltr");
 assert.match(i18n, /در حال بارگذاری/);

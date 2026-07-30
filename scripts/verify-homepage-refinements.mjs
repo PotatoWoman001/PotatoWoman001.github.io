@@ -139,8 +139,14 @@ assert.match(
   /#case-studies \.group > \.flex-1 :where\(h3, ul\)/,
 );
 assert.match(homepageStyles, /max-width:\s*none !important/);
-assert.match(homepageStyles, /html:lang\(en\) #case-studies/);
-assert.match(homepageStyles, /max-width:\s*235px !important/);
+assert.match(
+  homepageStyles,
+  /html:lang\(en\) #case-studies \.group > \.flex-1 h3\s*\{[\s\S]*?max-width:\s*none !important;[\s\S]*?font-family:\s*"Poppins",\s*sans-serif;[\s\S]*?font-size:\s*16px;[\s\S]*?line-height:\s*24px;[\s\S]*?font-weight:\s*500;/,
+);
+assert.match(
+  contactStyles,
+  /html:lang\(en\) #contact \.joto-home-contact__copy h2\s*\{[\s\S]*?max-width:\s*32rem;[\s\S]*?font-size:\s*clamp\(36px,\s*3\.2vw,\s*48px\) !important;[\s\S]*?line-height:\s*1\.12 !important;[\s\S]*?font-weight:\s*500;[\s\S]*?letter-spacing:\s*-0\.04em;/,
+);
 assert.match(homepageStyles, /flex-wrap:\s*nowrap !important/);
 assert.match(homepageStyles, /gap:\s*0\.25rem !important/);
 assert.match(homepageStyles, /white-space:\s*nowrap !important/);

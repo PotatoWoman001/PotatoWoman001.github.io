@@ -62,6 +62,8 @@ assert.match(pages, /popstate/);
 assert.match(pages, /aria-live/);
 assert.match(pages, /scrollIntoView/);
 assert.match(pages, /textContent/);
+assert.match(pages, /hasProductImage/);
+assert.match(pages, /\.filter\(hasProductImage\)/);
 assert.match(product, /\/mall\/products\//);
 assert.match(product, /textContent/);
 assert.match(product, /DOMParser/);
