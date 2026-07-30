@@ -251,6 +251,14 @@ textarea[data-product-prefilled="true"] {
   letter-spacing: -0.055em;
 }
 
+html:lang(en) #contact .joto-home-contact__copy h2 {
+  max-width: 32rem;
+  font-size: clamp(36px, 3.2vw, 48px) !important;
+  line-height: 1.12 !important;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+
 .joto-home-contact__copy > p:last-child {
   max-width: 36rem;
   margin-top: 28px;
