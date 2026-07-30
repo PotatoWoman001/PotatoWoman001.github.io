@@ -2,6 +2,9 @@ const DATA_ROOT = "/mall-data/";
 const SCHEMA_VERSION = "joto-mall-v1";
 const DEFAULT_PAGE_SIZE = 12;
 const ALLOWED_PAGE_SIZES = [12, 24, 48];
+const PLACEHOLDER_IMAGE_FILENAMES = new Set([
+  "cd6a5082346e186283e0cf0f632762a1172f6ad74da5d9b7a9689974a7afbc84.webp",
+]);
 
 export class MallDataError extends Error {
   constructor(code, cause) {
@@ -84,6 +87,17 @@ function compareText(left, right) {
   });
 }
 
+export function hasProductImage(product) {
+  return (
+    Array.isArray(product?.images) &&
+    product.images.some((image) => {
+      const pathname = String(image || "").split(/[?#]/, 1)[0];
+      const filename = pathname.split("/").pop()?.toLowerCase();
+      return Boolean(filename) && !PLACEHOLDER_IMAGE_FILENAMES.has(filename);
+    })
+  );
+}
+
 export function parseCatalogState(searchParams) {
   const params =
     searchParams instanceof URLSearchParams
@@ -143,7 +157,9 @@ function uniqueValues(products, getter) {
 
 export function queryProducts(index, requestedState = {}) {
   const state = parseCatalogState(serializeCatalogState(requestedState));
-  const source = Array.isArray(index?.products) ? index.products : [];
+  const source = (Array.isArray(index?.products) ? index.products : []).filter(
+    hasProductImage,
+  );
   const query = normalizedText(state.q);
   const filtered = source.filter((product) => {
     const haystack = [

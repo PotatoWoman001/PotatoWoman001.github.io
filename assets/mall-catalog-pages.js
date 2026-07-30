@@ -1,4 +1,5 @@
 import {
+  hasProductImage,
   loadCatalogIndex,
   parseCatalogState,
   queryProducts,
@@ -300,6 +301,7 @@ function renderHome(mount, index) {
   recentSection.append(sectionHeading("", locale.recent));
   const recentGrid = element("div", { className: "joto-mall__cards" });
   [...(index.products || [])]
+    .filter(hasProductImage)
     .sort((a, b) =>
       String(b.last_success_at || "").localeCompare(String(a.last_success_at || "")),
     )
