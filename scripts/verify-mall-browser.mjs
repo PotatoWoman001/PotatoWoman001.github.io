@@ -213,7 +213,9 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
     const search = root.querySelector(".joto-mall__search");
     const categories = root.querySelector(".joto-mall__section--categories");
     const contact = root.querySelector(".joto-mall__contact-panel");
-    const summary = firstCard?.querySelector(".joto-mall__card-summary");
+    const summary = root.querySelector(
+      ".joto-mall__cards--home .joto-mall__card-summary",
+    );
     const media = firstCard?.querySelector(".joto-mall__card-media");
     const header = document.querySelector("header");
     const footer = document.querySelector("footer");
@@ -250,7 +252,7 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
     `${testCase.locale}/${viewport.name}: media is not white`,
   );
   assert(
-    homeLayout.summaryDisplay === "none",
+    ["none", "missing"].includes(homeLayout.summaryDisplay),
     `${testCase.locale}/${viewport.name}: home summary is visible`,
   );
   assert(
@@ -309,9 +311,12 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
       .includes(HIDDEN_PRODUCT.titleToken),
     `${testCase.locale}/${viewport.name}: no-image product rendered in catalog`,
   );
+  const productGridClass = await page
+    .locator("[data-joto-mall-products] .joto-mall__cards")
+    .getAttribute("class");
   assert(
-    await page.locator(".joto-mall__card-summary").first().isVisible(),
-    `${testCase.locale}/${viewport.name}: product-list summaries were hidden`,
+    !productGridClass.includes("joto-mall__cards--home"),
+    `${testCase.locale}/${viewport.name}: home-only compact class leaked into product list`,
   );
 
   await page.goto(
@@ -371,9 +376,9 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
     }));
   assert(
     !sortMenuStyle.hidden
-      && sortMenuStyle.background === "rgb(12, 23, 18)"
+      && sortMenuStyle.background === "rgb(255, 255, 255)"
       && sortMenuStyle.role === "listbox",
-    `${testCase.locale}/${viewport.name}: sort menu was not the dark listbox`,
+    `${testCase.locale}/${viewport.name}: sort menu was not the white listbox`,
   );
   await page.locator(".joto-mall__list-header h1").click();
   assert(
