@@ -121,12 +121,30 @@ assert.match(pages, /\{\s*value:\s*"brand",\s*label:\s*locale\.sortBrand/);
 assert.match(pages, /\{\s*value:\s*"recent",\s*label:\s*locale\.sortRecent/);
 assert.match(pages, /\{\s*value:\s*"asc",\s*label:\s*locale\.ascending/);
 assert.match(pages, /\{\s*value:\s*"desc",\s*label:\s*locale\.descending/);
+assert.match(
+  pages,
+  /className:\s*"joto-mall__section joto-mall__section--recent"/,
+);
+assert.match(
+  pages,
+  /className:\s*"joto-mall__cards joto-mall__cards--home"/,
+);
+assert.match(pages, /\.slice\(0,\s*12\)/);
+assert.ok(
+  i18n.includes(
+    'homeIntro: "浏览 JOTO 可提供的产品型号、技术资料与应用场景。"',
+  ),
+  "Chinese Mall intro copy is stale",
+);
 assert.match(styles, /\.joto-mall__native-select[\s\S]*position:\s*absolute/);
-assert.match(styles, /\.joto-mall__select-menu[\s\S]*background:\s*#0c1712/);
+assert.match(
+  styles,
+  /\.joto-mall__select-menu[\s\S]*background:\s*var\(--mall-surface-raised\)/,
+);
 assert.match(styles, /\.joto-mall__select-option[\s\S]*min-height:\s*44px/);
 assert.match(
   styles,
-  /\.joto-mall__section--categories\s*\{[\s\S]*padding-block:\s*32px/,
+  /\.joto-mall__section--categories\s*\{[\s\S]*padding-block:\s*0 32px[\s\S]*border-top:\s*0/,
 );
 assert.match(
   styles,
@@ -151,9 +169,12 @@ assert.match(styles, /prefers-reduced-motion/);
 assert.match(styles, /aspect-ratio/);
 assert.match(styles, /object-fit:\s*contain/);
 for (const expected of [
-  "--mall-bg: #050a08",
-  "--mall-surface: #08110d",
+  "--mall-bg: #ffffff",
+  "--mall-surface: #ffffff",
+  "--mall-surface-raised: #ffffff",
+  "--mall-ink: #0a0f0c",
   "--mall-green: #5dd3a0",
+  "color-scheme: light",
   'html[lang^="en"] [data-joto-mall]',
   'html[lang^="zh"] [data-joto-mall]',
   'html[lang^="fa"] [data-joto-mall]',
@@ -163,6 +184,30 @@ for (const expected of [
 ]) {
   assert.ok(styles.includes(expected), `Mall styles missing ${expected}`);
 }
+assert.match(
+  styles,
+  /\.joto-mall__cards--home\s*\{[\s\S]*grid-template-columns:\s*repeat\(6/,
+);
+assert.match(
+  styles,
+  /@media\s*\(max-width:\s*1279px\)[\s\S]*\.joto-mall__cards--home[\s\S]*repeat\(3/,
+);
+assert.match(
+  styles,
+  /@media\s*\(max-width:\s*767px\)[\s\S]*\.joto-mall__cards--home[\s\S]*repeat\(2/,
+);
+assert.match(
+  styles,
+  /@media\s*\(max-width:\s*419px\)[\s\S]*\.joto-mall__cards--home[\s\S]*grid-template-columns:\s*1fr/,
+);
+assert.match(
+  styles,
+  /\.joto-mall__cards--home[\s\S]*\.joto-mall__card-summary\s*\{[\s\S]*display:\s*none/,
+);
+assert.match(
+  styles,
+  /\.joto-mall__contact-panel\s*\{[\s\S]*border:\s*0[\s\S]*background:\s*transparent/,
+);
 assert.doesNotMatch(styles, /background-size:\s*32px 32px/);
 assert.match(
   styles,

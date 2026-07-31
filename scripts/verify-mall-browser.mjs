@@ -99,8 +99,8 @@ async function assertPageBasics(page, testCase, viewport, selector) {
     };
   });
   assert(
-    mallStyles.backgroundColor === "rgb(5, 10, 8)",
-    `${testCase.locale}/${viewport.name}: Mall background is not dark`,
+    mallStyles.backgroundColor === "rgb(255, 255, 255)",
+    `${testCase.locale}/${viewport.name}: Mall background is not white`,
   );
   assert(
     mallStyles.backgroundImage === "none",
@@ -206,9 +206,68 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
       `${testCase.locale}/mobile: category track does not expose horizontal discovery`,
     );
   }
+  const homeLayout = await page.locator("[data-joto-mall-home]").evaluate((root) => {
+    const cards = [...root.querySelectorAll(".joto-mall__cards--home .joto-mall__card")];
+    const firstCard = cards[0];
+    const grid = root.querySelector(".joto-mall__cards--home");
+    const search = root.querySelector(".joto-mall__search");
+    const categories = root.querySelector(".joto-mall__section--categories");
+    const contact = root.querySelector(".joto-mall__contact-panel");
+    const summary = firstCard?.querySelector(".joto-mall__card-summary");
+    const media = firstCard?.querySelector(".joto-mall__card-media");
+    const header = document.querySelector("header");
+    const footer = document.querySelector("footer");
+    return {
+      cardCount: cards.length,
+      columns: getComputedStyle(grid).gridTemplateColumns.split(" ").length,
+      background: getComputedStyle(root).backgroundColor,
+      mediaBackground: media ? getComputedStyle(media).backgroundColor : "",
+      summaryDisplay: summary ? getComputedStyle(summary).display : "missing",
+      heroCategoryGap:
+        categories.getBoundingClientRect().top - search.getBoundingClientRect().bottom,
+      contactBorderWidth: getComputedStyle(contact).borderTopWidth,
+      contactBackground: getComputedStyle(contact).backgroundColor,
+      headerBackground: header ? getComputedStyle(header).backgroundColor : "",
+      footerBackground: footer ? getComputedStyle(footer).backgroundColor : "",
+    };
+  });
+  const expectedColumns =
+    viewport.width >= 1280 ? 6 : viewport.width >= 768 ? 3 : viewport.width >= 420 ? 2 : 1;
   assert(
-    (await page.locator(".joto-mall__card").count()) >= 6,
-    `${testCase.locale}/${viewport.name}: recent products were not rendered`,
+    homeLayout.cardCount === 12,
+    `${testCase.locale}/${viewport.name}: expected 12 home cards`,
+  );
+  assert(
+    homeLayout.columns === expectedColumns,
+    `${testCase.locale}/${viewport.name}: expected ${expectedColumns} home columns, got ${homeLayout.columns}`,
+  );
+  assert(
+    homeLayout.background === "rgb(255, 255, 255)",
+    `${testCase.locale}/${viewport.name}: Mall is not white`,
+  );
+  assert(
+    homeLayout.mediaBackground === "rgb(255, 255, 255)",
+    `${testCase.locale}/${viewport.name}: media is not white`,
+  );
+  assert(
+    homeLayout.summaryDisplay === "none",
+    `${testCase.locale}/${viewport.name}: home summary is visible`,
+  );
+  assert(
+    homeLayout.heroCategoryGap <= 48,
+    `${testCase.locale}/${viewport.name}: hero/category gap is ${homeLayout.heroCategoryGap}px`,
+  );
+  assert(
+    homeLayout.contactBorderWidth === "0px",
+    `${testCase.locale}/${viewport.name}: contact border remains`,
+  );
+  assert(
+    ["rgba(0, 0, 0, 0)", "transparent"].includes(homeLayout.contactBackground),
+    `${testCase.locale}/${viewport.name}: contact background remains`,
+  );
+  assert(
+    (await page.locator(".joto-mall__card").count()) === 12,
+    `${testCase.locale}/${viewport.name}: recent products did not render 12 cards`,
   );
   assert(
     !(await page.locator(".joto-mall__card-title").allTextContents())
@@ -249,6 +308,10 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
       .join("\n")
       .includes(HIDDEN_PRODUCT.titleToken),
     `${testCase.locale}/${viewport.name}: no-image product rendered in catalog`,
+  );
+  assert(
+    await page.locator(".joto-mall__card-summary").first().isVisible(),
+    `${testCase.locale}/${viewport.name}: product-list summaries were hidden`,
   );
 
   await page.goto(
