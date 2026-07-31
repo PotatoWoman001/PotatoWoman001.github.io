@@ -87,6 +87,44 @@ function compareText(left, right) {
   });
 }
 
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+export function productTypeFor(product) {
+  const categories = productCategory(product).filter(Boolean);
+  if (categories.length) return String(categories.at(-1)).trim();
+
+  const segments = String(product?.title || "")
+    .split(",")
+    .map((segment) => segment.trim())
+    .filter(Boolean);
+  if (segments.length < 2) return "";
+
+  const model = String(product?.model || "").trim();
+  const brand = String(product?.brand || "").trim();
+  let type = segments[1];
+  if (model) type = type.replace(model, "");
+  if (brand) {
+    type = type.replace(new RegExp(`^${escapeRegExp(brand)}\\s*`, "i"), "");
+  }
+  return type.trim();
+}
+
+export function rankedCategories(products) {
+  const counts = new Map();
+  products.filter(hasProductImage).forEach((product) => {
+    const name = productCategory(product)[0];
+    if (name) counts.set(name, (counts.get(name) || 0) + 1);
+  });
+  return [...counts]
+    .map(([name, count]) => ({ name, count }))
+    .sort(
+      (left, right) =>
+        right.count - left.count || compareText(left.name, right.name),
+    );
+}
+
 export function hasProductImage(product) {
   return (
     Array.isArray(product?.images) &&
@@ -197,6 +235,7 @@ export function queryProducts(index, requestedState = {}) {
   const start = (page - 1) * state.pageSize;
   const products = sorted.slice(start, start + state.pageSize).map((product) => ({
     ...product,
+    productType: productTypeFor(product),
     category_path: [...productCategory(product)],
     images: [...(product.images || [])],
     demand_tags: [...(product.demand_tags || [])],

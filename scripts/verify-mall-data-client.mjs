@@ -5,7 +5,9 @@ import {
   MallDataError,
   loadManifest,
   parseCatalogState,
+  productTypeFor,
   queryProducts,
+  rankedCategories,
   serializeCatalogState,
 } from "../assets/mall-data-client.js";
 import { MALL_COPY, getMallLocale } from "../assets/mall-i18n.js";
@@ -90,6 +92,35 @@ assert.deepEqual(state, {
   view: "list",
 });
 assert.equal(serializeCatalogState(state).get("view"), "list");
+assert.equal(
+  productTypeFor({
+    title: "AR1220C-S, Huawei AR1220C Router, 8GE LAN",
+    model: "AR1220C-S",
+    brand: "Huawei",
+    category_path: ["Routers", "Enterprise Routers"],
+  }),
+  "Enterprise Routers",
+);
+assert.equal(
+  productTypeFor({
+    title: "ASA5525-K8, Cisco ASA 5500 Firewall, 8GE",
+    model: "ASA5525-K8",
+    brand: "Cisco",
+    category_path: [],
+  }),
+  "ASA 5500 Firewall",
+);
+assert.deepEqual(
+  rankedCategories([
+    { category_path: ["Routers"], images: ["/mall-data/media/images/1.webp"] },
+    { category_path: ["Firewalls"], images: ["/mall-data/media/images/2.webp"] },
+    { category_path: ["Routers"], images: ["/mall-data/media/images/3.webp"] },
+  ]),
+  [
+    { name: "Routers", count: 2 },
+    { name: "Firewalls", count: 1 },
+  ],
+);
 const result = queryProducts({ products }, state);
 assert.equal(result.total, 1);
 assert.equal(result.page, 1);
@@ -98,6 +129,10 @@ const emptyBrand = queryProducts({ products }, {});
 assert.deepEqual(emptyBrand.facets.brands, ["Cisco"]);
 assert.deepEqual(queryProducts({ products: [products[1]] }, {}).facets.brands, []);
 assert.equal(emptyBrand.products.find((item) => item.slug === "a-switch").summary, "");
+assert.equal(
+  emptyBrand.products.find((item) => item.slug === "a-switch").productType,
+  "Switches",
+);
 
 const placeholderFilename =
   "cd6a5082346e186283e0cf0f632762a1172f6ad74da5d9b7a9689974a7afbc84.webp";
