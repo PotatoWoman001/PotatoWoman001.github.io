@@ -1,7 +1,6 @@
 const DATA_ROOT = "/mall-data/";
 const SCHEMA_VERSION = "joto-mall-v1";
-const DEFAULT_PAGE_SIZE = 12;
-const ALLOWED_PAGE_SIZES = [12, 24, 48];
+const DEFAULT_PAGE_SIZE = 24;
 const PLACEHOLDER_IMAGE_FILENAMES = new Set([
   "cd6a5082346e186283e0cf0f632762a1172f6ad74da5d9b7a9689974a7afbc84.webp",
   "9099315a9ea9f11b618add5542417582c9fa0e8457cda12074a3c10ec6c0b50c.jpg",
@@ -142,21 +141,11 @@ export function parseCatalogState(searchParams) {
     searchParams instanceof URLSearchParams
       ? searchParams
       : new URLSearchParams(searchParams);
-  const pageSizeCandidate = Number.parseInt(params.get("size") || "", 10);
   return {
     q: (params.get("q") || "").normalize("NFKC").trim().slice(0, 200),
     category: (params.get("category") || "").trim(),
-    brand: (params.get("brand") || "").trim(),
-    status: (params.get("status") || "").trim(),
-    condition: (params.get("condition") || "").trim(),
-    sort: ["title", "brand", "recent"].includes(params.get("sort"))
-      ? params.get("sort")
-      : "title",
-    direction: params.get("direction") === "desc" ? "desc" : "asc",
     page: Math.max(1, Number.parseInt(params.get("page") || "1", 10) || 1),
-    pageSize: ALLOWED_PAGE_SIZES.includes(pageSizeCandidate)
-      ? pageSizeCandidate
-      : DEFAULT_PAGE_SIZE,
+    pageSize: DEFAULT_PAGE_SIZE,
     view: params.get("view") === "list" ? "list" : "grid",
   };
 }
@@ -166,26 +155,14 @@ export function serializeCatalogState(state) {
     new URLSearchParams({
       q: state.q || "",
       category: state.category || "",
-      brand: state.brand || "",
-      status: state.status || "",
-      condition: state.condition || "",
-      sort: state.sort || "title",
-      direction: state.direction || "asc",
       page: String(state.page || 1),
-      size: String(state.pageSize || DEFAULT_PAGE_SIZE),
       view: state.view || "grid",
     }),
   );
   const params = new URLSearchParams();
-  for (const key of ["q", "category", "brand", "status", "condition"]) {
-    if (normalized[key]) params.set(key, normalized[key]);
-  }
-  if (normalized.sort !== "title") params.set("sort", normalized.sort);
-  if (normalized.direction !== "asc") params.set("direction", normalized.direction);
+  if (normalized.q) params.set("q", normalized.q);
+  if (normalized.category) params.set("category", normalized.category);
   if (normalized.page !== 1) params.set("page", String(normalized.page));
-  if (normalized.pageSize !== DEFAULT_PAGE_SIZE) {
-    params.set("size", String(normalized.pageSize));
-  }
   if (normalized.view !== "grid") params.set("view", normalized.view);
   return params;
 }
@@ -213,22 +190,15 @@ export function queryProducts(index, requestedState = {}) {
       .join("\n");
     return (
       (!query || haystack.includes(query)) &&
-      (!state.category || productCategory(product).includes(state.category)) &&
-      (!state.brand || product.brand === state.brand) &&
-      (!state.status || product.stock_status === state.status) &&
-      (!state.condition || product.condition === state.condition)
+      (!state.category || productCategory(product).includes(state.category))
     );
   });
 
-  const direction = state.direction === "desc" ? -1 : 1;
-  const sorted = [...filtered].sort((left, right) => {
-    let result = 0;
-    if (state.sort === "brand") result = compareText(left.brand, right.brand);
-    else if (state.sort === "recent") {
-      result = compareText(left.last_success_at, right.last_success_at);
-    } else result = compareText(left.title, right.title);
-    return result ? result * direction : compareText(left.slug, right.slug);
-  });
+  const sorted = [...filtered].sort(
+    (left, right) =>
+      compareText(left.title, right.title) ||
+      compareText(left.slug, right.slug),
+  );
 
   const total = sorted.length;
   const totalPages = Math.max(1, Math.ceil(total / state.pageSize));
@@ -251,9 +221,6 @@ export function queryProducts(index, requestedState = {}) {
     state: { ...state, page },
     facets: {
       categories: uniqueValues(filtered, (product) => productCategory(product)[0]),
-      brands: uniqueValues(filtered, (product) => product.brand),
-      statuses: uniqueValues(filtered, (product) => product.stock_status),
-      conditions: uniqueValues(filtered, (product) => product.condition),
     },
   };
 }
