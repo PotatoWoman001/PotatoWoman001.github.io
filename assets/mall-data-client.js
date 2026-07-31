@@ -4,6 +4,7 @@ const DEFAULT_PAGE_SIZE = 12;
 const ALLOWED_PAGE_SIZES = [12, 24, 48];
 const PLACEHOLDER_IMAGE_FILENAMES = new Set([
   "cd6a5082346e186283e0cf0f632762a1172f6ad74da5d9b7a9689974a7afbc84.webp",
+  "9099315a9ea9f11b618add5542417582c9fa0e8457cda12074a3c10ec6c0b50c.jpg",
 ]);
 
 export class MallDataError extends Error {

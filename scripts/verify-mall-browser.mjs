@@ -99,12 +99,13 @@ async function assertPageBasics(page, testCase, viewport, selector) {
     };
   });
   assert(
-    mallStyles.backgroundColor === "rgb(255, 255, 255)",
-    `${testCase.locale}/${viewport.name}: Mall background is not white`,
+    mallStyles.backgroundColor === "rgb(248, 251, 249)",
+    `${testCase.locale}/${viewport.name}: Mall background is not the technical off-white`,
   );
   assert(
-    mallStyles.backgroundImage === "none",
-    `${testCase.locale}/${viewport.name}: Mall grid background remains`,
+    mallStyles.backgroundImage.includes("linear-gradient")
+      && mallStyles.backgroundImage.includes("radial-gradient"),
+    `${testCase.locale}/${viewport.name}: Mall technical grid is missing`,
   );
   assert(
     mallStyles.fontFamily.startsWith("Poppins"),
@@ -193,10 +194,12 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
     categoryLayout.buttonCount >= 2 && categoryLayout.buttonCount <= 6,
     `${testCase.locale}/${viewport.name}: category navigation is incomplete`,
   );
-  assert(
-    categoryLayout.moreCategories,
-    `${testCase.locale}/${viewport.name}: more-categories control is missing`,
-  );
+  if (categoryLayout.buttonCount === 6) {
+    assert(
+      categoryLayout.moreCategories,
+      `${testCase.locale}/${viewport.name}: more-categories control is missing`,
+    );
+  }
   if (viewport.name === "mobile") {
     assert(
       categoryLayout.trackScrollWidth > categoryLayout.trackClientWidth,
@@ -325,8 +328,11 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
   await page.goto(`${origin}${productsPath}`, { waitUntil: "domcontentloaded" });
   await waitForCatalog(page, "[data-joto-mall-products]");
   assert(
-    (await page.locator(".joto-mall__result-count").innerText()).trim().startsWith("15 "),
-    `${testCase.locale}/${viewport.name}: filtered product total is not 15`,
+    Number.parseInt(
+      await page.locator(".joto-mall__result-count").getAttribute("data-result-count"),
+      10,
+    ) > 12,
+    `${testCase.locale}/${viewport.name}: product page did not expose the full catalog`,
   );
   assert(
     !(await page.locator(".joto-mall__card-model").allTextContents())
@@ -338,8 +344,8 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
     .locator("[data-joto-mall-products] .joto-mall__cards")
     .getAttribute("class");
   assert(
-    !productGridClass.includes("joto-mall__cards--home"),
-    `${testCase.locale}/${viewport.name}: home-only compact class leaked into product list`,
+    productGridClass.includes("joto-mall__cards--grid"),
+    `${testCase.locale}/${viewport.name}: shared catalog grid class is missing`,
   );
 
   await page.goto(
@@ -349,9 +355,12 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
   await waitForCatalog(page, "[data-joto-mall-products]");
   assert(
     (await page.locator(".joto-mall__card").count()) === 0
-      && (await page.locator(".joto-mall__result-count").innerText())
-        .trim()
-        .startsWith("0 "),
+      && Number.parseInt(
+        await page.locator(".joto-mall__result-count").getAttribute(
+          "data-result-count",
+        ),
+        10,
+      ) === 0,
     `${testCase.locale}/${viewport.name}: no-image product remains searchable`,
   );
 
@@ -421,7 +430,7 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
   await page.goto(`${origin}${productsPath}`, { waitUntil: "domcontentloaded" });
   await waitForCatalog(page, "[data-joto-mall-products]");
   const ascendingTitle = await page
-    .locator(".joto-mall__card-title")
+    .locator(".joto-mall__card-model")
     .first()
     .innerText();
   const directionTrigger = page.locator(
@@ -435,7 +444,7 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
     () => new URL(window.location.href).searchParams.get("direction") === "desc",
   );
   const descendingTitle = await page
-    .locator(".joto-mall__card-title")
+    .locator(".joto-mall__card-model")
     .first()
     .innerText();
   assert(

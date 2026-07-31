@@ -136,6 +136,8 @@ assert.equal(
 
 const placeholderFilename =
   "cd6a5082346e186283e0cf0f632762a1172f6ad74da5d9b7a9689974a7afbc84.webp";
+const jpgPlaceholderFilename =
+  "9099315a9ea9f11b618add5542417582c9fa0e8457cda12074a3c10ec6c0b50c.jpg";
 assert.equal(
   hasProductImage({ images: ["/mall-data/media/images/real-router.webp"] }),
   true,
@@ -144,6 +146,12 @@ assert.equal(hasProductImage({ images: [] }), false);
 assert.equal(
   hasProductImage({
     images: [`/mall-data/media/images/${placeholderFilename}?v=1#preview`],
+  }),
+  false,
+);
+assert.equal(
+  hasProductImage({
+    images: [`/mall-data/media/images/${jpgPlaceholderFilename}`],
   }),
   false,
 );
