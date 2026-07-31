@@ -78,6 +78,7 @@ assert.match(script, /CONTACT_ENDPOINT\s*=\s*"\/api\/contact"/);
 assert.match(script, /dataset\.homeHeroActions/);
 assert.match(script, /data-home-contact-form/);
 assert.match(script, /data-solution-contact-form/);
+assert.match(script, /export function createContactForm/);
 assert.match(script, /window\.location\.hash\s*===\s*"#contact"/);
 assert.doesNotMatch(script, /安全咨询|提交即表示/);
 assert.equal(parseProductInquirySlug("product=c881-k9"), "c881-k9");

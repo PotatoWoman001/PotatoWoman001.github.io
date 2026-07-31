@@ -323,7 +323,7 @@ function bindContactForm(form, copy) {
   });
 }
 
-function createContactForm(locale, idPrefix, formKind) {
+export function createContactForm(locale, idPrefix, formKind) {
   const wrapper = document.createElement("div");
   wrapper.innerHTML = contactFormMarkup(locale, idPrefix, formKind);
   const form = wrapper.firstElementChild;

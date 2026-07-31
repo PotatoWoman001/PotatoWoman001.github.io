@@ -6,6 +6,7 @@ import {
   serializeCatalogState,
 } from "./mall-data-client.js?v=20260731-2";
 import { getMallLocale } from "./mall-i18n.js?v=20260731-2";
+import { createContactForm } from "./contact-form-sections.js?v=20260731-2";
 
 const locale = getMallLocale();
 const SITE_ORIGIN = "https://jotoglobal.com";
@@ -163,10 +164,20 @@ function productCard(product) {
   if (product.brand) {
     copy.append(element("p", { className: "joto-mall__card-brand", text: product.brand }));
   }
+  const model = product.model || "\u00a0";
+  const modelLength = model.trim().length;
+  const modelClass =
+    modelLength > 38
+      ? "joto-mall__card-model joto-mall__card-model--xsmall"
+      : modelLength > 28
+        ? "joto-mall__card-model joto-mall__card-model--small"
+        : "joto-mall__card-model";
   copy.append(
     element("p", {
-      className: "joto-mall__card-model",
-      text: product.model || "\u00a0",
+      className: modelClass,
+      text: model,
+      title: model.trim() || undefined,
+      dataset: { length: String(modelLength) },
     }),
     element("p", {
       className: "joto-mall__card-type",
@@ -220,17 +231,21 @@ function renderSearch(target, { compact = false, onSubmit } = {}) {
 }
 
 function contactPanel() {
-  return element("section", { className: "joto-mall__contact-panel" }, [
-    element("div", {}, [
-      element("h2", { text: locale.contactTitle }),
-      element("p", { text: locale.contactBody }),
-    ]),
-    element("a", {
-      href: localizedPath("/contact/"),
-      className: "joto-mall__button",
-      text: locale.contact,
-    }),
+  const panel = element("section", { className: "joto-mall__contact-panel" });
+  const copy = element("div", { className: "joto-mall__contact-copy" }, [
+    element("h2", { text: locale.contactTitle }),
+    element("p", { text: locale.contactBody }),
   ]);
+  const formSlot = element("div", { className: "joto-mall__contact-form" });
+  formSlot.append(
+    createContactForm(
+      locale.lang,
+      `mall-contact-${locale.lang.toLowerCase()}`,
+      "solution",
+    ),
+  );
+  panel.append(copy, formSlot);
+  return panel;
 }
 
 function paginationItems(page, totalPages) {
@@ -327,10 +342,15 @@ function renderCatalog(mount, index, { mode }) {
   const isHome = mode === "home";
   const catalogState = () => ({
     ...parseCatalogState(window.location.search),
-    pageSize: 12,
-    view: "grid",
+    pageSize: 24,
   });
   let state = catalogState();
+  const initialParams = serializeCatalogState(state);
+  history.replaceState(
+    {},
+    "",
+    `${window.location.pathname}${initialParams.size ? `?${initialParams}` : ""}`,
+  );
   const header = isHome
     ? element(
         "section",
@@ -412,11 +432,6 @@ function renderCatalog(mount, index, { mode }) {
     button.addEventListener("click", () => update({ view: value, page: 1 }));
     viewControls.append(button);
   }
-
-  const filterOptions = (allLabel, values, dir = "ltr") => [
-    { value: "", label: allLabel },
-    ...values.map((value) => ({ value, label: value, dir })),
-  ];
 
   function categoryButton(value, label, selected) {
     return element("button", {
@@ -535,59 +550,7 @@ function renderCatalog(mount, index, { mode }) {
     searchInput.value = state.q;
     closeAllSelects();
     paintCategories(state.category);
-    const remainingFilterControls = [];
-    if (result.facets.brands.length) {
-      remainingFilterControls.push(
-        selectControl(
-          locale.brand,
-          "brand",
-          filterOptions(locale.allBrands, result.facets.brands),
-          state.brand,
-        ),
-      );
-    }
-    if (result.facets.statuses.length) {
-      remainingFilterControls.push(
-        selectControl(
-          locale.status,
-          "status",
-          filterOptions(locale.allStatuses, result.facets.statuses),
-          state.status,
-        ),
-      );
-    }
-    if (result.facets.conditions.length) {
-      remainingFilterControls.push(
-        selectControl(
-          locale.condition,
-          "condition",
-          filterOptions(locale.allConditions, result.facets.conditions),
-          state.condition,
-        ),
-      );
-    }
-    remainingFilterControls.push(
-      selectControl(
-        locale.sort,
-        "sort",
-        [
-          { value: "title", label: locale.sortTitle },
-          { value: "brand", label: locale.sortBrand },
-          { value: "recent", label: locale.sortRecent },
-        ],
-        state.sort,
-      ),
-      selectControl(
-        "",
-        "direction",
-        [
-          { value: "asc", label: locale.ascending },
-          { value: "desc", label: locale.descending },
-        ],
-        state.direction,
-      ),
-    );
-    controls.replaceChildren(categoryNavigation, ...remainingFilterControls);
+    controls.replaceChildren(categoryNavigation);
 
     const countText = `${locale.allProductsHeading} · ${result.total} ${locale.results}`;
     resultsHeading.textContent = countText;
@@ -608,11 +571,6 @@ function renderCatalog(mount, index, { mode }) {
         update({
           q: "",
           category: "",
-          brand: "",
-          status: "",
-          condition: "",
-          sort: "title",
-          direction: "asc",
           page: 1,
         }),
       );
