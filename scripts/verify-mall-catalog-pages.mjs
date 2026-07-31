@@ -86,16 +86,17 @@ assert.match(product, /"x-default"/);
 assert.doesNotMatch(product, /\boffers\b|\bprice\b|\bcurrency\b|\bsku\b/i);
 assert.doesNotMatch(i18n, /\b(?:price|currency|cart|checkout|payment)\b/i);
 for (const expected of [
-  "joto-mall__section--categories",
+  "joto-mall__category-navigation",
   "joto-mall__category--active",
   "locale.allProducts",
-  "locale.viewAllProducts",
+  "locale.moreCategories",
 ]) {
   assert.ok(pages.includes(expected), `Mall category renderer missing ${expected}`);
 }
 for (const expected of [
   "allProducts:",
-  "viewAllProducts:",
+  "moreCategories:",
+  "clearFilters:",
 ]) {
   assert.equal(
     [...i18n.matchAll(new RegExp(`^\\s*${expected}`, "gm"))].length,
@@ -121,15 +122,13 @@ assert.match(pages, /\{\s*value:\s*"brand",\s*label:\s*locale\.sortBrand/);
 assert.match(pages, /\{\s*value:\s*"recent",\s*label:\s*locale\.sortRecent/);
 assert.match(pages, /\{\s*value:\s*"asc",\s*label:\s*locale\.ascending/);
 assert.match(pages, /\{\s*value:\s*"desc",\s*label:\s*locale\.descending/);
-assert.match(
-  pages,
-  /className:\s*"joto-mall__section joto-mall__section--recent"/,
-);
-assert.match(
-  pages,
-  /className:\s*"joto-mall__cards joto-mall__cards--home"/,
-);
-assert.match(pages, /\.slice\(0,\s*12\)/);
+assert.doesNotMatch(pages, /joto-mall__section--recent/);
+assert.doesNotMatch(pages, /\.slice\(0,\s*12\)/);
+assert.match(pages, /function renderCatalog\(/);
+assert.match(pages, /renderCatalog\(mount,\s*index,\s*\{\s*mode:\s*"home"/);
+assert.match(pages, /renderCatalog\(mount,\s*index,\s*\{\s*mode:\s*"list"/);
+assert.match(pages, /className:\s*"joto-mall__card-type"/);
+assert.match(pages, /function paginationItems\(/);
 assert.ok(
   i18n.includes(
     'homeIntro: "浏览 JOTO 可提供的产品型号、技术资料与应用场景。"',
@@ -144,11 +143,7 @@ assert.match(
 assert.match(styles, /\.joto-mall__select-option[\s\S]*min-height:\s*44px/);
 assert.match(
   styles,
-  /\.joto-mall__section--categories\s*\{[\s\S]*padding-block:\s*0 32px[\s\S]*border-top:\s*0/,
-);
-assert.match(
-  styles,
-  /\.joto-mall__category-grid\s*\{[\s\S]*display:\s*flex[\s\S]*overflow-x:\s*auto/,
+  /\.joto-mall__category-navigation\s*\{[\s\S]*display:\s*flex[\s\S]*overflow-x:\s*auto/,
 );
 assert.match(
   styles,
@@ -186,24 +181,29 @@ for (const expected of [
 }
 assert.match(
   styles,
-  /\.joto-mall__cards--home\s*\{[\s\S]*grid-template-columns:\s*repeat\(6/,
+  /\.joto-mall__cards--grid\s*\{[\s\S]*grid-template-columns:\s*repeat\(6/,
 );
 assert.match(
   styles,
-  /@media\s*\(max-width:\s*1279px\)[\s\S]*\.joto-mall__cards--home[\s\S]*repeat\(3/,
+  /@media\s*\(max-width:\s*1279px\)[\s\S]*\.joto-mall__cards--grid[\s\S]*repeat\(3/,
 );
 assert.match(
   styles,
-  /@media\s*\(max-width:\s*767px\)[\s\S]*\.joto-mall__cards--home[\s\S]*repeat\(2/,
+  /@media\s*\(max-width:\s*767px\)[\s\S]*\.joto-mall__cards--grid[\s\S]*repeat\(2/,
 );
 assert.match(
   styles,
-  /@media\s*\(max-width:\s*419px\)[\s\S]*\.joto-mall__cards--home[\s\S]*grid-template-columns:\s*1fr/,
+  /@media\s*\(max-width:\s*419px\)[\s\S]*\.joto-mall__cards--grid[\s\S]*grid-template-columns:\s*1fr/,
 );
 assert.match(
   styles,
-  /\.joto-mall__cards--home[\s\S]*\.joto-mall__card-summary\s*\{[\s\S]*display:\s*none/,
+  /\.joto-mall__card-model\s*\{[\s\S]*overflow-wrap:\s*anywhere/,
 );
+assert.doesNotMatch(
+  styles,
+  /\.joto-mall__card-model\s*\{[\s\S]{0,320}-webkit-line-clamp/,
+);
+assert.match(styles, /radial-gradient\([\s\S]*linear-gradient\(/);
 assert.match(
   styles,
   /\.joto-mall__contact-panel\s*\{[\s\S]*border:\s*0[\s\S]*background:\s*transparent/,
@@ -212,10 +212,6 @@ assert.doesNotMatch(styles, /background-size:\s*32px 32px/);
 assert.match(
   styles,
   /\.joto-mall__hero-title[\s\S]*font-size:\s*clamp\(34px,\s*5vw,\s*56px\)/,
-);
-assert.match(
-  styles,
-  /\.joto-mall__card-title[\s\S]*font-size:\s*18px/,
 );
 for (const route of [
   "/zh/mall/product/index.html",

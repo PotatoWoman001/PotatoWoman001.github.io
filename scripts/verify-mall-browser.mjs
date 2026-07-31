@@ -146,26 +146,23 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
     `${testCase.locale}/${viewport.name}: real categories were not rendered`,
   );
   const categoryLayout = await page
-    .locator(".joto-mall__section--categories")
-    .evaluate((section) => {
-      const track = section.querySelector(".joto-mall__category-grid");
-      const links = [...track.querySelectorAll(".joto-mall__category")];
-      const first = links[0];
-      const last = links.at(-1);
+    .locator(".joto-mall__category-navigation")
+    .evaluate((track) => {
+      const buttons = [...track.querySelectorAll(".joto-mall__category")];
+      const first = buttons[0];
       const trackStyle = getComputedStyle(track);
       return {
-        sectionHeight: section.getBoundingClientRect().height,
+        sectionHeight: track.getBoundingClientRect().height,
         display: trackStyle.display,
         flexWrap: trackStyle.flexWrap,
         overflowX: trackStyle.overflowX,
         trackScrollWidth: track.scrollWidth,
         trackClientWidth: track.clientWidth,
         firstHeight: first.getBoundingClientRect().height,
-        firstHref: first.getAttribute("href"),
         firstActive: first.classList.contains("joto-mall__category--active"),
-        secondHref: links[1]?.getAttribute("href") || "",
-        lastHref: last.getAttribute("href"),
-        linkCount: links.length,
+        secondCategory: buttons[1]?.dataset.category || "",
+        buttonCount: buttons.length,
+        moreCategories: Boolean(track.querySelector('[data-select-name="category"]')),
       };
     });
   assert(
@@ -185,20 +182,20 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
     `${testCase.locale}/${viewport.name}: first category pill is ${categoryLayout.firstHeight}px tall`,
   );
   assert(
-    categoryLayout.firstHref === productsPath && categoryLayout.lastHref === productsPath,
-    `${testCase.locale}/${viewport.name}: all-products links are not localized`,
-  );
-  assert(
     categoryLayout.firstActive,
     `${testCase.locale}/${viewport.name}: first category pill is not active`,
   );
   assert(
-    categoryLayout.secondHref.includes("category="),
-    `${testCase.locale}/${viewport.name}: category link lost its filter query`,
+    Boolean(categoryLayout.secondCategory),
+    `${testCase.locale}/${viewport.name}: category button lost its state value`,
   );
   assert(
-    categoryLayout.linkCount >= 4,
+    categoryLayout.buttonCount >= 2 && categoryLayout.buttonCount <= 6,
     `${testCase.locale}/${viewport.name}: category navigation is incomplete`,
+  );
+  assert(
+    categoryLayout.moreCategories,
+    `${testCase.locale}/${viewport.name}: more-categories control is missing`,
   );
   if (viewport.name === "mobile") {
     assert(
@@ -207,24 +204,34 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
     );
   }
   const homeLayout = await page.locator("[data-joto-mall-home]").evaluate((root) => {
-    const cards = [...root.querySelectorAll(".joto-mall__cards--home .joto-mall__card")];
+    const cards = [...root.querySelectorAll(".joto-mall__cards--grid .joto-mall__card")];
     const firstCard = cards[0];
-    const grid = root.querySelector(".joto-mall__cards--home");
+    const grid = root.querySelector(".joto-mall__cards--grid");
     const search = root.querySelector(".joto-mall__search");
-    const categories = root.querySelector(".joto-mall__section--categories");
+    const categories = root.querySelector(".joto-mall__category-navigation");
     const contact = root.querySelector(".joto-mall__contact-panel");
-    const summary = root.querySelector(
-      ".joto-mall__cards--home .joto-mall__card-summary",
-    );
     const media = firstCard?.querySelector(".joto-mall__card-media");
+    const model = firstCard?.querySelector(".joto-mall__card-model");
+    const resultCount = root.querySelector(".joto-mall__result-count");
+    const pagination = root.querySelector(".joto-mall__pagination");
     const header = document.querySelector("header");
     const footer = document.querySelector("footer");
+    const rootStyle = getComputedStyle(root);
+    const modelStyle = model ? getComputedStyle(model) : null;
     return {
       cardCount: cards.length,
       columns: getComputedStyle(grid).gridTemplateColumns.split(" ").length,
-      background: getComputedStyle(root).backgroundColor,
+      resultCount: Number.parseInt(resultCount?.textContent || "0", 10),
+      background: rootStyle.backgroundColor,
+      backgroundHasGrid:
+        rootStyle.backgroundImage.includes("linear-gradient")
+        && rootStyle.backgroundImage.includes("radial-gradient"),
       mediaBackground: media ? getComputedStyle(media).backgroundColor : "",
-      summaryDisplay: summary ? getComputedStyle(summary).display : "missing",
+      modelOverflow: modelStyle?.overflow || "missing",
+      modelText: model?.textContent || "",
+      paginationVisible: Boolean(
+        pagination && getComputedStyle(pagination).display !== "none",
+      ),
       heroCategoryGap:
         categories.getBoundingClientRect().top - search.getBoundingClientRect().bottom,
       contactBorderWidth: getComputedStyle(contact).borderTopWidth,
@@ -237,23 +244,39 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
     viewport.width >= 1280 ? 6 : viewport.width >= 768 ? 3 : viewport.width >= 420 ? 2 : 1;
   assert(
     homeLayout.cardCount === 12,
-    `${testCase.locale}/${viewport.name}: expected 12 home cards`,
+    `${testCase.locale}/${viewport.name}: expected 12 catalog cards`,
+  );
+  assert(
+    homeLayout.resultCount > 12,
+    `${testCase.locale}/${viewport.name}: home did not expose the full catalog`,
+  );
+  assert(
+    homeLayout.paginationVisible,
+    `${testCase.locale}/${viewport.name}: pagination is missing`,
   );
   assert(
     homeLayout.columns === expectedColumns,
     `${testCase.locale}/${viewport.name}: expected ${expectedColumns} home columns, got ${homeLayout.columns}`,
   );
   assert(
-    homeLayout.background === "rgb(255, 255, 255)",
-    `${testCase.locale}/${viewport.name}: Mall is not white`,
+    homeLayout.background === "rgb(248, 251, 249)",
+    `${testCase.locale}/${viewport.name}: Mall base is not the technical off-white`,
+  );
+  assert(
+    homeLayout.backgroundHasGrid,
+    `${testCase.locale}/${viewport.name}: technical grid is missing`,
   );
   assert(
     homeLayout.mediaBackground === "rgb(255, 255, 255)",
     `${testCase.locale}/${viewport.name}: media is not white`,
   );
   assert(
-    ["none", "missing"].includes(homeLayout.summaryDisplay),
-    `${testCase.locale}/${viewport.name}: home summary is visible`,
+    homeLayout.modelOverflow === "visible",
+    `${testCase.locale}/${viewport.name}: model is clipped`,
+  );
+  assert(
+    !homeLayout.modelText.includes("…"),
+    `${testCase.locale}/${viewport.name}: model uses ellipsis`,
   );
   assert(
     homeLayout.heroCategoryGap <= 48,
@@ -269,10 +292,10 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
   );
   assert(
     (await page.locator(".joto-mall__card").count()) === 12,
-    `${testCase.locale}/${viewport.name}: recent products did not render 12 cards`,
+    `${testCase.locale}/${viewport.name}: catalog did not render 12 cards`,
   );
   assert(
-    !(await page.locator(".joto-mall__card-title").allTextContents())
+    !(await page.locator(".joto-mall__card-model").allTextContents())
       .join("\n")
       .includes(HIDDEN_PRODUCT.titleToken),
     `${testCase.locale}/${viewport.name}: no-image product rendered on Mall home`,
@@ -289,7 +312,7 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
   await page.locator("[data-joto-mall-home] form[role=search]").evaluate(
     (form) => form.requestSubmit(),
   );
-  await waitForCatalog(page, "[data-joto-mall-products]");
+  await waitForCatalog(page, "[data-joto-mall-home]");
   assert(
     (await searchParam(page, "q")) === "D-Link",
     `${testCase.locale}/${viewport.name}: home search query was not preserved`,
@@ -306,7 +329,7 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
     `${testCase.locale}/${viewport.name}: filtered product total is not 15`,
   );
   assert(
-    !(await page.locator(".joto-mall__card-title").allTextContents())
+    !(await page.locator(".joto-mall__card-model").allTextContents())
       .join("\n")
       .includes(HIDDEN_PRODUCT.titleToken),
     `${testCase.locale}/${viewport.name}: no-image product rendered in catalog`,
