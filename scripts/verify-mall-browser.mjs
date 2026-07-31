@@ -221,7 +221,7 @@ async function exerciseCatalog(page, origin, testCase, viewport) {
     return {
       cardCount: cards.length,
       columns: getComputedStyle(grid).gridTemplateColumns.split(" ").length,
-      resultCount: Number.parseInt(resultCount?.textContent || "0", 10),
+      resultCount: Number.parseInt(resultCount?.dataset.resultCount || "0", 10),
       background: rootStyle.backgroundColor,
       backgroundHasGrid:
         rootStyle.backgroundImage.includes("linear-gradient")

@@ -1,8 +1,8 @@
 import {
-  hasProductImage,
   loadCatalogIndex,
   parseCatalogState,
   queryProducts,
+  rankedCategories,
   serializeCatalogState,
 } from "./mall-data-client.js?v=20260731-1";
 import { getMallLocale } from "./mall-i18n.js?v=20260731-1";
@@ -163,13 +163,16 @@ function productCard(product) {
   if (product.brand) {
     copy.append(element("p", { className: "joto-mall__card-brand", text: product.brand }));
   }
-  copy.append(element("h3", { className: "joto-mall__card-title", text: product.title }));
-  if (product.model) {
-    copy.append(element("p", { className: "joto-mall__card-model", text: product.model }));
-  }
-  if (product.summary) {
-    copy.append(element("p", { className: "joto-mall__card-summary", text: product.summary }));
-  }
+  copy.append(
+    element("p", {
+      className: "joto-mall__card-model",
+      text: product.model || "\u00a0",
+    }),
+    element("p", {
+      className: "joto-mall__card-type",
+      text: product.productType || "\u00a0",
+    }),
+  );
   copy.append(
     element("span", { className: "joto-mall__card-action", text: locale.viewDetails }),
   );
@@ -177,34 +180,7 @@ function productCard(product) {
   return element("article", { className: "joto-mall__card" }, [link]);
 }
 
-function sectionHeading(eyebrow, title) {
-  return element("header", { className: "joto-mall__section-heading" }, [
-    eyebrow ? element("p", { className: "joto-mall__eyebrow", text: eyebrow }) : null,
-    element("h2", { text: title }),
-  ]);
-}
-
-function normalizedCategories(index) {
-  const categories = Array.isArray(index.categories) ? index.categories : [];
-  const explicit = categories
-    .map((category) =>
-      typeof category === "string"
-        ? { name: category, slug: category }
-        : {
-            name: category.name || category.title || category.path?.[0],
-            slug: category.slug || category.name || category.path?.[0],
-          },
-    )
-    .filter((category) => category.name);
-  if (explicit.length) return explicit;
-  return [
-    ...new Set(
-      (index.products || []).map((product) => product.category_path?.[0]).filter(Boolean),
-    ),
-  ].map((name) => ({ name, slug: name }));
-}
-
-function renderSearch(target, compact = false) {
+function renderSearch(target, { compact = false, onSubmit } = {}) {
   const form = element("form", {
     className: compact ? "joto-mall__search joto-mall__search--compact" : "joto-mall__search",
     role: "search",
@@ -229,106 +205,22 @@ function renderSearch(target, compact = false) {
   form.append(label, input, submit);
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    const params = new URLSearchParams();
     const q = input.value.normalize("NFKC").trim();
+    if (onSubmit) {
+      onSubmit(q);
+      return;
+    }
+    const params = new URLSearchParams();
     if (q) params.set("q", q);
-    window.location.href = `${localizedPath("/mall/products/")}${params.size ? `?${params}` : ""}`;
+    window.location.href =
+      `${localizedPath("/mall/products/")}${params.size ? `?${params}` : ""}`;
   });
   target.append(form);
   return input;
 }
 
-function renderHome(mount, index) {
-  mount.replaceChildren();
-  const hero = element("section", {
-    className: "joto-mall__hero joto-mall__grid-field",
-    "aria-labelledby": "joto-mall-home-title",
-  });
-  const heroInner = element("div", { className: "joto-mall__inner" });
-  heroInner.append(
-    element("p", { className: "joto-mall__eyebrow", text: locale.eyebrow }),
-    element("h1", {
-      id: "joto-mall-home-title",
-      className: "joto-mall__hero-title",
-      text: locale.homeTitle,
-    }),
-    element("p", { className: "joto-mall__hero-intro", text: locale.homeIntro }),
-  );
-  renderSearch(heroInner);
-  hero.append(heroInner);
-
-  const categories = normalizedCategories(index);
-  const productsHref = localizedPath("/mall/products/");
-  const categorySection = element("section", {
-    className: "joto-mall__section joto-mall__section--categories",
-  });
-  categorySection.append(sectionHeading("", locale.categories));
-  const categoryGrid = element("div", {
-    className: "joto-mall__category-grid",
-    role: "navigation",
-    "aria-label": locale.categories,
-  });
-  categoryGrid.append(
-    element("a", {
-      href: productsHref,
-      className: "joto-mall__category joto-mall__category--active",
-      text: locale.allProducts,
-    }),
-  );
-  categories.forEach((category) => {
-    const href = `${productsHref}?${new URLSearchParams({
-      category: category.name,
-    })}`;
-    categoryGrid.append(
-      element("a", {
-        href,
-        className: "joto-mall__category",
-        text: category.name,
-        dir: "ltr",
-      }),
-    );
-  });
-  categoryGrid.append(
-    element("a", {
-      href: productsHref,
-      className: "joto-mall__category joto-mall__category--all",
-      text: locale.viewAllProducts,
-    }),
-  );
-  if (categories.length) categorySection.append(categoryGrid);
-
-  const recentSection = element("section", {
-    className: "joto-mall__section joto-mall__section--recent",
-  });
-  recentSection.append(sectionHeading("", locale.recent));
-  const recentGrid = element("div", {
-    className: "joto-mall__cards joto-mall__cards--home",
-  });
-  [...(index.products || [])]
-    .filter(hasProductImage)
-    .sort((a, b) =>
-      String(b.last_success_at || "").localeCompare(String(a.last_success_at || "")),
-    )
-    .slice(0, 12)
-    .forEach((product) => recentGrid.append(productCard(product)));
-  recentSection.append(recentGrid);
-
-  const scenarios = [
-    ...new Set((index.products || []).flatMap((product) => product.demand_tags || [])),
-  ].filter(Boolean);
-  const scenarioSection = element("section", { className: "joto-mall__section" });
-  if (scenarios.length) {
-    scenarioSection.append(sectionHeading("", locale.scenarios));
-    scenarioSection.append(
-      element(
-        "ul",
-        { className: "joto-mall__scenario-list", dir: "ltr" },
-        scenarios.map((scenario) => element("li", { text: scenario })),
-      ),
-    );
-  }
-
-  const contact = element("section", { className: "joto-mall__contact-panel" }, [
+function contactPanel() {
+  return element("section", { className: "joto-mall__contact-panel" }, [
     element("div", {}, [
       element("h2", { text: locale.contactTitle }),
       element("p", { text: locale.contactBody }),
@@ -339,11 +231,19 @@ function renderHome(mount, index) {
       text: locale.contact,
     }),
   ]);
-  mount.append(hero, categorySection, recentSection);
-  if (scenarios.length) mount.append(scenarioSection);
-  mount.append(contact);
-  mount.setAttribute("aria-busy", "false");
-  installCatalogSeo("home");
+}
+
+function paginationItems(page, totalPages) {
+  const pages = new Set([1, totalPages, page - 1, page, page + 1]);
+  const ordered = [...pages]
+    .filter((value) => value >= 1 && value <= totalPages)
+    .sort((a, b) => a - b);
+  const items = [];
+  ordered.forEach((value, index) => {
+    if (index && value - ordered[index - 1] > 1) items.push("ellipsis");
+    items.push(value);
+  });
+  return items;
 }
 
 function selectControl(labelText, name, options, selected) {
@@ -423,18 +323,65 @@ function selectControl(labelText, name, options, selected) {
   return wrapper;
 }
 
-function renderList(mount, index) {
-  let state = parseCatalogState(window.location.search);
-  const header = element("header", { className: "joto-mall__list-header" }, [
-    element("p", { className: "joto-mall__eyebrow", text: locale.eyebrow }),
-    element("h1", { text: locale.products }),
-  ]);
-  const searchSlot = element("div");
-  const searchInput = renderSearch(searchSlot, true);
+function renderCatalog(mount, index, { mode }) {
+  const isHome = mode === "home";
+  const catalogState = () => ({
+    ...parseCatalogState(window.location.search),
+    pageSize: 12,
+    view: "grid",
+  });
+  let state = catalogState();
+  const header = isHome
+    ? element(
+        "section",
+        {
+          className: "joto-mall__hero joto-mall__grid-field",
+          "aria-labelledby": "joto-mall-home-title",
+        },
+        [
+          element("div", { className: "joto-mall__inner" }, [
+            element("p", {
+              className: "joto-mall__eyebrow",
+              text: locale.eyebrow,
+            }),
+            element("h1", {
+              id: "joto-mall-home-title",
+              className: "joto-mall__hero-title",
+              text: locale.homeTitle,
+            }),
+            element("p", {
+              className: "joto-mall__hero-intro",
+              text: locale.homeIntro,
+            }),
+          ]),
+        ],
+      )
+    : element("header", { className: "joto-mall__list-header" }, [
+        element("p", { className: "joto-mall__eyebrow", text: locale.eyebrow }),
+        element("h1", { text: locale.products }),
+      ]);
+  const catalog = element("section", {
+    className: `joto-mall__catalog joto-mall__catalog--${mode}`,
+  });
+  const searchSlot = element("div", {
+    className: "joto-mall__catalog-search",
+  });
+  const searchInput = renderSearch(searchSlot, {
+    compact: true,
+    onSubmit: (q) => update({ q, page: 1 }),
+  });
   searchInput.value = state.q;
   const controls = element("form", {
     className: "joto-mall__filters",
     "aria-label": locale.filters,
+  });
+  const ranked = rankedCategories(index.products || []);
+  const primaryCategories = ranked.slice(0, 5);
+  const additionalCategories = ranked.slice(5);
+  const categoryNavigation = element("div", {
+    className: "joto-mall__category-navigation",
+    role: "navigation",
+    "aria-label": locale.categories,
   });
   const resultsHeading = element("h2", {
     className: "joto-mall__result-count",
@@ -444,7 +391,9 @@ function renderList(mount, index) {
     className: "joto-mall__sr-only",
     "aria-live": "polite",
   });
-  const resultGrid = element("div", { className: "joto-mall__cards" });
+  const resultGrid = element("div", {
+    className: "joto-mall__cards joto-mall__cards--grid",
+  });
   const pagination = element("nav", {
     className: "joto-mall__pagination",
     "aria-label": locale.page,
@@ -468,6 +417,47 @@ function renderList(mount, index) {
     { value: "", label: allLabel },
     ...values.map((value) => ({ value, label: value, dir })),
   ];
+
+  function categoryButton(value, label, selected) {
+    return element("button", {
+      type: "button",
+      className: selected
+        ? "joto-mall__category joto-mall__category--active"
+        : "joto-mall__category",
+      text: label,
+      dataset: { category: value },
+      "aria-pressed": String(selected),
+      dir: value ? "ltr" : undefined,
+    });
+  }
+
+  function paintCategories(selected) {
+    const items = [
+      categoryButton("", locale.allProducts, !selected),
+      ...primaryCategories.map(({ name }) =>
+        categoryButton(name, name, selected === name),
+      ),
+    ];
+    if (additionalCategories.length) {
+      const additionalValues = additionalCategories.map(({ name }) => name);
+      items.push(
+        selectControl(
+          locale.category,
+          "category",
+          [
+            { value: "", label: locale.moreCategories },
+            ...additionalValues.map((value) => ({
+              value,
+              label: value,
+              dir: "ltr",
+            })),
+          ],
+          additionalValues.includes(selected) ? selected : "",
+        ),
+      );
+    }
+    categoryNavigation.replaceChildren(...items);
+  }
 
   function closeSelect(wrapper, options = {}) {
     if (!wrapper) return;
@@ -544,16 +534,10 @@ function renderList(mount, index) {
     state = result.state;
     searchInput.value = state.q;
     closeAllSelects();
-    controls.replaceChildren(
-      selectControl(
-        locale.category,
-        "category",
-        filterOptions(locale.allCategories, result.facets.categories),
-        state.category,
-      ),
-    );
+    paintCategories(state.category);
+    const remainingFilterControls = [];
     if (result.facets.brands.length) {
-      controls.append(
+      remainingFilterControls.push(
         selectControl(
           locale.brand,
           "brand",
@@ -563,7 +547,7 @@ function renderList(mount, index) {
       );
     }
     if (result.facets.statuses.length) {
-      controls.append(
+      remainingFilterControls.push(
         selectControl(
           locale.status,
           "status",
@@ -573,7 +557,7 @@ function renderList(mount, index) {
       );
     }
     if (result.facets.conditions.length) {
-      controls.append(
+      remainingFilterControls.push(
         selectControl(
           locale.condition,
           "condition",
@@ -582,7 +566,7 @@ function renderList(mount, index) {
         ),
       );
     }
-    controls.append(
+    remainingFilterControls.push(
       selectControl(
         locale.sort,
         "sort",
@@ -603,14 +587,37 @@ function renderList(mount, index) {
         state.direction,
       ),
     );
+    controls.replaceChildren(categoryNavigation, ...remainingFilterControls);
 
-    const countText = `${result.total} ${locale.results}`;
+    const countText = `${locale.allProductsHeading} · ${result.total} ${locale.results}`;
     resultsHeading.textContent = countText;
+    resultsHeading.dataset.resultCount = String(result.total);
     live.textContent = countText;
     resultGrid.className = `joto-mall__cards joto-mall__cards--${state.view}`;
     resultGrid.replaceChildren();
     if (!result.products.length) {
-      resultGrid.append(element("p", { className: "joto-mall__empty", text: locale.noResults }));
+      const empty = element("div", { className: "joto-mall__empty" }, [
+        element("p", { text: locale.noResults }),
+      ]);
+      const clear = element("button", {
+        type: "button",
+        className: "joto-mall__button",
+        text: locale.clearFilters,
+      });
+      clear.addEventListener("click", () =>
+        update({
+          q: "",
+          category: "",
+          brand: "",
+          status: "",
+          condition: "",
+          sort: "title",
+          direction: "asc",
+          page: 1,
+        }),
+      );
+      empty.append(clear);
+      resultGrid.append(empty);
     } else {
       result.products.forEach((product) => resultGrid.append(productCard(product)));
     }
@@ -625,16 +632,43 @@ function renderList(mount, index) {
       disabled: result.page <= 1,
     });
     previous.addEventListener("click", () => update({ page: result.page - 1 }, { scroll: true }));
-    const current = element("span", {
-      text: `${locale.page} ${result.page} / ${result.totalPages}`,
+    pagination.append(previous);
+    paginationItems(result.page, result.totalPages).forEach((item) => {
+      if (item === "ellipsis") {
+        pagination.append(
+          element("span", {
+            className: "joto-mall__pagination-ellipsis",
+            text: "…",
+            "aria-hidden": "true",
+          }),
+        );
+        return;
+      }
+      const pageButton = element("button", {
+        type: "button",
+        className: "joto-mall__pagination-page",
+        text: String(item),
+        "aria-current": item === result.page ? "page" : undefined,
+        "aria-label": `${locale.page} ${item}`,
+      });
+      pageButton.addEventListener("click", () =>
+        update({ page: item }, { scroll: true }),
+      );
+      pagination.append(pageButton);
     });
+    pagination.append(
+      element("span", {
+        className: "joto-mall__pagination-mobile-current",
+        text: `${locale.page} ${result.page} / ${result.totalPages}`,
+      }),
+    );
     const next = element("button", {
       type: "button",
       text: locale.next,
       disabled: result.page >= result.totalPages,
     });
     next.addEventListener("click", () => update({ page: result.page + 1 }, { scroll: true }));
-    pagination.append(previous, current, next);
+    pagination.append(next);
   }
 
   controls.addEventListener("change", (event) => {
@@ -642,6 +676,11 @@ function renderList(mount, index) {
     if (select) update({ [select.name]: select.value, page: 1 });
   });
   controls.addEventListener("click", (event) => {
+    const category = event.target.closest("[data-category]");
+    if (category) {
+      update({ category: category.dataset.category, page: 1 });
+      return;
+    }
     const option = event.target.closest(".joto-mall__select-option");
     if (option) {
       chooseOption(option);
@@ -687,17 +726,12 @@ function renderList(mount, index) {
   document.addEventListener("pointerdown", (event) => {
     if (!controls.contains(event.target)) closeAllSelects();
   });
-  searchSlot.querySelector("form").addEventListener("submit", (event) => {
-    event.preventDefault();
-    update({ q: searchInput.value.normalize("NFKC").trim(), page: 1 });
-  });
   window.addEventListener("popstate", () => {
-    state = parseCatalogState(window.location.search);
+    state = catalogState();
     paint();
   });
 
-  mount.replaceChildren(
-    header,
+  catalog.append(
     searchSlot,
     controls,
     viewControls,
@@ -706,9 +740,11 @@ function renderList(mount, index) {
     resultGrid,
     pagination,
   );
+  mount.replaceChildren(header, catalog);
+  if (isHome) mount.append(contactPanel());
   mount.setAttribute("aria-busy", "false");
   paint();
-  installCatalogSeo("products");
+  installCatalogSeo(isHome ? "home" : "products");
 }
 
 async function start(mount, mode) {
@@ -717,8 +753,8 @@ async function start(mount, mode) {
   setStatus(mount, locale.loading);
   try {
     const index = await loadCatalogIndex({ signal: activeRequest.signal });
-    if (mode === "home") renderHome(mount, index);
-    else renderList(mount, index);
+    if (mode === "home") renderCatalog(mount, index, { mode: "home" });
+    else renderCatalog(mount, index, { mode: "list" });
   } catch (error) {
     if (error?.name !== "AbortError") {
       setStatus(mount, locale.unavailable, () => start(mount, mode));
