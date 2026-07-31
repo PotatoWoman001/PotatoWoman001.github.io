@@ -13,9 +13,9 @@ const contactRoutes = new Set([
 const solutionRoutePattern =
   /^(?:(?:zh|fa)\/)?solutions\/[^/]+(?:\/[^/]+)?\/index\.html$/;
 const finalScriptTag =
-  '<script type="module" src="/assets/contact-form-sections.js?v=20260731-2"></script>';
+  '<script type="module" src="/assets/contact-form-sections.js?v=20260731-3"></script>';
 const finalStyleTag =
-  '<link rel="stylesheet" href="/assets/contact-form-sections.css?v=20260731-2">';
+  '<link rel="stylesheet" href="/assets/contact-form-sections.css?v=20260731-3">';
 const bundleScriptPattern =
   /(<script type="module" crossorigin src="\/assets\/index-DaFvN0XI\.js(?:\?v=[^"]+)?"><\/script>)/;
 const bundleStylePattern =

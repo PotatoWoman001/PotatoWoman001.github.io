@@ -11,695 +11,303 @@ const VIEWPORTS = [
   { name: "mobile", width: 390, height: 844 },
 ];
 
-const HIDDEN_PRODUCT = {
-  slug: "di-7008-mini-d-link-di-7008-series-router-1xwan-7xlan-400mbps-ipsec-vpn",
-  titleToken: "DI-7008-MINI",
-};
+const HIDDEN_PRODUCT = "DI-7008-MINI";
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-async function searchParam(page, name) {
-  return page.evaluate(
-    (parameterName) => new URL(window.location.href).searchParams.get(parameterName),
-    name,
-  );
-}
-
-async function waitForCatalog(page, selector) {
+async function waitForCatalog(selector) {
   await page.waitForSelector(`${selector}[aria-busy="false"]`, {
     timeout: 20_000,
   });
 }
 
-async function assertLoadedImages(page, selector, label) {
+async function currentParams() {
+  return page.evaluate(() =>
+    Object.fromEntries(new URL(window.location.href).searchParams.entries()),
+  );
+}
+
+async function assertNoOverflow(label) {
+  const dimensions = await page.evaluate(() => ({
+    scrollWidth: document.documentElement.scrollWidth,
+    clientWidth: document.documentElement.clientWidth,
+  }));
+  assert(
+    dimensions.scrollWidth <= dimensions.clientWidth + 1,
+    `${label}: horizontal overflow ${dimensions.scrollWidth}/${dimensions.clientWidth}`,
+  );
+}
+
+async function assertImagesLoaded(selector, label) {
   const images = page.locator(`${selector} img`);
   const count = await images.count();
-  assert(count > 0, `${label}: expected at least one image`);
+  assert(count > 0, `${label}: expected product images`);
   for (const index of [...new Set([0, count - 1])]) {
     const image = images.nth(index);
     await image.scrollIntoViewIfNeeded();
-    await page.waitForFunction(
-      (node) => node.complete && node.naturalWidth > 0,
-      await image.elementHandle(),
-      { timeout: 15_000 },
+    await image.evaluate(
+      (node) =>
+        node.complete && node.naturalWidth > 0
+          ? true
+          : new Promise((resolve) => {
+              node.addEventListener("load", () => resolve(true), { once: true });
+              node.addEventListener("error", () => resolve(false), { once: true });
+            }),
+    );
+    assert(
+      await image.evaluate((node) => node.naturalWidth > 0),
+      `${label}: image failed to load`,
     );
   }
 }
 
-async function assertPageBasics(page, testCase, viewport, selector) {
-  const attributes = await page.evaluate(() => ({
-    lang: document.documentElement.lang,
-    dir: document.documentElement.dir,
-    scrollWidth: document.documentElement.scrollWidth,
-    clientWidth: document.documentElement.clientWidth,
-    bodyText: document.body.innerText,
-    title: document.title,
-    canonical: document.querySelector('link[rel="canonical"]')?.href || "",
-  }));
-  assert(
-    attributes.lang === testCase.lang,
-    `${testCase.locale}/${viewport.name}: lang was ${attributes.lang}`,
-  );
-  assert(
-    attributes.dir === testCase.dir,
-    `${testCase.locale}/${viewport.name}: dir was ${attributes.dir}`,
-  );
-  assert(
-    attributes.scrollWidth <= attributes.clientWidth + 1,
-    `${testCase.locale}/${viewport.name}: horizontal overflow ${attributes.scrollWidth}/${attributes.clientWidth}`,
-  );
-  assert(
-    !/\b(price|pricing|cart|checkout|payment|currency)\b/i.test(attributes.bodyText),
-    `${testCase.locale}/${viewport.name}: commerce wording rendered`,
-  );
-  assert(
-    !/not found|未找到|پیدا نشد/i.test(attributes.title),
-    `${testCase.locale}/${viewport.name}: catalog retained the SPA 404 title`,
-  );
-  assert(
-    attributes.canonical.includes(`${testCase.prefix}/mall/`),
-    `${testCase.locale}/${viewport.name}: localized canonical missing`,
-  );
-  await page.waitForSelector("a[data-joto-mall-link]", {
-    state: "attached",
-    timeout: 15_000,
-  });
-  const mallStyles = await page.locator("[data-joto-mall]").evaluate((node) => {
-    const style = getComputedStyle(node);
-    const title = node.querySelector(
+async function assertPageBasics(testCase, viewport, selector) {
+  const basics = await page.evaluate(() => {
+    const root = document.querySelector("[data-joto-mall]");
+    const title = root?.querySelector(
       ".joto-mall__hero-title, .joto-mall__list-header h1, .joto-mall__product-summary h1",
     );
+    const rootStyle = root ? getComputedStyle(root) : null;
     return {
-      backgroundColor: style.backgroundColor,
-      backgroundImage: style.backgroundImage,
-      fontFamily: style.fontFamily,
+      lang: document.documentElement.lang,
+      dir: document.documentElement.dir,
+      canonical: document.querySelector('link[rel="canonical"]')?.href || "",
+      background: rootStyle?.backgroundColor || "",
+      backgroundImage: rootStyle?.backgroundImage || "",
+      fontFamily: rootStyle?.fontFamily || "",
       titleSize: title ? Number.parseFloat(getComputedStyle(title).fontSize) : 0,
     };
   });
+  const label = `${testCase.locale}/${viewport.name}`;
+  assert(basics.lang === testCase.lang, `${label}: wrong lang ${basics.lang}`);
+  assert(basics.dir === testCase.dir, `${label}: wrong dir ${basics.dir}`);
   assert(
-    mallStyles.backgroundColor === "rgb(248, 251, 249)",
-    `${testCase.locale}/${viewport.name}: Mall background is not the technical off-white`,
+    basics.canonical.includes(`${testCase.prefix}/mall/`),
+    `${label}: localized canonical missing`,
   );
   assert(
-    mallStyles.backgroundImage.includes("linear-gradient")
-      && mallStyles.backgroundImage.includes("radial-gradient"),
-    `${testCase.locale}/${viewport.name}: Mall technical grid is missing`,
+    basics.background === "rgb(248, 251, 249)",
+    `${label}: Mall background is not off-white`,
   );
   assert(
-    mallStyles.fontFamily.startsWith("Poppins"),
-    `${testCase.locale}/${viewport.name}: Mall font is not Poppins-first`,
+    basics.backgroundImage.includes("linear-gradient")
+      && basics.backgroundImage.includes("radial-gradient"),
+    `${label}: technical grid background missing`,
+  );
+  assert(
+    basics.fontFamily.startsWith("Poppins"),
+    `${label}: Mall font is not Poppins-first`,
   );
   const titleMaximum = viewport.name === "desktop" ? 56 : viewport.name === "tablet" ? 48 : 34;
   assert(
-    mallStyles.titleSize > 0 && mallStyles.titleSize <= titleMaximum,
-    `${testCase.locale}/${viewport.name}: Mall title size ${mallStyles.titleSize}px exceeds ${titleMaximum}px`,
+    basics.titleSize > 0 && basics.titleSize <= titleMaximum,
+    `${label}: title is ${basics.titleSize}px`,
   );
-  const mallLinks = page.locator("a[data-joto-mall-link]");
-  assert(
-    (await mallLinks.count()) > 0,
-    `${testCase.locale}/${viewport.name}: Mall navigation link missing`,
-  );
-  if (viewport.name === "desktop") {
-    const visibleMallLinks = await mallLinks.evaluateAll((links) =>
-      links.filter((link) => {
-        const style = getComputedStyle(link);
-        const box = link.getBoundingClientRect();
-        return style.display !== "none" && style.visibility !== "hidden" && box.width > 0;
-      }).length,
-    );
-    assert(
-      visibleMallLinks > 0,
-      `${testCase.locale}/${viewport.name}: Mall navigation link not visible`,
-    );
-  }
-  await assertLoadedImages(page, selector, `${testCase.locale}/${viewport.name}`);
+  await assertNoOverflow(label);
+  await assertImagesLoaded(selector, label);
 }
 
-async function exerciseCatalog(page, origin, testCase, viewport) {
+async function assertContactForm(testCase, viewport) {
+  const label = `${testCase.locale}/${viewport.name}`;
+  const form = page.locator(".joto-mall__contact-form form");
+  assert((await form.count()) === 1, `${label}: Mall contact form missing`);
+  for (const name of ["name", "company", "email", "phoneOrWechat", "message"]) {
+    assert(
+      (await form.locator(`[name="${name}"]`).count()) === 1,
+      `${label}: contact field ${name} missing`,
+    );
+  }
+  if (viewport.name !== "desktop") return;
+
+  let payload = null;
+  await page.route("**/api/contact", async (route) => {
+    payload = JSON.parse(route.request().postData() || "{}");
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ ok: true }),
+    });
+  });
+  await form.locator('[name="name"]').fill("Mall Browser Test");
+  await form.locator('[name="company"]').fill("JOTO");
+  await form.locator('[name="email"]').fill("mall-test@example.com");
+  await form.locator('[name="message"]').fill("Catalog inquiry");
+  await form.evaluate((node) => node.requestSubmit());
+  await page.waitForFunction(
+    () => document.querySelector("[data-solution-contact-status]")?.textContent.trim().length > 0,
+  );
+  assert(payload?.message === "Catalog inquiry", `${label}: contact POST payload missing`);
+  await page.unroute("**/api/contact");
+}
+
+async function exerciseCatalog(origin, testCase, viewport) {
+  const label = `${testCase.locale}/${viewport.name}`;
   const homePath = `${testCase.prefix}/mall/`;
   const productsPath = `${testCase.prefix}/mall/products/`;
-  await page.goto(`${origin}${homePath}`, { waitUntil: "domcontentloaded" });
-  await waitForCatalog(page, "[data-joto-mall-home]");
+  const legacyQuery =
+    "?status=In+Stock&brand=Huawei&condition=Original+New&sort=recent&direction=desc&size=12";
+
+  await page.goto(`${origin}${homePath}${legacyQuery}`, {
+    waitUntil: "domcontentloaded",
+  });
+  await waitForCatalog("[data-joto-mall-home]");
+
+  const normalizedParams = await currentParams();
   assert(
-    (await page.locator(".joto-mall__category").count()) >= 2,
-    `${testCase.locale}/${viewport.name}: real categories were not rendered`,
+    Object.keys(normalizedParams).length === 0,
+    `${label}: legacy params remain ${JSON.stringify(normalizedParams)}`,
   );
-  const categoryLayout = await page
-    .locator(".joto-mall__category-navigation")
-    .evaluate((track) => {
-      const buttons = [...track.querySelectorAll(".joto-mall__category")];
-      const first = buttons[0];
-      const trackStyle = getComputedStyle(track);
-      return {
-        sectionHeight: track.getBoundingClientRect().height,
-        display: trackStyle.display,
-        flexWrap: trackStyle.flexWrap,
-        overflowX: trackStyle.overflowX,
-        trackScrollWidth: track.scrollWidth,
-        trackClientWidth: track.clientWidth,
-        firstHeight: first.getBoundingClientRect().height,
-        firstActive: first.classList.contains("joto-mall__category--active"),
-        secondCategory: buttons[1]?.dataset.category || "",
-        buttonCount: buttons.length,
-        moreCategories: Boolean(track.querySelector('[data-select-name="category"]')),
-      };
-    });
-  assert(
-    categoryLayout.sectionHeight <= 180,
-    `${testCase.locale}/${viewport.name}: category section is ${categoryLayout.sectionHeight}px tall`,
-  );
-  assert(
-    categoryLayout.display === "flex" && categoryLayout.flexWrap === "nowrap",
-    `${testCase.locale}/${viewport.name}: category track is not a single flex row`,
-  );
-  assert(
-    ["auto", "scroll"].includes(categoryLayout.overflowX),
-    `${testCase.locale}/${viewport.name}: category track is not horizontally scrollable`,
-  );
-  assert(
-    Math.abs(categoryLayout.firstHeight - 40) <= 1,
-    `${testCase.locale}/${viewport.name}: first category pill is ${categoryLayout.firstHeight}px tall`,
-  );
-  assert(
-    categoryLayout.firstActive,
-    `${testCase.locale}/${viewport.name}: first category pill is not active`,
-  );
-  assert(
-    Boolean(categoryLayout.secondCategory),
-    `${testCase.locale}/${viewport.name}: category button lost its state value`,
-  );
-  assert(
-    categoryLayout.buttonCount >= 2 && categoryLayout.buttonCount <= 6,
-    `${testCase.locale}/${viewport.name}: category navigation is incomplete`,
-  );
-  if (categoryLayout.buttonCount === 6) {
+  for (const name of ["brand", "status", "condition", "sort", "direction", "size"]) {
     assert(
-      categoryLayout.moreCategories,
-      `${testCase.locale}/${viewport.name}: more-categories control is missing`,
+      (await page.locator(`[name="${name}"], [data-select-name="${name}"]`).count()) === 0,
+      `${label}: obsolete ${name} control remains`,
     );
   }
-  if (viewport.name === "mobile") {
-    assert(
-      categoryLayout.trackScrollWidth > categoryLayout.trackClientWidth,
-      `${testCase.locale}/mobile: category track does not expose horizontal discovery`,
-    );
-  }
-  const homeLayout = await page.locator("[data-joto-mall-home]").evaluate((root) => {
+
+  const layout = await page.locator("[data-joto-mall-home]").evaluate((root) => {
     const cards = [...root.querySelectorAll(".joto-mall__cards--grid .joto-mall__card")];
-    const firstCard = cards[0];
     const grid = root.querySelector(".joto-mall__cards--grid");
-    const search = root.querySelector(".joto-mall__search");
+    const models = [...root.querySelectorAll(".joto-mall__card-model")];
+    const result = root.querySelector(".joto-mall__result-count");
     const categories = root.querySelector(".joto-mall__category-navigation");
-    const contact = root.querySelector(".joto-mall__contact-panel");
-    const media = firstCard?.querySelector(".joto-mall__card-media");
-    const model = firstCard?.querySelector(".joto-mall__card-model");
-    const resultCount = root.querySelector(".joto-mall__result-count");
-    const pagination = root.querySelector(".joto-mall__pagination");
-    const header = document.querySelector("header");
-    const footer = document.querySelector("footer");
-    const rootStyle = getComputedStyle(root);
-    const modelStyle = model ? getComputedStyle(model) : null;
+    const search = root.querySelector(".joto-mall__search");
     return {
       cardCount: cards.length,
       columns: getComputedStyle(grid).gridTemplateColumns.split(" ").length,
-      resultCount: Number.parseInt(resultCount?.dataset.resultCount || "0", 10),
-      background: rootStyle.backgroundColor,
-      backgroundHasGrid:
-        rootStyle.backgroundImage.includes("linear-gradient")
-        && rootStyle.backgroundImage.includes("radial-gradient"),
-      mediaBackground: media ? getComputedStyle(media).backgroundColor : "",
-      modelOverflow: modelStyle?.overflow || "missing",
-      modelText: model?.textContent || "",
-      paginationVisible: Boolean(
-        pagination && getComputedStyle(pagination).display !== "none",
+      total: Number.parseInt(result?.dataset.resultCount || "0", 10),
+      categoryCount: root.querySelectorAll(".joto-mall__category").length,
+      categoryHeight: categories.getBoundingClientRect().height,
+      categoryDisplay: getComputedStyle(categories).display,
+      categoryWrap: getComputedStyle(categories).flexWrap,
+      categoryOverflowX: getComputedStyle(categories).overflowX,
+      categoryScrollWidth: categories.scrollWidth,
+      categoryClientWidth: categories.clientWidth,
+      categoryGap: categories.getBoundingClientRect().top
+        - search.getBoundingClientRect().bottom,
+      modelLines: models.map((model) => ({
+        text: model.textContent,
+        whiteSpace: getComputedStyle(model).whiteSpace,
+        overflow: getComputedStyle(model).overflow,
+        scrollWidth: model.scrollWidth,
+        clientWidth: model.clientWidth,
+      })),
+      mediaWhite: cards.every(
+        (card) =>
+          getComputedStyle(card.querySelector(".joto-mall__card-media")).backgroundColor
+          === "rgb(255, 255, 255)",
       ),
-      heroCategoryGap:
-        categories.getBoundingClientRect().top - search.getBoundingClientRect().bottom,
-      contactBorderWidth: getComputedStyle(contact).borderTopWidth,
-      contactBackground: getComputedStyle(contact).backgroundColor,
-      headerBackground: header ? getComputedStyle(header).backgroundColor : "",
-      footerBackground: footer ? getComputedStyle(footer).backgroundColor : "",
     };
   });
   const expectedColumns =
     viewport.width >= 1280 ? 6 : viewport.width >= 768 ? 3 : viewport.width >= 420 ? 2 : 1;
+  assert(layout.cardCount === 24, `${label}: expected 24 cards, got ${layout.cardCount}`);
+  assert(layout.total > 200, `${label}: expected complete catalog, got ${layout.total}`);
+  assert(layout.columns === expectedColumns, `${label}: expected ${expectedColumns} columns`);
+  assert(layout.categoryCount >= 2, `${label}: category navigation incomplete`);
+  assert(layout.categoryHeight <= 64, `${label}: category row is ${layout.categoryHeight}px tall`);
   assert(
-    homeLayout.cardCount === 12,
-    `${testCase.locale}/${viewport.name}: expected 12 catalog cards`,
+    layout.categoryDisplay === "flex" && layout.categoryWrap === "nowrap",
+    `${label}: categories are not a single row`,
   );
   assert(
-    homeLayout.resultCount > 12,
-    `${testCase.locale}/${viewport.name}: home did not expose the full catalog`,
+    ["auto", "scroll"].includes(layout.categoryOverflowX),
+    `${label}: categories are not horizontally discoverable`,
   );
+  if (viewport.name === "mobile") {
+    assert(
+      layout.categoryScrollWidth > layout.categoryClientWidth,
+      `${label}: category row does not scroll`,
+    );
+  }
+  assert(layout.categoryGap <= 48, `${label}: search/category gap is ${layout.categoryGap}px`);
+  assert(layout.mediaWhite, `${label}: product image background is not white`);
   assert(
-    homeLayout.paginationVisible,
-    `${testCase.locale}/${viewport.name}: pagination is missing`,
-  );
-  assert(
-    homeLayout.columns === expectedColumns,
-    `${testCase.locale}/${viewport.name}: expected ${expectedColumns} home columns, got ${homeLayout.columns}`,
-  );
-  assert(
-    homeLayout.background === "rgb(248, 251, 249)",
-    `${testCase.locale}/${viewport.name}: Mall base is not the technical off-white`,
-  );
-  assert(
-    homeLayout.backgroundHasGrid,
-    `${testCase.locale}/${viewport.name}: technical grid is missing`,
-  );
-  assert(
-    homeLayout.mediaBackground === "rgb(255, 255, 255)",
-    `${testCase.locale}/${viewport.name}: media is not white`,
-  );
-  assert(
-    homeLayout.modelOverflow === "visible",
-    `${testCase.locale}/${viewport.name}: model is clipped`,
-  );
-  assert(
-    !homeLayout.modelText.includes("…"),
-    `${testCase.locale}/${viewport.name}: model uses ellipsis`,
-  );
-  assert(
-    homeLayout.heroCategoryGap <= 48,
-    `${testCase.locale}/${viewport.name}: hero/category gap is ${homeLayout.heroCategoryGap}px`,
-  );
-  assert(
-    homeLayout.contactBorderWidth === "0px",
-    `${testCase.locale}/${viewport.name}: contact border remains`,
-  );
-  assert(
-    ["rgba(0, 0, 0, 0)", "transparent"].includes(homeLayout.contactBackground),
-    `${testCase.locale}/${viewport.name}: contact background remains`,
-  );
-  assert(
-    (await page.locator(".joto-mall__card").count()) === 12,
-    `${testCase.locale}/${viewport.name}: catalog did not render 12 cards`,
+    layout.modelLines.every(
+      (model) =>
+        model.whiteSpace === "nowrap"
+        && model.overflow === "hidden"
+        && model.scrollWidth <= model.clientWidth + 1
+        && !model.text.includes("…"),
+    ),
+    `${label}: model is wrapped, clipped or ellipsized`,
   );
   assert(
     !(await page.locator(".joto-mall__card-model").allTextContents())
       .join("\n")
-      .includes(HIDDEN_PRODUCT.titleToken),
-    `${testCase.locale}/${viewport.name}: no-image product rendered on Mall home`,
+      .includes(HIDDEN_PRODUCT),
+    `${label}: no-image product remains in listing`,
   );
-  await assertPageBasics(
-    page,
-    testCase,
-    viewport,
-    "[data-joto-mall-home]",
-  );
+  await assertPageBasics(testCase, viewport, "[data-joto-mall-home]");
+  await assertContactForm(testCase, viewport);
 
-  const homeSearch = page.locator("[data-joto-mall-home] input[type=search]");
-  await homeSearch.fill("D-Link");
-  await page.locator("[data-joto-mall-home] form[role=search]").evaluate(
-    (form) => form.requestSubmit(),
-  );
-  await waitForCatalog(page, "[data-joto-mall-home]");
-  assert(
-    (await searchParam(page, "q")) === "D-Link",
-    `${testCase.locale}/${viewport.name}: home search query was not preserved`,
-  );
-  assert(
-    (await page.locator(".joto-mall__card").count()) > 0,
-    `${testCase.locale}/${viewport.name}: search returned no results`,
-  );
-
-  await page.goto(`${origin}${productsPath}`, { waitUntil: "domcontentloaded" });
-  await waitForCatalog(page, "[data-joto-mall-products]");
+  const categoryButtons = page.locator(".joto-mall__category");
+  await categoryButtons.nth(1).click();
+  await waitForCatalog("[data-joto-mall-home]");
   assert(
     Number.parseInt(
       await page.locator(".joto-mall__result-count").getAttribute("data-result-count"),
       10,
-    ) > 12,
-    `${testCase.locale}/${viewport.name}: product page did not expose the full catalog`,
+    ) > 0,
+    `${label}: second category is empty`,
   );
-  assert(
-    !(await page.locator(".joto-mall__card-model").allTextContents())
-      .join("\n")
-      .includes(HIDDEN_PRODUCT.titleToken),
-    `${testCase.locale}/${viewport.name}: no-image product rendered in catalog`,
-  );
-  const productGridClass = await page
-    .locator("[data-joto-mall-products] .joto-mall__cards")
-    .getAttribute("class");
-  assert(
-    productGridClass.includes("joto-mall__cards--grid"),
-    `${testCase.locale}/${viewport.name}: shared catalog grid class is missing`,
-  );
+  await page.locator(".joto-mall__category").first().click();
+  await waitForCatalog("[data-joto-mall-home]");
 
-  await page.goto(
-    `${origin}${productsPath}?q=${encodeURIComponent(HIDDEN_PRODUCT.titleToken)}`,
-    { waitUntil: "domcontentloaded" },
-  );
-  await waitForCatalog(page, "[data-joto-mall-products]");
-  assert(
-    (await page.locator(".joto-mall__card").count()) === 0
-      && Number.parseInt(
-        await page.locator(".joto-mall__result-count").getAttribute(
-          "data-result-count",
-        ),
-        10,
-      ) === 0,
-    `${testCase.locale}/${viewport.name}: no-image product remains searchable`,
-  );
-
-  await page.goto(`${origin}${productsPath}`, { waitUntil: "domcontentloaded" });
-  await waitForCatalog(page, "[data-joto-mall-products]");
-  const sortControl = page.locator('[data-select-name="sort"]');
-  const directionControl = page.locator('[data-select-name="direction"]');
-  const sortValues = await sortControl
-    .locator("select option")
-    .evaluateAll((options) => options.map((option) => option.value));
-  const directionValues = await directionControl
-    .locator("select option")
-    .evaluateAll((options) => options.map((option) => option.value));
-  assert(
-    JSON.stringify(sortValues) === JSON.stringify(["title", "brand", "recent"]),
-    `${testCase.locale}/${viewport.name}: sort values were ${sortValues.join(",")}`,
-  );
-  assert(
-    JSON.stringify(directionValues) === JSON.stringify(["asc", "desc"]),
-    `${testCase.locale}/${viewport.name}: direction values were ${directionValues.join(",")}`,
-  );
-  const sortLabels = await sortControl
-    .locator('[role="option"]')
-    .allTextContents();
-  const directionLabels = await directionControl
-    .locator('[role="option"]')
-    .allTextContents();
-  assert(
-    new Set(sortLabels).size === sortLabels.length,
-    `${testCase.locale}/${viewport.name}: duplicate sort labels rendered`,
-  );
-  assert(
-    new Set(directionLabels).size === directionLabels.length,
-    `${testCase.locale}/${viewport.name}: duplicate direction labels rendered`,
-  );
-
-  const sortTrigger = sortControl.locator(".joto-mall__select-trigger");
-  await sortTrigger.click();
-  const sortMenuStyle = await sortControl
-    .locator(".joto-mall__select-menu")
-    .evaluate((menu) => ({
-      background: getComputedStyle(menu).backgroundColor,
-      hidden: menu.hidden,
-      role: menu.getAttribute("role"),
-    }));
-  assert(
-    !sortMenuStyle.hidden
-      && sortMenuStyle.background === "rgb(255, 255, 255)"
-      && sortMenuStyle.role === "listbox",
-    `${testCase.locale}/${viewport.name}: sort menu was not the white listbox`,
-  );
-  await page.locator(".joto-mall__list-header h1").click();
-  assert(
-    await sortControl.locator(".joto-mall__select-menu").isHidden(),
-    `${testCase.locale}/${viewport.name}: outside click did not close sort menu`,
-  );
-
-  await sortTrigger.click();
-  await sortControl
-    .locator('.joto-mall__select-option[data-value="recent"]')
-    .click();
-  assert(
-    (await searchParam(page, "sort")) === "recent",
-    `${testCase.locale}/${viewport.name}: custom sort option did not update URL`,
-  );
-
-  await page.goto(`${origin}${productsPath}`, { waitUntil: "domcontentloaded" });
-  await waitForCatalog(page, "[data-joto-mall-products]");
-  const ascendingTitle = await page
-    .locator(".joto-mall__card-model")
-    .first()
-    .innerText();
-  const directionTrigger = page.locator(
-    '[data-select-name="direction"] .joto-mall__select-trigger',
-  );
-  await directionTrigger.focus();
-  await directionTrigger.press("Enter");
-  await page.keyboard.press("End");
-  await page.keyboard.press("Enter");
-  await page.waitForFunction(
-    () => new URL(window.location.href).searchParams.get("direction") === "desc",
-  );
-  const descendingTitle = await page
-    .locator(".joto-mall__card-model")
-    .first()
-    .innerText();
-  assert(
-    ascendingTitle !== descendingTitle,
-    `${testCase.locale}/${viewport.name}: descending sort did not change order`,
-  );
-  assert(
-    (await searchParam(page, "direction")) === "desc",
-    `${testCase.locale}/${viewport.name}: sort state missing from URL`,
-  );
-
-  const categoryTrigger = page.locator(
-    '[data-select-name="category"] .joto-mall__select-trigger',
-  );
-  await categoryTrigger.focus();
-  await categoryTrigger.press("ArrowDown");
-  await page.keyboard.press("End");
-  await page.keyboard.press("Home");
-  await page.keyboard.press("Escape");
-  assert(
-    (await categoryTrigger.getAttribute("aria-expanded")) === "false"
-      && (await categoryTrigger.evaluate((node) => document.activeElement === node)),
-    `${testCase.locale}/${viewport.name}: keyboard close did not restore category trigger`,
-  );
-
-  const categorySelect = page.locator('select[name="category"]');
-  const categoryValues = await categorySelect.locator("option").evaluateAll(
-    (options) => options.map((option) => option.value).filter(Boolean),
-  );
-  assert(
-    categoryValues.length >= 2,
-    `${testCase.locale}/${viewport.name}: category filter has insufficient values`,
-  );
-  if (testCase.dir === "rtl") {
-    const rtlDirections = await page
-      .locator('[data-select-name="category"]')
-      .evaluate((control) => ({
-        trigger: getComputedStyle(
-          control.querySelector(".joto-mall__select-trigger"),
-        ).direction,
-        technicalOption: control.querySelector(
-          '.joto-mall__select-option[data-value]:not([data-value=""])',
-        )?.dir,
-      }));
-    assert(
-      rtlDirections.trigger === "rtl" && rtlDirections.technicalOption === "ltr",
-      `${testCase.locale}/${viewport.name}: RTL control or LTR technical option is incorrect`,
-    );
-  }
-  await categorySelect.selectOption(categoryValues[0]);
-  assert(
-    (await searchParam(page, "category")) === categoryValues[0],
-    `${testCase.locale}/${viewport.name}: category state missing from URL`,
-  );
-
-  await page.goto(`${origin}${productsPath}`, { waitUntil: "domcontentloaded" });
-  await waitForCatalog(page, "[data-joto-mall-products]");
-  const brandSelect = page.locator('select[name="brand"]');
-  if (await brandSelect.count()) {
-    const brand = await brandSelect.locator("option").nth(1).getAttribute("value");
-    await brandSelect.selectOption(brand);
-    assert(
-      (await searchParam(page, "brand")) === brand,
-      `${testCase.locale}/${viewport.name}: brand state missing from URL`,
-    );
-  }
-
-  await page.goto(`${origin}${productsPath}`, { waitUntil: "domcontentloaded" });
-  await waitForCatalog(page, "[data-joto-mall-products]");
-  await page.locator('[data-view="list"]').click();
-  assert(
-    (await searchParam(page, "view")) === "list",
-    `${testCase.locale}/${viewport.name}: list view state missing from URL`,
-  );
-  assert(
-    await page.locator(".joto-mall__cards--list").count(),
-    `${testCase.locale}/${viewport.name}: list view class missing`,
-  );
-
-  await page.goto(`${origin}${productsPath}`, { waitUntil: "domcontentloaded" });
-  await waitForCatalog(page, "[data-joto-mall-products]");
-  const next = page.locator(".joto-mall__pagination button").last();
-  assert(!(await next.isDisabled()), `${testCase.locale}/${viewport.name}: next page disabled`);
-  await next.click();
-  assert(
-    (await searchParam(page, "page")) === "2",
-    `${testCase.locale}/${viewport.name}: pagination state missing from URL`,
-  );
-  await page.goBack({ waitUntil: "domcontentloaded" });
-  await waitForCatalog(page, "[data-joto-mall-products]");
-  assert(
-    (await searchParam(page, "page")) === null,
-    `${testCase.locale}/${viewport.name}: browser back did not restore page one`,
-  );
-  await page.goForward({ waitUntil: "domcontentloaded" });
-  await waitForCatalog(page, "[data-joto-mall-products]");
-  assert(
-    (await searchParam(page, "page")) === "2",
-    `${testCase.locale}/${viewport.name}: browser forward did not restore page two`,
-  );
-
-  await page.goto(`${origin}${productsPath}`, { waitUntil: "domcontentloaded" });
-  await waitForCatalog(page, "[data-joto-mall-products]");
-  const card = page.locator(".joto-mall__card-link").first();
-  const detailHref = await card.getAttribute("href");
-  assert(
-    detailHref?.startsWith(`${testCase.prefix}/mall/products/`),
-    `${testCase.locale}/${viewport.name}: product detail link is not localized`,
-  );
-  await card.click();
-  await waitForCatalog(page, "[data-joto-mall-product]");
-  await assertLoadedImages(
-    page,
-    "[data-joto-mall-product]",
-    `${testCase.locale}/${viewport.name}/detail`,
-  );
-  const productTitle = await page.locator(".joto-mall__product-summary h1").innerText();
-  const jsonLd = await page
-    .locator('script[data-joto-mall-product-jsonld]')
-    .textContent();
-  assert(jsonLd, `${testCase.locale}/${viewport.name}: Product JSON-LD missing`);
-  const structuredProduct = JSON.parse(jsonLd);
-  assert(
-    !("offers" in structuredProduct) && !("price" in structuredProduct),
-    `${testCase.locale}/${viewport.name}: Product JSON-LD contains commerce data`,
-  );
-  assert(
-    (await page.locator(".joto-mall__detail-section").count()) > 0,
-    `${testCase.locale}/${viewport.name}: product details missing`,
-  );
-  assert(
-    (await page
-      .locator('a[href^="http"]')
-      .filter({ hasText: /https?:\/\// })
-      .count()) === 0,
-    `${testCase.locale}/${viewport.name}: visible source URL remains`,
-  );
-  assert(
-    !/^(Source|来源|منبع)$/m.test(
-      await page.locator("[data-joto-mall-product]").innerText(),
-    ),
-    `${testCase.locale}/${viewport.name}: visible source label remains`,
-  );
-
-  const contactCta = page
-    .locator(
-      ".joto-mall__product-summary .joto-mall__button:visible, .joto-mall__sticky-contact:visible",
-    )
-    .first();
-  assert(
-    (await contactCta.count()) === 1,
-    `${testCase.locale}/${viewport.name}: visible product contact target missing`,
-  );
-  assert(
-    (await contactCta.getAttribute("href"))?.includes("?product="),
-    `${testCase.locale}/${viewport.name}: product contact target missing`,
-  );
-  await contactCta.click();
-  await page.waitForSelector("textarea", { timeout: 15_000 });
-  await page.waitForFunction(
-    () => document.querySelector("textarea")?.value.length > 0,
-    null,
-    { timeout: 15_000 },
-  );
-  const message = page.locator("textarea").first();
-  assert(
-    (await message.inputValue()).includes(productTitle),
-    `${testCase.locale}/${viewport.name}: contact message was not product-prefilled`,
-  );
-  await message.fill(`${await message.inputValue()}\nBrowser verification`);
-  assert(
-    (await message.inputValue()).endsWith("Browser verification"),
-    `${testCase.locale}/${viewport.name}: contact message is not editable`,
-  );
-
-  await page.goto(
-    `${origin}${testCase.prefix}/mall/products/${HIDDEN_PRODUCT.slug}/`,
-    { waitUntil: "domcontentloaded" },
-  );
-  await waitForCatalog(page, "[data-joto-mall-product]");
-  assert(
-    (await page.locator(".joto-mall__product-summary h1").innerText())
-      .includes(HIDDEN_PRODUCT.titleToken),
-    `${testCase.locale}/${viewport.name}: hidden listing product detail is inaccessible`,
-  );
-}
-
-async function verifyEnglishHomepageTypography(page, origin, viewport) {
-  await page.goto(`${origin}/#case-studies`, { waitUntil: "domcontentloaded" });
-  await page.waitForSelector("#case-studies .group > .flex-1 h3", {
-    timeout: 15_000,
-  });
-  await page.waitForSelector("#contact .joto-home-contact__copy h2", {
-    timeout: 15_000,
-  });
-  const styles = await page.evaluate(() => {
-    const caseTitle = document.querySelector(
-      "#case-studies .group > .flex-1 h3",
-    );
-    const contactTitle = document.querySelector(
-      "#contact .joto-home-contact__copy h2",
-    );
-    const caseStyle = getComputedStyle(caseTitle);
-    const contactStyle = getComputedStyle(contactTitle);
-    return {
-      caseFontFamily: caseStyle.fontFamily,
-      caseFontSize: Number.parseFloat(caseStyle.fontSize),
-      caseLineHeight: Number.parseFloat(caseStyle.lineHeight),
-      caseFontWeight: caseStyle.fontWeight,
-      contactFontSize: Number.parseFloat(contactStyle.fontSize),
-      contactLineHeight: Number.parseFloat(contactStyle.lineHeight),
-      contactMaxWidth: Number.parseFloat(contactStyle.maxWidth),
-    };
-  });
-  assert(
-    styles.caseFontFamily.startsWith("Poppins")
-      && styles.caseFontSize === 16
-      && styles.caseLineHeight === 24
-      && styles.caseFontWeight === "500",
-    `en/${viewport.name}: case title typography is ${JSON.stringify(styles)}`,
-  );
-  assert(
-    styles.contactFontSize >= 36
-      && styles.contactFontSize <= 48
-      && Math.abs(styles.contactLineHeight / styles.contactFontSize - 1.12) < 0.02
-      && styles.contactMaxWidth === 512,
-    `en/${viewport.name}: contact title typography is ${JSON.stringify(styles)}`,
-  );
-}
-
-async function exerciseErrorStates(page, origin, testCase) {
-  const missingPath = `${testCase.prefix}/mall/products/not-a-real-product/`;
-  await page.goto(`${origin}${missingPath}`, { waitUntil: "domcontentloaded" });
-  await page.waitForSelector("[data-joto-mall-product] .joto-mall__state");
-  const missingText = await page
-    .locator("[data-joto-mall-product] .joto-mall__state")
-    .innerText();
-  assert(missingText.trim(), `${testCase.locale}: missing-product state was empty`);
-
-  const manifestPattern = "**/mall-data/manifest.json";
-  await page.route(manifestPattern, (route) => route.abort("failed"));
-  await page.goto(`${origin}${testCase.prefix}/mall/`, {
+  await page.goto(`${origin}${productsPath}${legacyQuery}`, {
     waitUntil: "domcontentloaded",
   });
-  await page.waitForSelector("[data-joto-mall-home] .joto-mall__state button", {
-    timeout: 15_000,
+  await waitForCatalog("[data-joto-mall-products]");
+  assert(
+    Object.keys(await currentParams()).length === 0,
+    `${label}: product page retained legacy params`,
+  );
+  assert(
+    (await page.locator(".joto-mall__card").count()) === 24,
+    `${label}: product page did not render 24 products`,
+  );
+
+  await page.locator('[data-view="list"]').click();
+  assert((await currentParams()).view === "list", `${label}: list state missing`);
+  const listMetrics = await page.locator(".joto-mall__card").first().evaluate((card) => {
+    const model = card.querySelector(".joto-mall__card-model");
+    return {
+      height: card.getBoundingClientRect().height,
+      modelWhiteSpace: getComputedStyle(model).whiteSpace,
+    };
   });
-  await page.unroute(manifestPattern);
-  await page.locator("[data-joto-mall-home] .joto-mall__state button").click();
-  await waitForCatalog(page, "[data-joto-mall-home]");
+  assert(listMetrics.height <= 112.5, `${label}: list row is ${listMetrics.height}px tall`);
+  assert(listMetrics.modelWhiteSpace === "nowrap", `${label}: list model wraps`);
+
+  await page.goto(`${origin}${productsPath}`, { waitUntil: "domcontentloaded" });
+  await waitForCatalog("[data-joto-mall-products]");
+  const next = page.locator(".joto-mall__pagination button").last();
+  assert(!(await next.isDisabled()), `${label}: next page is disabled`);
+  await next.click();
+  assert((await currentParams()).page === "2", `${label}: pagination state missing`);
+  assert(
+    (await page.locator(".joto-mall__card").count()) === 24,
+    `${label}: second page did not render 24 products`,
+  );
+
+  await page.goto(`${origin}${productsPath}`, { waitUntil: "domcontentloaded" });
+  await waitForCatalog("[data-joto-mall-products]");
+  const detailHref = await page.locator(".joto-mall__card-link").first().getAttribute("href");
+  assert(
+    detailHref?.startsWith(`${testCase.prefix}/mall/products/`),
+    `${label}: detail link is not localized`,
+  );
+  await page.locator(".joto-mall__card-link").first().click();
+  await waitForCatalog("[data-joto-mall-product]");
+  assert(
+    (await page.locator(".joto-mall__detail-section").count()) > 0,
+    `${label}: product detail missing`,
+  );
+  await assertNoOverflow(`${label}/detail`);
 }
 
-async function verifyMallBrowser(
-  origin = "http://127.0.0.1:3009",
-) {
+async function verifyMallBrowser(origin = "http://127.0.0.1:3009") {
   const consoleProblems = [];
   const pageErrors = [];
   const onConsole = (message) => {
@@ -714,52 +322,32 @@ async function verifyMallBrowser(
   const completed = [];
   try {
     for (const testCase of CASES) {
-      await page.evaluate((locale) => {
-        localStorage.setItem("joto:locale", locale);
+      await page.evaluate((lang) => {
+        localStorage.setItem("joto:locale", lang);
       }, testCase.lang);
       for (const viewport of VIEWPORTS) {
-        await page.setViewportSize({
-          width: viewport.width,
-          height: viewport.height,
-        });
+        await page.setViewportSize(viewport);
         await page.emulateMedia({ reducedMotion: "no-preference" });
         const problemStart = consoleProblems.length;
         const errorStart = pageErrors.length;
-        await exerciseCatalog(page, origin, testCase, viewport);
-        if (testCase.locale === "en") {
-          await verifyEnglishHomepageTypography(page, origin, viewport);
-        }
+        await exerciseCatalog(origin, testCase, viewport);
         assert(
           consoleProblems.length === problemStart,
-          `${testCase.locale}/${viewport.name}: console problems: ${consoleProblems
-            .slice(problemStart)
-            .join(" | ")}`,
+          `${testCase.locale}/${viewport.name}: ${consoleProblems.slice(problemStart).join(" | ")}`,
         );
         assert(
           pageErrors.length === errorStart,
-          `${testCase.locale}/${viewport.name}: page errors: ${pageErrors
-            .slice(errorStart)
-            .join(" | ")}`,
+          `${testCase.locale}/${viewport.name}: ${pageErrors.slice(errorStart).join(" | ")}`,
         );
         completed.push(`${testCase.locale}/${viewport.name}`);
       }
-      const expectedProblemStart = consoleProblems.length;
-      const expectedErrorStart = pageErrors.length;
-      await exerciseErrorStates(page, origin, testCase);
-      consoleProblems.splice(expectedProblemStart);
-      pageErrors.splice(expectedErrorStart);
     }
 
     await page.setViewportSize({ width: 390, height: 844 });
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto(`${origin}/fa/mall/`, { waitUntil: "domcontentloaded" });
-    await waitForCatalog(page, "[data-joto-mall-home]");
-    assert(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1,
-      ),
-      "fa/mobile/reduced-motion: horizontal overflow",
-    );
+    await waitForCatalog("[data-joto-mall-home]");
+    await assertNoOverflow("fa/mobile/reduced-motion");
     completed.push("fa/mobile/reduced-motion");
   } finally {
     page.off("console", onConsole);

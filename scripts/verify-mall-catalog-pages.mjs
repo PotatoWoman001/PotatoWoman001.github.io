@@ -4,7 +4,7 @@ import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 
 const root = process.cwd();
-const version = "20260731-2";
+const version = "20260731-3";
 const routes = [
   ["mall/index.html", "en", "ltr", "home", "mall-catalog-pages.js"],
   ["zh/mall/index.html", "zh-CN", "ltr", "home", "mall-catalog-pages.js"],
@@ -38,6 +38,7 @@ for (const [route, lang, dir, mode, script] of routes) {
   assert.match(html, new RegExp(`<html lang="${lang}" dir="${dir}">`));
   assert.ok(html.includes(`data-joto-mall-shell="${mode}"`));
   assert.ok(html.includes(`/assets/mall-catalog.css?v=${version}`));
+  assert.ok(html.includes(`/assets/contact-form-sections.css?v=${version}`));
   assert.ok(html.includes(`/assets/${script}?v=${version}`));
   for (const match of html.matchAll(/\/assets\/[^"'<>]+\.(?:js|css)\?v=([^"'<>]+)/g)) {
     assert.equal(match[1], version, `${route} has mismatched cache version`);
@@ -77,7 +78,7 @@ assert.doesNotMatch(product, /product\.source_url|locale\.source/);
 assert.doesNotMatch(i18n, /^\s*source:\s*/m);
 assert.doesNotMatch(`${pages}\n${product}`, /\.innerHTML\s*=/);
 for (const asset of [pages, product]) {
-  assert.match(asset, /\.js\?v=20260731-2/);
+  assert.match(asset, /\.js\?v=20260731-3/);
 }
 assert.match(product, /og:type", "product"/);
 assert.match(product, /"@type": "Product"/);

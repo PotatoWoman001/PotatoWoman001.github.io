@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(scriptDirectory, "..");
-const version = "20260731-2";
+const version = "20260731-3";
 const expectedRouteCount = 114;
 
 const excludedDirectories = new Set([
@@ -61,6 +61,8 @@ const mallNavigationTag =
   `<script type="module" src="/assets/mall-navigation-and-page.js?v=${version}"></script>`;
 const mallCatalogStyleTag =
   `<link rel="stylesheet" href="/assets/mall-catalog.css?v=${version}">`;
+const contactFormStyleTag =
+  `<link rel="stylesheet" href="/assets/contact-form-sections.css?v=${version}">`;
 
 async function collectIndexFiles(directory, relativeDirectory = "") {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -120,6 +122,10 @@ function removeGeneratedMallTags(html) {
     .replace(
       /\s*<link rel="stylesheet" href="\/assets\/mall-catalog\.css(?:\?v=[^"]+)?">/g,
       "",
+    )
+    .replace(
+      /\s*<link rel="stylesheet" href="\/assets\/contact-form-sections\.css(?:\?v=[^"]+)?">/g,
+      "",
     );
 }
 
@@ -143,6 +149,7 @@ function seedMallShell(source, config) {
     `<meta property="og:description" content="${metadata.description}" data-joto-mall-seed>`,
     `<meta property="og:url" content="${metadata.canonical}" data-joto-mall-seed>`,
     mallCatalogStyleTag,
+    contactFormStyleTag,
     `<script type="module" src="/assets/${metadata.script}?v=${version}"></script>`,
   ].join("\n    ");
   html = html.replace(/(\s*<\/head>)/, `\n    ${headSeed}$1`);
