@@ -297,15 +297,19 @@ function renderHome(mount, index) {
   );
   if (categories.length) categorySection.append(categoryGrid);
 
-  const recentSection = element("section", { className: "joto-mall__section" });
+  const recentSection = element("section", {
+    className: "joto-mall__section joto-mall__section--recent",
+  });
   recentSection.append(sectionHeading("", locale.recent));
-  const recentGrid = element("div", { className: "joto-mall__cards" });
+  const recentGrid = element("div", {
+    className: "joto-mall__cards joto-mall__cards--home",
+  });
   [...(index.products || [])]
     .filter(hasProductImage)
     .sort((a, b) =>
       String(b.last_success_at || "").localeCompare(String(a.last_success_at || "")),
     )
-    .slice(0, 6)
+    .slice(0, 12)
     .forEach((product) => recentGrid.append(productCard(product)));
   recentSection.append(recentGrid);
 

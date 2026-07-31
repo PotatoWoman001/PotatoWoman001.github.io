@@ -71,7 +71,7 @@ const copy = {
     contact: "联系我们",
     eyebrow: "JOTO TECH / 商城",
     homeTitle: "面向互联运营的技术产品",
-    homeIntro: "浏览由 JOTO 整理的产品型号、技术资料与应用场景。",
+    homeIntro: "浏览 JOTO 可提供的产品型号、技术资料与应用场景。",
     browseProducts: "浏览全部产品",
     categories: "产品分类",
     allProducts: "全部产品",
