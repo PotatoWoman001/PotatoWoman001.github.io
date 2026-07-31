@@ -117,11 +117,12 @@ for (const expected of [
   assert.ok(pages.includes(expected), `Mall custom select renderer missing ${expected}`);
 }
 assert.doesNotMatch(pages, /function selectControl\([^)]*values[^)]*allLabel/);
-assert.match(pages, /\{\s*value:\s*"title",\s*label:\s*locale\.sortTitle/);
-assert.match(pages, /\{\s*value:\s*"brand",\s*label:\s*locale\.sortBrand/);
-assert.match(pages, /\{\s*value:\s*"recent",\s*label:\s*locale\.sortRecent/);
-assert.match(pages, /\{\s*value:\s*"asc",\s*label:\s*locale\.ascending/);
-assert.match(pages, /\{\s*value:\s*"desc",\s*label:\s*locale\.descending/);
+assert.match(pages, /createContactForm/);
+assert.match(pages, /pageSize:\s*24/);
+assert.doesNotMatch(pages, /locale\.allBrands/);
+assert.doesNotMatch(pages, /locale\.allStatuses/);
+assert.doesNotMatch(pages, /locale\.allConditions/);
+assert.doesNotMatch(pages, /locale\.sortRecent/);
 assert.doesNotMatch(pages, /joto-mall__section--recent/);
 assert.doesNotMatch(pages, /\.slice\(0,\s*12\)/);
 assert.match(pages, /function renderCatalog\(/);
@@ -197,7 +198,7 @@ assert.match(
 );
 assert.match(
   styles,
-  /\.joto-mall__card-model\s*\{[\s\S]*overflow-wrap:\s*anywhere/,
+  /\.joto-mall__card-model\s*\{[\s\S]*white-space:\s*nowrap/,
 );
 assert.doesNotMatch(
   styles,
@@ -207,6 +208,10 @@ assert.match(styles, /radial-gradient\([\s\S]*linear-gradient\(/);
 assert.match(
   styles,
   /\.joto-mall__contact-panel\s*\{[\s\S]*border:\s*0[\s\S]*background:\s*transparent/,
+);
+assert.match(
+  styles,
+  /\.joto-mall__cards--list[\s\S]*max-height:\s*112px/,
 );
 assert.doesNotMatch(styles, /background-size:\s*32px 32px/);
 assert.match(

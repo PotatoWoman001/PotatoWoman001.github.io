@@ -76,22 +76,20 @@ const products = [
 ];
 const state = parseCatalogState(
   new URLSearchParams(
-    "q=router&category=Network&brand=Cisco&status=In+stock&condition=Original+New&sort=brand&direction=desc&page=3&size=24&view=list",
+    "q=router&category=Network&brand=Cisco&status=In+stock&condition=Original+New&sort=brand&direction=desc&page=1&size=12&view=list",
   ),
 );
 assert.deepEqual(state, {
   q: "router",
   category: "Network",
-  brand: "Cisco",
-  status: "In stock",
-  condition: "Original New",
-  sort: "brand",
-  direction: "desc",
-  page: 3,
+  page: 1,
   pageSize: 24,
   view: "list",
 });
-assert.equal(serializeCatalogState(state).get("view"), "list");
+assert.equal(
+  serializeCatalogState(state).toString(),
+  "q=router&category=Network&view=list",
+);
 assert.equal(
   productTypeFor({
     title: "AR1220C-S, Huawei AR1220C Router, 8GE LAN",
@@ -124,15 +122,26 @@ assert.deepEqual(
 const result = queryProducts({ products }, state);
 assert.equal(result.total, 1);
 assert.equal(result.page, 1);
-assert.deepEqual(result.facets.brands, ["Cisco"]);
 const emptyBrand = queryProducts({ products }, {});
-assert.deepEqual(emptyBrand.facets.brands, ["Cisco"]);
-assert.deepEqual(queryProducts({ products: [products[1]] }, {}).facets.brands, []);
 assert.equal(emptyBrand.products.find((item) => item.slug === "a-switch").summary, "");
 assert.equal(
   emptyBrand.products.find((item) => item.slug === "a-switch").productType,
   "Switches",
 );
+const bulkResult = queryProducts(
+  {
+    products: Array.from({ length: 30 }, (_, index) => ({
+      ...products[0],
+      slug: `router-${index + 1}`,
+      title: `Router ${String(index + 1).padStart(2, "0")}`,
+      images: [`/mall-data/media/images/router-${index + 1}.webp`],
+    })),
+  },
+  {},
+);
+assert.equal(bulkResult.total, 30);
+assert.equal(bulkResult.pageSize, 24);
+assert.equal(bulkResult.products.length, 24);
 
 const placeholderFilename =
   "cd6a5082346e186283e0cf0f632762a1172f6ad74da5d9b7a9689974a7afbc84.webp";
@@ -180,7 +189,6 @@ const imageFiltered = queryProducts(
 );
 assert.equal(imageFiltered.total, 1);
 assert.deepEqual(imageFiltered.products.map((product) => product.slug), ["z-router"]);
-assert.deepEqual(imageFiltered.facets.brands, ["Cisco"]);
 assert.deepEqual(imageFiltered.facets.categories, ["Network"]);
 assert.equal(getMallLocale("/fa/mall/"), MALL_COPY.fa);
 assert.equal(MALL_COPY.fa.technicalDirection, "ltr");
