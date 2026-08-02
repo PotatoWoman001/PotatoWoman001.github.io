@@ -1,0 +1,120 @@
+name: Publish jotoglobal to Aliyun
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: jotoglobal-production
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      DEPLOY_HOST: 139.224.51.172
+      DEPLOY_USER: root
+
+    steps:
+      - name: Check out the exact release source
+        uses: actions/checkout@v4
+
+      - name: Verify the website before upload
+        run: |
+          node scripts/verify-mall-catalog-pages.mjs
+          node scripts/verify-site-typography-mall.mjs
+          node scripts/verify-site-rules.mjs
+
+      - name: Build an immutable release archive
+        id: release
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          release_id="$(date -u +%Y%m%dT%H%M%SZ)-${GITHUB_SHA::7}"
+          archive="/tmp/jotoglobal-${release_id}.tar.gz"
+          git archive --format=tar.gz --output="$archive" HEAD
+          echo "release_id=$release_id" >> "$GITHUB_OUTPUT"
+          echo "archive=$archive" >> "$GITHUB_OUTPUT"
+
+      - name: Configure the restricted deployment key
+        shell: bash
+        env:
+          JOTO_ALIYUN_SSH_KEY: ${{ secrets.JOTO_ALIYUN_SSH_KEY }}
+        run: |
+          set -Eeuo pipefail
+          install -d -m 0700 ~/.ssh
+          printf '%s\n' "$JOTO_ALIYUN_SSH_KEY" > ~/.ssh/joto-aliyun
+          chmod 0600 ~/.ssh/joto-aliyun
+          cat >> ~/.ssh/known_hosts <<'HOSTKEY'
+          139.224.51.172 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILFbw8wchhE+in/D8Ne/6mmyfUj9h8McSsdQYjWjrfYx
+          HOSTKEY
+
+      - name: Upload the release archive
+        shell: bash
+        env:
+          RELEASE_ID: ${{ steps.release.outputs.release_id }}
+          ARCHIVE: ${{ steps.release.outputs.archive }}
+        run: |
+          set -Eeuo pipefail
+          scp -i ~/.ssh/joto-aliyun "$ARCHIVE" \
+            "$DEPLOY_USER@$DEPLOY_HOST:/tmp/jotoglobal-${RELEASE_ID}.tar.gz"
+
+      - name: Validate and atomically activate the release
+        shell: bash
+        env:
+          RELEASE_ID: ${{ steps.release.outputs.release_id }}
+        run: |
+          set -Eeuo pipefail
+          ssh -i ~/.ssh/joto-aliyun "$DEPLOY_USER@$DEPLOY_HOST" \
+            bash -s -- "$RELEASE_ID" <<'REMOTE'
+          set -Eeuo pipefail
+          release_id="$1"
+          release_root=/var/www/jotoglobal/releases
+          release_path="$release_root/$release_id"
+          archive="/tmp/jotoglobal-${release_id}.tar.gz"
+          current=/var/www/jotoglobal/current
+          previous="$(readlink -f "$current")"
+          switched=0
+
+          rollback() {
+            if [ "$switched" -eq 1 ]; then
+              rollback_link="/var/www/jotoglobal/current.rollback.${release_id}"
+              ln -s "$previous" "$rollback_link"
+              mv -Tf "$rollback_link" "$current"
+              systemctl reload nginx
+            fi
+          }
+          trap rollback ERR
+
+          test -n "$previous"
+          test ! -e "$release_path"
+          mkdir "$release_path"
+          tar -xzf "$archive" -C "$release_path"
+          cd "$release_path"
+
+          test -f index.html
+          test -f zh/index.html
+          test -f fa/index.html
+          node scripts/verify-mall-catalog-pages.mjs
+          node scripts/verify-site-typography-mall.mjs
+          node scripts/verify-site-rules.mjs
+          nginx -t
+
+          next_link="/var/www/jotoglobal/current.next.${release_id}"
+          ln -s "$release_path" "$next_link"
+          mv -Tf "$next_link" "$current"
+          switched=1
+
+          nginx -t
+          systemctl reload nginx
+          curl -fsSI -H 'Host: jotoglobal.com' http://127.0.0.1/zh/mall/ | head -n 8
+          test "$(readlink -f "$current")" = "$release_path"
+
+          trap - ERR
+          rm -f "$archive"
+          printf 'PREVIOUS=%s\nCURRENT=%s\nDEPLOY_OK=%s\n' \
+            "$previous" "$(readlink -f "$current")" "$release_id"
+          REMOTE
