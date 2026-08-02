@@ -52,6 +52,27 @@ jobs:
           139.224.51.172 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILFbw8wchhE+in/D8Ne/6mmyfUj9h8McSsdQYjWjrfYx
           HOSTKEY
 
+      - name: Authorize the deployment key on first use
+        shell: bash
+        env:
+          JOTO_ALIYUN_ROOT_PASSWORD: ${{ secrets.JOTO_ALIYUN_ROOT_PASSWORD }}
+        run: |
+          set -Eeuo pipefail
+          if [ -z "${JOTO_ALIYUN_ROOT_PASSWORD:-}" ]; then
+            echo "Root bootstrap secret is absent; using the authorized key."
+            exit 0
+          fi
+          if ! command -v sshpass >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y sshpass
+          fi
+          public_key="$(ssh-keygen -y -f ~/.ssh/joto-aliyun) joto-github-actions"
+          SSHPASS="$JOTO_ALIYUN_ROOT_PASSWORD" sshpass -e ssh \
+            -o PreferredAuthentications=password \
+            -o PubkeyAuthentication=no \
+            "$DEPLOY_USER@$DEPLOY_HOST" \
+            "umask 077; install -d -m 0700 /root/.ssh; touch /root/.ssh/authorized_keys; grep -qxF '$public_key' /root/.ssh/authorized_keys || printf '%s\\n' '$public_key' >> /root/.ssh/authorized_keys; chmod 0600 /root/.ssh/authorized_keys"
+
       - name: Upload the release archive
         shell: bash
         env:
