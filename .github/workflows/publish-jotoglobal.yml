@@ -140,13 +140,23 @@ jobs:
             "$previous" "$(readlink -f "$current")" "$release_id"
           REMOTE
 
-      - name: Verify public HTTPS routes
+      - name: Verify production DNS and HTTPS routes
         shell: bash
         run: |
           set -Eeuo pipefail
+
+          dns_json="$(curl -fsS --retry 5 --retry-delay 2 \
+            'https://dns.google/resolve?name=jotoglobal.com&type=A')"
+          printf '%s' "$dns_json" | jq -e --arg ip "$DEPLOY_HOST" \
+            '.Answer[]? | select(.type == 1 and .data == $ip)' >/dev/null
+          printf 'PUBLIC_DNS_OK=%s\n' "$DEPLOY_HOST"
+
+          ssh -i ~/.ssh/joto-aliyun "$DEPLOY_USER@$DEPLOY_HOST" bash -s <<'REMOTE'
+          set -Eeuo pipefail
           for path in / /zh/ /fa/ /mall/ /zh/mall/ /fa/mall/ /mall-data/manifest.json; do
-            status="$(curl -sS -L --retry 5 --retry-delay 2 \
+            status="$(curl -sS -L --resolve jotoglobal.com:443:127.0.0.1 \
               -o /dev/null -w '%{http_code}' "https://jotoglobal.com${path}")"
             test "$status" = 200
             printf 'PUBLIC_OK=%s %s\n' "$status" "$path"
           done
+          REMOTE
