@@ -4,9 +4,9 @@ import {
   queryProducts,
   rankedCategories,
   serializeCatalogState,
-} from "./mall-data-client.js?v=20260731-3";
-import { getMallLocale } from "./mall-i18n.js?v=20260731-3";
-import { createContactForm } from "./contact-form-sections.js?v=20260731-3";
+} from "./mall-data-client.js?v=20260802-1";
+import { getMallLocale } from "./mall-i18n.js?v=20260802-1";
+import { createContactForm } from "./contact-form-sections.js?v=20260802-1";
 
 const locale = getMallLocale();
 const SITE_ORIGIN = "https://jotoglobal.com";
@@ -552,7 +552,8 @@ function renderCatalog(mount, index, { mode }) {
     paintCategories(state.category);
     controls.replaceChildren(categoryNavigation);
 
-    const countText = `${locale.allProductsHeading} · ${result.total} ${locale.results}`;
+    const activeCategory = state.category || locale.allProductsHeading;
+    const countText = `${activeCategory} · ${result.total} ${locale.results}`;
     resultsHeading.textContent = countText;
     resultsHeading.dataset.resultCount = String(result.total);
     live.textContent = countText;

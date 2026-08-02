@@ -77,7 +77,6 @@ function start() {
   enhance();
   const observer = new MutationObserver(scheduleEnhance);
   observer.observe(document.body, { childList: true, subtree: true });
-  window.setTimeout(() => observer.disconnect(), 15000);
 }
 
 if (typeof document !== "undefined") {

@@ -31,6 +31,7 @@ for (const token of [
 ]) {
   assert.ok(navigation.includes(token), `navigation missing ${token}`);
 }
+assert.doesNotMatch(navigation, /observer\.disconnect\(\)/);
 assert.doesNotMatch(client, /fetch\((?!publicPath|`\$\{DATA_ROOT\})/);
 assert.match(client, /\/mall-data\//);
 assert.match(client, /schema-mismatch/);
@@ -142,6 +143,23 @@ const bulkResult = queryProducts(
 assert.equal(bulkResult.total, 30);
 assert.equal(bulkResult.pageSize, 24);
 assert.equal(bulkResult.products.length, 24);
+const bulkListResult = queryProducts(
+  {
+    products: Array.from({ length: 30 }, (_, index) => ({
+      ...products[0],
+      slug: `router-${index + 1}`,
+      title: `Router ${String(index + 1).padStart(2, "0")}`,
+      images: [`/mall-data/media/images/router-${index + 1}.webp`],
+    })),
+  },
+  { view: "list" },
+);
+assert.equal(bulkListResult.total, bulkResult.total);
+assert.equal(bulkListResult.pageSize, bulkResult.pageSize);
+assert.deepEqual(
+  bulkListResult.products.map((product) => product.slug),
+  bulkResult.products.map((product) => product.slug),
+);
 
 const placeholderFilename =
   "cd6a5082346e186283e0cf0f632762a1172f6ad74da5d9b7a9689974a7afbc84.webp";

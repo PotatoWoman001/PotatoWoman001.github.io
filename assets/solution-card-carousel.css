@@ -14,6 +14,26 @@
   height: 0;
 }
 
+.solution-scroll-section.is-scroll-driven {
+  overflow: clip;
+}
+
+.solution-scroll-stage.is-scroll-driven {
+  position: sticky;
+  top: 76px;
+  z-index: 1;
+  overflow: clip;
+  background: #070b0a;
+}
+
+.solution-scroll-stage.is-scroll-driven .solution-card-scroller {
+  width: max-content;
+  max-width: none;
+  overflow: visible !important;
+  scroll-snap-type: none !important;
+  will-change: transform;
+}
+
 [data-solution-carousel-controls] {
   display: flex;
   justify-content: flex-end;
@@ -59,12 +79,6 @@
 [data-solution-carousel-button]:disabled {
   opacity: 0.28;
   cursor: default;
-}
-
-[data-solutions-scroller][data-solution-carousel-hint="running"],
-[data-solutions-scroller][data-solution-carousel-hint="cancelled"] {
-  scroll-behavior: auto !important;
-  scroll-snap-type: none !important;
 }
 
 .solution-card-carousel-enhanced [data-solution-card] {

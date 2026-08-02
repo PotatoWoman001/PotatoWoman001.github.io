@@ -3,7 +3,7 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const version = "20260731-3";
+const version = "20260802-1";
 const expectedRouteCount = 114;
 const excludedDirectories = new Set([
   ".git",
@@ -128,6 +128,14 @@ const mallModule = readFileSync(
   path.join(root, "assets/mall-navigation-and-page.js"),
   "utf8",
 );
+const mainBundle = readFileSync(
+  path.join(root, "assets/index-DaFvN0XI.js"),
+  "utf8",
+);
+assert.match(mainBundle, /const cm=\["en","zh-CN"\]/);
+assert.doesNotMatch(mainBundle, /const cm=\["en","zh-CN","fa-IR"\]/);
+assert.match(mainBundle, /t==="fa"\|\|t\.startsWith\("fa-"\)\)return"fa-IR"/);
+assert.match(mainBundle, /"fa-IR":\{dir:"rtl",label:"فارسی",prefix:"\/fa"\}/);
 for (const expected of [
   'label: "Mall"',
   'label: "商城"',

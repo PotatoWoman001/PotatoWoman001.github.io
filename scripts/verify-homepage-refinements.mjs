@@ -4,7 +4,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const homepages = ["index.html", "zh/index.html", "fa/index.html"];
-const version = "20260731-3";
+const version = "20260802-1";
 
 for (const route of homepages) {
   const html = readFileSync(path.join(root, route), "utf8");
@@ -89,38 +89,19 @@ assert.match(
   /grid-template-columns:\s*minmax\(0,\s*5fr\)\s+minmax\(0,\s*7fr\)/,
 );
 
-assert.match(carouselScript, /IntersectionObserver/);
-assert.match(carouselScript, /hintObserver\.observe\(scroller\)/);
-assert.doesNotMatch(carouselScript, /hintObserver\.observe\(scroller\.closest/);
-assert.match(carouselScript, /HINT_DISTANCE_RATIO/);
+assert.match(carouselScript, /min-width:\s*1024px/);
+assert.match(carouselScript, /solution-scroll-section/);
+assert.match(carouselScript, /solution-scroll-stage/);
 assert.match(carouselScript, /prefers-reduced-motion:\s*reduce/);
-assert.match(carouselScript, /pointerdown/);
-assert.match(carouselScript, /touchstart/);
-assert.match(carouselScript, /wheel/);
-assert.match(carouselScript, /keydown/);
-assert.match(carouselScript, /cancelledScrollLeft/);
-assert.match(carouselScript, /HINT_INTERSECTION_RATIO\s*=\s*0\.32/);
-assert.match(carouselScript, /HINT_DISTANCE_RATIO\s*=\s*0\.3/);
-assert.match(carouselScript, /HINT_MAX_DISTANCE\s*=\s*72/);
-assert.match(carouselScript, /HINT_DELAY\s*=\s*0/);
-assert.match(carouselScript, /function easeInOutCubic\(progress\)/);
-assert.match(
-  carouselScript,
-  /hintScrollFrame\s*=\s*window\.requestAnimationFrame/,
-);
-assert.match(carouselScript, /scrollTo\(\{/);
+assert.match(carouselScript, /translate3d\(/);
+assert.match(carouselScript, /window\.scrollTo\(\{/);
 assert.match(
   carouselScript,
   /reducedMotion\.matches\s*\?\s*"auto"\s*:\s*"smooth"/,
 );
-assert.match(carouselScript, /behavior:\s*"auto"/);
 assert.doesNotMatch(carouselScript, /scroller\.scrollLeft\s*=/);
-assert.match(carouselScript, /Math\.abs\(event\.deltaX\)/);
-assert.match(carouselScript, /Math\.abs\(event\.deltaY\)/);
-assert.match(carouselScript, /event\.shiftKey/);
-assert.match(carouselScript, /window\.scrollBy\(\{/);
-assert.match(carouselScript, /behavior:\s*"instant"/);
-assert.match(carouselScript, /passive:\s*false/);
+assert.doesNotMatch(carouselScript, /addEventListener\("wheel"/);
+assert.doesNotMatch(carouselScript, /preventDefault\(\)/);
 assert.match(
   readFileSync(path.join(root, "assets/solution-card-carousel.css"), "utf8"),
   /scroll-snap-type:\s*none !important/,

@@ -1,20 +1,10 @@
 const SCROLLER_SELECTOR = "[data-solutions-scroller]";
 const CARD_SELECTOR = "[data-solution-card]";
 const CONTROLS_SELECTOR = "[data-solution-carousel-controls]";
+const DESKTOP_QUERY = "(min-width: 1024px)";
+const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
+const STICKY_TOP = 76;
 const EDGE_TOLERANCE = 3;
-const HINT_INTERSECTION_RATIO = 0.32;
-const HINT_DISTANCE_RATIO = 0.3;
-const HINT_MAX_DISTANCE = 72;
-const HINT_DELAY = 0;
-const HINT_FORWARD_DURATION = 260;
-const HINT_HOLD_DURATION = 80;
-const HINT_RETURN_DURATION = 260;
-
-function easeInOutCubic(progress) {
-  return progress < 0.5
-    ? 4 * progress * progress * progress
-    : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-}
 
 const labelsByLocale = {
   en: {
@@ -33,6 +23,10 @@ const labelsByLocale = {
     next: "راهکار بعدی",
   },
 };
+
+function clamp(value, minimum, maximum) {
+  return Math.min(Math.max(value, minimum), maximum);
+}
 
 function getLabels() {
   const language = (document.documentElement.lang || "en").toLowerCase();
@@ -121,11 +115,21 @@ function enhanceSolutionCarousel(scroller) {
   if (scroller.dataset.solutionCarouselEnhanced === "true") return;
 
   const items = getItems(scroller);
-  if (items.length < 2 || document.querySelector(CONTROLS_SELECTOR)) return;
+  const section = scroller.closest("section");
+  const stage = scroller.parentElement;
+  if (
+    items.length < 2 ||
+    !section ||
+    !stage ||
+    document.querySelector(CONTROLS_SELECTOR)
+  ) {
+    return;
+  }
 
   scroller.dataset.solutionCarouselEnhanced = "true";
   scroller.id ||= "solution-card-scroller";
-  scroller.parentElement?.classList.add("solution-card-carousel-enhanced");
+  stage.classList.add("solution-card-carousel-enhanced", "solution-scroll-stage");
+  section.classList.add("solution-scroll-section");
 
   const labels = getLabels();
   const controls = document.createElement("div");
@@ -138,287 +142,136 @@ function enhanceSolutionCarousel(scroller) {
   controls.append(previousButton, nextButton);
   scroller.before(controls);
 
-  const reducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  );
+  const desktop = window.matchMedia(DESKTOP_QUERY);
+  const reducedMotion = window.matchMedia(REDUCED_MOTION_QUERY);
   let frame = 0;
+  let resizeFrame = 0;
   let currentIndex = 0;
-  let userInteracted = false;
-  let hintStarted = false;
-  let hintTimer = 0;
-  let hintTimerResolve = null;
-  let hintScrollTimer = 0;
-  let hintScrollResolve = null;
-  let hintScrollFrame = 0;
-  let hintObserver = null;
-  let cancelledScrollLeft = null;
+  let scrollStart = 0;
+  let scrollTravel = 0;
+  let scrollDriven = false;
 
-  function updateState() {
+  function setButtonState(index, edgeState) {
+    if (scrollDriven) {
+      previousButton.disabled = index <= 0;
+      nextButton.disabled = index >= items.length - 1;
+      return;
+    }
+    previousButton.disabled = edgeState.atStart;
+    nextButton.disabled = edgeState.atEnd;
+  }
+
+  function paintScrollProgress() {
     frame = 0;
-    currentIndex = getCurrentIndex(scroller, items);
-    const { atStart, atEnd } = getEdgeState(scroller, items);
-    previousButton.disabled = atStart;
-    nextButton.disabled = atEnd;
-  }
-
-  function scheduleUpdate() {
-    if (frame) return;
-    frame = window.requestAnimationFrame(updateState);
-  }
-
-  function cancelHintTimer() {
-    if (hintTimer) {
-      window.clearTimeout(hintTimer);
-      hintTimer = 0;
-    }
-    const resolve = hintTimerResolve;
-    hintTimerResolve = null;
-    resolve?.(false);
-  }
-
-  function finishHintScroll(completed) {
-    if (hintScrollFrame) {
-      window.cancelAnimationFrame(hintScrollFrame);
-      hintScrollFrame = 0;
-    }
-    if (hintScrollTimer) {
-      window.clearTimeout(hintScrollTimer);
-      hintScrollTimer = 0;
-    }
-    const resolve = hintScrollResolve;
-    hintScrollResolve = null;
-    resolve?.(completed);
-  }
-
-  function markUserInteraction() {
-    userInteracted = true;
-    hintObserver?.disconnect();
-    hintObserver = null;
-    cancelHintTimer();
-
-    if (hintScrollResolve) {
-      scroller.scrollTo({
-        left: scroller.scrollLeft,
-        behavior: "auto",
-      });
-      finishHintScroll(false);
-    }
-
-    if (scroller.dataset.solutionCarouselHint !== "complete") {
-      cancelledScrollLeft = scroller.scrollLeft;
-      scroller.dataset.solutionCarouselHint = "cancelled";
-    }
-  }
-
-  function handleWheelInteraction(event) {
-    const isVerticalIntent =
-      Math.abs(event.deltaY) >= Math.abs(event.deltaX) && !event.shiftKey;
-    const shouldForwardVerticalScroll =
-      isVerticalIntent &&
-      scroller.dataset.solutionCarouselHint === "running";
-    const hasWheelInput =
-      Math.abs(event.deltaX) + Math.abs(event.deltaY) > 0 || event.shiftKey;
-
-    if (shouldForwardVerticalScroll) event.preventDefault();
-    if (hasWheelInput) markUserInteraction();
-    if (shouldForwardVerticalScroll) {
-      const deltaScale =
-        event.deltaMode === 1
-          ? 16
-          : event.deltaMode === 2
-            ? window.innerHeight
-            : 1;
-      window.scrollBy({
-        top: event.deltaY * deltaScale,
-        left: 0,
-        behavior: "instant",
-      });
-    }
-  }
-
-  function handleScroll() {
-    if (
-      scroller.dataset.solutionCarouselHint === "cancelled" &&
-      cancelledScrollLeft !== null &&
-      Math.abs(scroller.scrollLeft - cancelledScrollLeft) > 1
-    ) {
-      scroller.dataset.solutionCarouselHint = "user";
-      cancelledScrollLeft = null;
-    }
-    scheduleUpdate();
-  }
-
-  function waitForHint(duration) {
-    return new Promise((resolve) => {
-      hintTimerResolve = resolve;
-      hintTimer = window.setTimeout(() => {
-        hintTimer = 0;
-        hintTimerResolve = null;
-        resolve(!userInteracted);
-      }, duration);
-    });
-  }
-
-  function scrollForHint(target, duration) {
-    return new Promise((resolve) => {
-      if (userInteracted) {
-        resolve(false);
-        return;
-      }
-
-      hintScrollResolve = resolve;
-      const startScrollLeft = scroller.scrollLeft;
-      const scrollDistance = target - startScrollLeft;
-      const startTime = window.performance.now();
-
-      hintScrollTimer = window.setTimeout(
-        () => finishHintScroll(!userInteracted),
-        duration + 180,
-      );
-
-      function step(timestamp) {
-        if (userInteracted) {
-          finishHintScroll(false);
-          return;
-        }
-
-        const progress = Math.min((timestamp - startTime) / duration, 1);
-        scroller.scrollTo({
-          left: startScrollLeft + scrollDistance * easeInOutCubic(progress),
-          behavior: "auto",
-        });
-
-        if (progress >= 1) {
-          finishHintScroll(true);
-          return;
-        }
-        hintScrollFrame = window.requestAnimationFrame(step);
-      }
-
-      hintScrollFrame = window.requestAnimationFrame(step);
-    });
-  }
-
-  async function runHint() {
-    if (
-      userInteracted ||
-      reducedMotion.matches ||
-      !getEdgeState(scroller, items).atStart
-    ) {
-      return;
-    }
-
-    const startScrollLeft = scroller.scrollLeft;
-    const itemDelta =
-      items[1].getBoundingClientRect().left -
-      items[0].getBoundingClientRect().left;
-    const distance = Math.min(
-      Math.abs(itemDelta) * HINT_DISTANCE_RATIO,
-      HINT_MAX_DISTANCE,
+    if (!scrollDriven || scrollTravel <= 0) return;
+    const progress = clamp(
+      (window.scrollY - scrollStart) / scrollTravel,
+      0,
+      1,
     );
-
-    if (!distance) {
-      scroller.dataset.solutionCarouselHint = "complete";
-      return;
-    }
-
-    scroller.dataset.solutionCarouselHint = "running";
-    const hintedScrollLeft =
-      startScrollLeft + Math.sign(itemDelta || 1) * distance;
-
-    if (!(await scrollForHint(hintedScrollLeft, HINT_FORWARD_DURATION))) {
-      return;
-    }
-    if (!(await waitForHint(HINT_HOLD_DURATION))) return;
-    if (!(await scrollForHint(startScrollLeft, HINT_RETURN_DURATION))) {
-      return;
-    }
-
-    scroller.dataset.solutionCarouselHint = "complete";
-    scheduleUpdate();
+    const distance = progress * scrollTravel * (isRtl(scroller) ? 1 : -1);
+    scroller.style.transform = `translate3d(${distance}px, 0, 0)`;
+    currentIndex = Math.round(progress * (items.length - 1));
+    setButtonState(currentIndex, { atStart: false, atEnd: false });
   }
 
-  function scheduleHint() {
-    if (hintStarted || userInteracted) return;
-    hintStarted = true;
-    hintObserver?.disconnect();
-    hintObserver = null;
+  function scheduleScrollPaint() {
+    if (!scrollDriven || frame) return;
+    frame = window.requestAnimationFrame(paintScrollProgress);
+  }
 
-    if (reducedMotion.matches) {
-      scroller.dataset.solutionCarouselHint = "reduced";
+  function clearScrollDrivenLayout() {
+    scrollDriven = false;
+    section.classList.remove("is-scroll-driven");
+    stage.classList.remove("is-scroll-driven");
+    section.style.removeProperty("height");
+    section.style.removeProperty("--solution-scroll-distance");
+    scroller.style.removeProperty("transform");
+    scroller.dataset.solutionScrollMode = "native";
+    currentIndex = getCurrentIndex(scroller, items);
+    setButtonState(currentIndex, getEdgeState(scroller, items));
+  }
+
+  function measure() {
+    resizeFrame = 0;
+    section.style.removeProperty("height");
+    scroller.style.removeProperty("transform");
+
+    if (!desktop.matches || reducedMotion.matches) {
+      clearScrollDrivenLayout();
       return;
     }
 
-    hintTimerResolve = null;
-    hintTimer = window.setTimeout(() => {
-      hintTimer = 0;
-      runHint();
-    }, HINT_DELAY);
+    section.classList.add("is-scroll-driven");
+    stage.classList.add("is-scroll-driven");
+    const itemStarts = items.map((item) => item.offsetLeft);
+    const itemEnds = items.map((item) => item.offsetLeft + item.offsetWidth);
+    const contentWidth = Math.max(...itemEnds) - Math.min(...itemStarts);
+    const viewportWidth = stage.clientWidth;
+    scrollTravel = Math.max(0, contentWidth - viewportWidth);
+
+    if (scrollTravel <= EDGE_TOLERANCE) {
+      clearScrollDrivenLayout();
+      return;
+    }
+
+    const sectionStyle = getComputedStyle(section);
+    const paddingTop = Number.parseFloat(sectionStyle.paddingTop) || 0;
+    const naturalHeight = Math.max(section.offsetHeight, stage.offsetHeight);
+    section.style.setProperty("--solution-scroll-distance", `${scrollTravel}px`);
+    section.style.height = `${naturalHeight + scrollTravel}px`;
+    scrollStart =
+      section.getBoundingClientRect().top + window.scrollY + paddingTop - STICKY_TOP;
+    scrollDriven = true;
+    scroller.dataset.solutionScrollMode = "driven";
+    paintScrollProgress();
+  }
+
+  function scheduleMeasure() {
+    if (resizeFrame) return;
+    resizeFrame = window.requestAnimationFrame(measure);
+  }
+
+  function updateNativeState() {
+    if (scrollDriven) return;
+    currentIndex = getCurrentIndex(scroller, items);
+    setButtonState(currentIndex, getEdgeState(scroller, items));
   }
 
   function navigate(offset) {
-    currentIndex = getCurrentIndex(scroller, items);
-    const targetIndex = Math.max(
-      0,
-      Math.min(items.length - 1, currentIndex + offset),
-    );
-    items[targetIndex].scrollIntoView({
-      behavior: reducedMotion.matches ? "auto" : "smooth",
-      block: "nearest",
-      inline: "start",
-    });
+    const targetIndex = clamp(currentIndex + offset, 0, items.length - 1);
+    if (scrollDriven) {
+      const targetProgress = targetIndex / (items.length - 1);
+      window.scrollTo({
+        top: scrollStart + targetProgress * scrollTravel,
+        behavior: reducedMotion.matches ? "auto" : "smooth",
+      });
+    } else {
+      items[targetIndex].scrollIntoView({
+        behavior: reducedMotion.matches ? "auto" : "smooth",
+        block: "nearest",
+        inline: "start",
+      });
+    }
     currentIndex = targetIndex;
-    scheduleUpdate();
+    setButtonState(currentIndex, { atStart: false, atEnd: false });
   }
 
-  previousButton.addEventListener("click", () => {
-    markUserInteraction();
-    navigate(-1);
-  });
-  nextButton.addEventListener("click", () => {
-    markUserInteraction();
-    navigate(1);
-  });
-  scroller.addEventListener("scroll", handleScroll, { passive: true });
-  reducedMotion.addEventListener?.("change", scheduleUpdate);
-
-  ["pointerdown", "touchstart"].forEach((eventName) => {
-    scroller.addEventListener(eventName, markUserInteraction, {
-      passive: true,
-      once: true,
-    });
-  });
-  scroller.addEventListener("wheel", handleWheelInteraction, {
-    passive: false,
-  });
-  scroller.addEventListener("keydown", markUserInteraction, { once: true });
-
-  if ("IntersectionObserver" in window) {
-    hintObserver = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (
-          !entry?.isIntersecting ||
-          entry.intersectionRatio < HINT_INTERSECTION_RATIO
-        ) {
-          return;
-        }
-        scheduleHint();
-      },
-      { threshold: [HINT_INTERSECTION_RATIO] },
-    );
-    hintObserver.observe(scroller);
-  }
+  previousButton.addEventListener("click", () => navigate(-1));
+  nextButton.addEventListener("click", () => navigate(1));
+  scroller.addEventListener("scroll", updateNativeState, { passive: true });
+  window.addEventListener("scroll", scheduleScrollPaint, { passive: true });
+  window.addEventListener("resize", scheduleMeasure, { passive: true });
+  desktop.addEventListener?.("change", scheduleMeasure);
+  reducedMotion.addEventListener?.("change", scheduleMeasure);
 
   if ("ResizeObserver" in window) {
-    const resizeObserver = new ResizeObserver(scheduleUpdate);
-    resizeObserver.observe(scroller);
+    const resizeObserver = new ResizeObserver(scheduleMeasure);
+    resizeObserver.observe(stage);
     items.forEach((item) => resizeObserver.observe(item));
-  } else {
-    window.addEventListener("resize", scheduleUpdate, { passive: true });
   }
 
-  updateState();
+  measure();
 }
 
 function start() {

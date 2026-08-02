@@ -4,9 +4,10 @@ import { fileURLToPath } from "node:url";
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(scriptDirectory, "..");
-const staticAssetVersion = "20260731-3";
-const scriptPattern = /\/assets\/index-DaFvN0XI\.js(?:\?v=[^"'<>]+)?/g;
-const stylePattern = /\/assets\/index-e49ffBFL\.css(?:\?v=[^"'<>]+)?/g;
+const staticAssetVersion = "20260802-1";
+const assetPattern = /(\/assets\/[^"'<>?]+\.(?:js|css))(?:\?v=[^"'<>]+)?/g;
+const scriptPattern = /\/assets\/index-DaFvN0XI\.js\?v=20260802-1/g;
+const stylePattern = /\/assets\/index-e49ffBFL\.css\?v=20260802-1/g;
 const scriptUrl = `/assets/index-DaFvN0XI.js?v=${staticAssetVersion}`;
 const styleUrl = `/assets/index-e49ffBFL.css?v=${staticAssetVersion}`;
 const excludedDirectories = new Set([
@@ -38,17 +39,22 @@ async function collectIndexFiles(directory, relativeDirectory = "") {
 }
 
 function versionHtml(source, route) {
-  if (!scriptPattern.test(source)) {
+  const versioned = source.replace(
+    assetPattern,
+    `$1?v=${staticAssetVersion}`,
+  );
+
+  if (!scriptPattern.test(versioned)) {
     throw new Error(`${route} is missing the shared JavaScript bundle URL.`);
   }
   scriptPattern.lastIndex = 0;
 
-  if (!stylePattern.test(source)) {
+  if (!stylePattern.test(versioned)) {
     throw new Error(`${route} is missing the shared stylesheet URL.`);
   }
   stylePattern.lastIndex = 0;
 
-  return source.replace(scriptPattern, scriptUrl).replace(stylePattern, styleUrl);
+  return versioned.replace(scriptPattern, scriptUrl).replace(stylePattern, styleUrl);
 }
 
 const routeFiles = (await collectIndexFiles(projectRoot)).sort();
