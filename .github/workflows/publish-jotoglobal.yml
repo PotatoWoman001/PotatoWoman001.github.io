@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Check out the exact release source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Verify the website before upload
         run: |
@@ -139,3 +139,14 @@ jobs:
           printf 'PREVIOUS=%s\nCURRENT=%s\nDEPLOY_OK=%s\n' \
             "$previous" "$(readlink -f "$current")" "$release_id"
           REMOTE
+
+      - name: Verify public HTTPS routes
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for path in / /zh/ /fa/ /mall/ /zh/mall/ /fa/mall/ /mall-data/manifest.json; do
+            status="$(curl -sS -L --retry 5 --retry-delay 2 \
+              -o /dev/null -w '%{http_code}' "https://jotoglobal.com${path}")"
+            test "$status" = 200
+            printf 'PUBLIC_OK=%s %s\n' "$status" "$path"
+          done
