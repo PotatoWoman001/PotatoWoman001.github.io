@@ -4,7 +4,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const homepages = ["index.html", "zh/index.html", "fa/index.html"];
-const version = "20260803-3";
+const version = "20260803-2";
 
 for (const route of homepages) {
   const html = readFileSync(path.join(root, route), "utf8");
@@ -67,29 +67,12 @@ assert.match(homepageScript, /ایران/);
 assert.match(homepageScript, /تهران/);
 assert.match(homepageScript, /35\.71219607/);
 assert.match(homepageScript, /51\.36844735/);
-assert.match(homepageScript, /enhanceAboutStatMotion/);
-assert.match(homepageScript, /IntersectionObserver/);
-assert.match(homepageScript, /requestAnimationFrame/);
-assert.match(homepageScript, /aboutMotionReady/);
-assert.match(homepageScript, /aboutMotionRunning/);
-assert.match(homepageScript, /aboutMotionComplete/);
-assert.match(homepageScript, /Intl\.NumberFormat/);
-assert.match(homepageScript, /prefers-reduced-motion:\s*reduce/);
 assert.match(homepageStyles, /service-card__icon-mark--accent/);
 assert.match(homepageStyles, /data-about-stats/);
 assert.match(homepageStyles, /grid-template-columns:\s*repeat\(2/);
 assert.match(homepageStyles, /@media \(max-width:\s*479px\)/);
 assert.match(homepageStyles, /data-home-hero-refined/);
 assert.match(homepageStyles, /data-iran-presence/);
-assert.match(homepageStyles, /data-about-motion-ready/);
-assert.match(homepageStyles, /data-about-motion-running/);
-assert.match(homepageStyles, /data-about-motion-complete/);
-assert.match(homepageStyles, /font-variant-numeric:\s*tabular-nums/);
-assert.match(homepageStyles, /clip-path:\s*inset/);
-assert.match(
-  homepageStyles,
-  /@media \(prefers-reduced-motion:\s*reduce\)[\s\S]*?data-about-motion/,
-);
 
 assert.match(sharedStyles, /data-testid="header-actions"/);
 assert.match(sharedStyles, /aria-haspopup="menu"/);

@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(scriptDirectory, "..");
-const version = "20260803-3";
+const version = "20260803-2";
 const homeRoutes = ["index.html", "zh/index.html", "fa/index.html"];
 
 const homepageScriptTag =

@@ -1,11 +1,4 @@
 const ABOUT_COPY_SELECTOR = "#about [data-about-copy]";
-const ABOUT_SECTION_SELECTOR = "#about";
-const ABOUT_STATS_SELECTOR = "[data-about-stats]";
-const ABOUT_CARD_SELECTOR = "[data-about-stat-card]";
-const ABOUT_VALUE_SELECTOR = "[data-about-stat-value]";
-const ABOUT_COUNTER_DURATION = 1000;
-const ABOUT_DESKTOP_STAGGER = 100;
-const ABOUT_MOBILE_STAGGER = 70;
 const HERO_HEADING_SELECTOR =
   '[aria-labelledby="hero-title"] [data-hero-heading-shell]';
 const GLOBAL_PRESENCE_SELECTOR = "#global-presence";
@@ -13,156 +6,6 @@ const TEHRAN_LATITUDE = 35.71219607;
 const TEHRAN_LONGITUDE = 51.36844735;
 const TEHRAN_MAP_X = 64.27;
 const TEHRAN_MAP_Y = 38.93;
-
-const LOCALIZED_DIGITS = new Map([
-  ["۰", "0"],
-  ["۱", "1"],
-  ["۲", "2"],
-  ["۳", "3"],
-  ["۴", "4"],
-  ["۵", "5"],
-  ["۶", "6"],
-  ["۷", "7"],
-  ["۸", "8"],
-  ["۹", "9"],
-  ["٠", "0"],
-  ["١", "1"],
-  ["٢", "2"],
-  ["٣", "3"],
-  ["٤", "4"],
-  ["٥", "5"],
-  ["٦", "6"],
-  ["٧", "7"],
-  ["٨", "8"],
-  ["٩", "9"],
-]);
-
-function parseLocalizedInteger(value) {
-  const normalized = Array.from(
-    value,
-    (character) => LOCALIZED_DIGITS.get(character) ?? character,
-  ).join("");
-  if (!/^\s*\d+\s*$/.test(normalized)) return null;
-  return Number.parseInt(normalized, 10);
-}
-
-function numberFormatter(finalText) {
-  const usesLocalizedDigits = /[۰-۹٠-٩]/.test(finalText);
-  const locale = usesLocalizedDigits
-    ? document.documentElement.lang || "en"
-    : "en";
-  return new Intl.NumberFormat(locale, {
-    maximumFractionDigits: 0,
-    useGrouping: false,
-  });
-}
-
-function animateAboutCounter(element, target, delay, formatter) {
-  return new Promise((resolve) => {
-    window.setTimeout(() => {
-      const startedAt = performance.now();
-      const frame = (timestamp) => {
-        const progress = Math.min(
-          1,
-          (timestamp - startedAt) / ABOUT_COUNTER_DURATION,
-        );
-        const eased = 1 - Math.pow(1 - progress, 3);
-        element.textContent = formatter.format(Math.round(target * eased));
-        if (progress < 1) {
-          window.requestAnimationFrame(frame);
-          return;
-        }
-        element.textContent = formatter.format(target);
-        resolve();
-      };
-      window.requestAnimationFrame(frame);
-    }, delay);
-  });
-}
-
-function completeAboutMotion(section, values) {
-  values.forEach(({ element, finalText }) => {
-    element.textContent = finalText;
-  });
-  section.dataset.aboutMotionRunning = "false";
-  section.dataset.aboutMotionComplete = "true";
-}
-
-function enhanceAboutStatMotion(section) {
-  if (section.dataset.aboutMotionReady === "true") return true;
-
-  const stats = section.querySelector(ABOUT_STATS_SELECTOR);
-  const cards = Array.from(
-    stats?.querySelectorAll(ABOUT_CARD_SELECTOR) ?? [],
-  );
-  if (!stats || cards.length !== 4) return false;
-
-  const values = cards.map((card, index) => {
-    const element = card.querySelector(ABOUT_VALUE_SELECTOR);
-    if (!element) return null;
-
-    const finalText = element.textContent.trim();
-    const target = parseLocalizedInteger(finalText);
-    const kind = target === null ? "text" : "number";
-    card.style.setProperty(
-      "--joto-about-delay",
-      `${index * ABOUT_DESKTOP_STAGGER}ms`,
-    );
-    card.style.setProperty(
-      "--joto-about-delay-mobile",
-      `${index * ABOUT_MOBILE_STAGGER}ms`,
-    );
-    element.dataset.aboutValueKind = kind;
-    element.dataset.aboutMotionFinal = finalText;
-    element.setAttribute("aria-label", finalText);
-    return { element, finalText, target, index, kind };
-  });
-  if (values.some((value) => value === null)) return false;
-
-  section.dataset.aboutMotionReady = "true";
-  const reducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  );
-  if (reducedMotion.matches || !("IntersectionObserver" in window)) {
-    completeAboutMotion(section, values);
-    return true;
-  }
-
-  values
-    .filter(({ kind }) => kind === "number")
-    .forEach(({ element, finalText }) => {
-      element.textContent = numberFormatter(finalText).format(0);
-    });
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      const visible = entries.some(
-        (entry) => entry.isIntersecting && entry.intersectionRatio >= 0.25,
-      );
-      if (!visible) return;
-
-      observer.disconnect();
-      section.dataset.aboutMotionRunning = "true";
-      const stagger = window.matchMedia("(max-width: 479px)").matches
-        ? ABOUT_MOBILE_STAGGER
-        : ABOUT_DESKTOP_STAGGER;
-      const counters = values
-        .filter(({ kind }) => kind === "number")
-        .map(({ element, target, index, finalText }) =>
-          animateAboutCounter(
-            element,
-            target,
-            index * stagger + 120,
-            numberFormatter(finalText),
-          ),
-        );
-      Promise.all(counters).then(() => completeAboutMotion(section, values));
-    },
-    { threshold: [0.25] },
-  );
-  observer.observe(section);
-  return true;
-}
 
 function isPersianHomepage() {
   const language = (document.documentElement.lang || "").toLowerCase();
@@ -334,7 +177,6 @@ function enhancePersianIranPresence(section) {
 
 function applyHomepageRefinements() {
   const copy = document.querySelector(ABOUT_COPY_SELECTOR);
-  const aboutSection = document.querySelector(ABOUT_SECTION_SELECTOR);
   const headingShell = document.querySelector(HERO_HEADING_SELECTOR);
   const globalPresence = document.querySelector(GLOBAL_PRESENCE_SELECTOR);
 
@@ -343,13 +185,8 @@ function applyHomepageRefinements() {
   const iranComplete = globalPresence
     ? enhancePersianIranPresence(globalPresence)
     : false;
-  const aboutMotionComplete = aboutSection
-    ? enhanceAboutStatMotion(aboutSection)
-    : false;
 
-  return Boolean(
-    copy && heroComplete && iranComplete && aboutMotionComplete,
-  );
+  return Boolean(copy && heroComplete && iranComplete);
 }
 
 function startHomepageRefinements() {

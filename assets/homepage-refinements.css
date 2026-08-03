@@ -151,54 +151,10 @@ html:lang(en) #case-studies .group > .flex-1 h3 {
 
 #about [data-about-stat-value] {
   font-size: clamp(1.65rem, 2.75vw, 2.8rem);
-  font-variant-numeric: tabular-nums;
 }
 
 html[lang="fa-IR"] #about [data-about-stat-value] {
   font-size: clamp(1.45rem, 2.4vw, 2.45rem);
-}
-
-#about[data-about-motion-ready="true"] [data-about-stat-card] {
-  opacity: 0;
-  transform: translate3d(0, 14px, 0);
-  will-change: opacity, transform;
-}
-
-#about[data-about-motion-running="true"] [data-about-stat-card],
-#about[data-about-motion-complete="true"] [data-about-stat-card] {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-  transition:
-    opacity 550ms ease-out var(--joto-about-delay),
-    transform 550ms ease-out var(--joto-about-delay),
-    background-color 300ms ease,
-    border-color 300ms ease,
-    box-shadow 300ms ease,
-    color 300ms ease;
-}
-
-#about[data-about-motion-complete="true"] [data-about-stat-card] {
-  will-change: auto;
-}
-
-#about[data-about-motion-ready="true"]
-  [data-about-stat-value][data-about-value-kind="text"] {
-  opacity: 0;
-  clip-path: inset(0 0 100% 0);
-  transform: translate3d(0, 0.35em, 0);
-}
-
-#about[data-about-motion-running="true"]
-  [data-about-stat-value][data-about-value-kind="text"],
-#about[data-about-motion-complete="true"]
-  [data-about-stat-value][data-about-value-kind="text"] {
-  opacity: 1;
-  clip-path: inset(0 0 0 0);
-  transform: translate3d(0, 0, 0);
-  transition:
-    opacity 450ms ease-out var(--joto-about-delay),
-    clip-path 450ms ease-out var(--joto-about-delay),
-    transform 450ms ease-out var(--joto-about-delay);
 }
 
 @media (min-width: 1024px) {
@@ -288,28 +244,10 @@ html[lang="fa-IR"] #about [data-about-stat-value] {
   #about [data-about-stats] {
     grid-template-columns: minmax(0, 1fr) !important;
   }
-
-  #about[data-about-motion-running="true"] [data-about-stat-card],
-  #about[data-about-motion-complete="true"] [data-about-stat-card],
-  #about[data-about-motion-running="true"]
-    [data-about-stat-value][data-about-value-kind="text"],
-  #about[data-about-motion-complete="true"]
-    [data-about-stat-value][data-about-value-kind="text"] {
-    transition-delay: var(--joto-about-delay-mobile);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   [data-home-hero-refined="true"] [data-home-hero-content] {
     transform: none;
-  }
-
-  #about[data-about-motion-ready="true"] [data-about-stat-card],
-  #about[data-about-motion-ready="true"] [data-about-stat-value] {
-    opacity: 1 !important;
-    clip-path: none !important;
-    transform: none !important;
-    transition: none !important;
-    will-change: auto;
   }
 }

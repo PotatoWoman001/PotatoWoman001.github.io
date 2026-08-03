@@ -3,7 +3,7 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const version = "20260803-3";
+const version = "20260803-2";
 const expectedRouteCount = 114;
 const excludedDirectories = new Set([
   ".git",
