@@ -198,10 +198,14 @@ async function exerciseCatalog(origin, testCase, viewport) {
           getComputedStyle(card.querySelector(".joto-mall__card-media")).backgroundColor
           === "rgb(255, 255, 255)",
       ),
+      actionsVisible: cards.every((card) => {
+        const action = card.querySelector(".joto-mall__card-action");
+        return action && action.getBoundingClientRect().height > 0 && action.textContent.trim();
+      }),
     };
   });
   const expectedColumns =
-    viewport.width >= 1280 ? 6 : viewport.width >= 768 ? 3 : viewport.width >= 420 ? 2 : 1;
+    viewport.width >= 1280 ? 6 : viewport.width >= 768 ? 3 : 2;
   assert(layout.cardCount === 24, `${label}: expected 24 cards, got ${layout.cardCount}`);
   assert(layout.total > 200, `${label}: expected complete catalog, got ${layout.total}`);
   assert(layout.columns === expectedColumns, `${label}: expected ${expectedColumns} columns`);
@@ -223,6 +227,7 @@ async function exerciseCatalog(origin, testCase, viewport) {
   }
   assert(layout.categoryGap <= 48, `${label}: search/category gap is ${layout.categoryGap}px`);
   assert(layout.mediaWhite, `${label}: product image background is not white`);
+  assert(layout.actionsVisible, `${label}: product detail affordance is hidden`);
   assert(
     layout.modelLines.every(
       (model) =>
@@ -277,7 +282,11 @@ async function exerciseCatalog(origin, testCase, viewport) {
       modelWhiteSpace: getComputedStyle(model).whiteSpace,
     };
   });
-  assert(listMetrics.height <= 112.5, `${label}: list row is ${listMetrics.height}px tall`);
+  const maximumListHeight = viewport.name === "mobile" ? 70.5 : 80;
+  assert(
+    listMetrics.height <= maximumListHeight,
+    `${label}: list row is ${listMetrics.height}px tall`,
+  );
   assert(listMetrics.modelWhiteSpace === "nowrap", `${label}: list model wraps`);
 
   await page.goto(`${origin}${productsPath}`, { waitUntil: "domcontentloaded" });
@@ -304,10 +313,56 @@ async function exerciseCatalog(origin, testCase, viewport) {
     (await page.locator(".joto-mall__detail-section").count()) > 0,
     `${label}: product detail missing`,
   );
+  if (viewport.name === "mobile") {
+    const detailMetrics = await page.locator("[data-joto-mall-product]").evaluate((root) => {
+      const rect = root.getBoundingClientRect();
+      const gallery = root.querySelector(".joto-mall__gallery-main");
+      const title = root.querySelector(".joto-mall__product-summary h1");
+      const sticky = root.querySelector(".joto-mall__sticky-contact");
+      const contact = root.querySelector(".joto-mall__product-summary .joto-mall__button");
+      const rootStyle = getComputedStyle(root);
+      return {
+        left: rect.left,
+        right: window.innerWidth - rect.right,
+        backgroundColor: rootStyle.backgroundColor,
+        borderRadius: Number.parseFloat(rootStyle.borderRadius),
+        pageBackgroundImage: getComputedStyle(document.querySelector("#root")).backgroundImage,
+        galleryHeight: gallery.getBoundingClientRect().height,
+        titleFontSize: Number.parseFloat(getComputedStyle(title).fontSize),
+        stickyDisplay: getComputedStyle(sticky).display,
+        contactVisible: contact.getBoundingClientRect().height > 0,
+      };
+    });
+    assert(detailMetrics.left >= 13, `${label}: detail left margin is ${detailMetrics.left}px`);
+    assert(detailMetrics.right >= 13, `${label}: detail right margin is ${detailMetrics.right}px`);
+    assert(
+      detailMetrics.backgroundColor === "rgb(255, 255, 255)",
+      `${label}: detail panel is not white`,
+    );
+    assert(detailMetrics.borderRadius >= 18, `${label}: detail panel radius is too small`);
+    assert(
+      detailMetrics.pageBackgroundImage !== "none",
+      `${label}: detail page grid background is missing`,
+    );
+    assert(detailMetrics.galleryHeight <= 240, `${label}: gallery is too tall`);
+    assert(detailMetrics.titleFontSize <= 26.5, `${label}: product title is too large`);
+    assert(detailMetrics.stickyDisplay === "none", `${label}: sticky contact still covers content`);
+    assert(detailMetrics.contactVisible, `${label}: in-flow contact action is hidden`);
+  }
   await assertNoOverflow(`${label}/detail`);
 }
 
 async function verifyMallBrowser(origin = "http://127.0.0.1:3009") {
+  const usesLocalRuntimeSnapshot = origin.includes("127.0.0.1");
+  if (usesLocalRuntimeSnapshot) {
+    await page.route("**/mall-data/**", async (route) => {
+      const requestUrl = route.request().url().replace(
+        `${origin}/mall-data/`,
+        `${origin}/.runtime/mall-data/`,
+      );
+      await route.continue({ url: requestUrl });
+    });
+  }
   const consoleProblems = [];
   const pageErrors = [];
   const onConsole = (message) => {
@@ -350,6 +405,7 @@ async function verifyMallBrowser(origin = "http://127.0.0.1:3009") {
     await assertNoOverflow("fa/mobile/reduced-motion");
     completed.push("fa/mobile/reduced-motion");
   } finally {
+    if (usesLocalRuntimeSnapshot) await page.unroute("**/mall-data/**");
     page.off("console", onConsole);
     page.off("pageerror", onPageError);
   }

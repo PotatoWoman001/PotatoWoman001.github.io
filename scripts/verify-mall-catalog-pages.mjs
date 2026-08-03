@@ -197,7 +197,7 @@ assert.match(
 );
 assert.match(
   styles,
-  /@media\s*\(max-width:\s*419px\)[\s\S]*\.joto-mall__cards--grid[\s\S]*grid-template-columns:\s*1fr/,
+  /@media\s*\(max-width:\s*419px\)[\s\S]*\.joto-mall__cards--grid[\s\S]*grid-template-columns:\s*repeat\(2/,
 );
 assert.match(
   styles,
@@ -218,7 +218,24 @@ assert.match(
 );
 assert.match(
   styles,
-  /@media\s*\(max-width:\s*767px\)[\s\S]*\.joto-mall__cards--list[\s\S]*max-height:\s*88px/,
+  /@media\s*\(max-width:\s*639px\)[\s\S]*\.joto-mall__cards--list[\s\S]*max-height:\s*68px/,
+);
+assert.match(
+  styles,
+  /@media\s*\(max-width:\s*639px\)[\s\S]*\.joto-mall__cards--list \.joto-mall__card-media[\s\S]*height:\s*66px/,
+);
+assert.match(styles, /#root:has\(\[data-joto-mall-product\]\)/);
+assert.match(
+  styles,
+  /\[data-joto-mall\]\[data-joto-mall-product\][\s\S]*border-radius:\s*18px/,
+);
+assert.match(
+  styles,
+  /@media\s*\(max-width:\s*639px\)[\s\S]*\.joto-mall__product-summary h1[\s\S]*font-size:\s*26px\s*!important/,
+);
+assert.doesNotMatch(
+  styles,
+  /@media\s*\(max-width:\s*639px\)[\s\S]*\.joto-mall__sticky-contact\s*\{[\s\S]*position:\s*sticky/,
 );
 assert.doesNotMatch(styles, /background-size:\s*32px 32px/);
 assert.match(
