@@ -110,42 +110,78 @@ function sanitizedDescription(value) {
 }
 
 function gallery(product) {
-  const images = product.images || [];
+  let images = [...(product.images || [])];
+  const failedImages = new Set();
   const wrapper = element("div", { className: "joto-mall__gallery" });
+  const placeholder = () => element("div", {
+    className: "joto-mall__image-placeholder",
+    "aria-hidden": "true",
+  });
   if (!images.length) {
-    wrapper.append(element("div", {
-      className: "joto-mall__image-placeholder",
-      "aria-hidden": "true",
-    }));
+    wrapper.append(placeholder());
     return wrapper;
   }
+
+  let activePath = images[0];
+  let thumbnails;
   const mainImage = element("img", {
     className: "joto-mall__gallery-main",
-    src: images[0],
+    src: activePath,
     alt: product.title || "",
     decoding: "async",
   });
+
+  const updatePressed = () => {
+    thumbnails?.querySelectorAll("button").forEach((button) => {
+      button.setAttribute("aria-pressed", String(button.dataset.imagePath === activePath));
+    });
+  };
+  const selectImage = (path) => {
+    activePath = path;
+    mainImage.src = path;
+    updatePressed();
+  };
+  const removeFailedImage = (path) => {
+    if (failedImages.has(path)) return;
+    failedImages.add(path);
+    images = images.filter((candidate) => candidate !== path);
+    thumbnails?.querySelectorAll("button").forEach((button) => {
+      if (button.dataset.imagePath === path) button.remove();
+    });
+    product.images = [...images];
+    installProductSeo(product);
+    if (!images.length) {
+      mainImage.replaceWith(placeholder());
+      thumbnails?.remove();
+      return;
+    }
+    if (activePath === path) selectImage(images[0]);
+    if (images.length <= 1) thumbnails?.remove();
+  };
+
+  mainImage.addEventListener("error", () => removeFailedImage(activePath));
   wrapper.append(mainImage);
   if (images.length > 1) {
-    const thumbnails = element("div", {
+    thumbnails = element("div", {
       className: "joto-mall__thumbnails",
       role: "list",
     });
     images.forEach((path, index) => {
+      const thumbnailImage = element("img", {
+        src: path,
+        alt: "",
+        loading: "lazy",
+        decoding: "async",
+      });
       const thumbnail = element("button", {
         type: "button",
         className: "joto-mall__thumbnail",
         "aria-label": `${product.title} ${index + 1}`,
         "aria-pressed": String(index === 0),
-      }, [
-        element("img", { src: path, alt: "", loading: "lazy", decoding: "async" }),
-      ]);
-      thumbnail.addEventListener("click", () => {
-        mainImage.src = path;
-        thumbnails.querySelectorAll("button").forEach((button) => {
-          button.setAttribute("aria-pressed", String(button === thumbnail));
-        });
-      });
+        dataset: { imagePath: path },
+      }, [thumbnailImage]);
+      thumbnail.addEventListener("click", () => selectImage(path));
+      thumbnailImage.addEventListener("error", () => removeFailedImage(path), { once: true });
       thumbnails.append(thumbnail);
     });
     wrapper.append(thumbnails);

@@ -1,6 +1,6 @@
 # Mall 有效产品图片统一过滤 Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** 让 Mall 列表、详情图库、分享图和结构化数据只使用有效产品图片，并自动移除加载失败的图库项。
 
@@ -28,7 +28,7 @@
 - Consumes: `product.images?: unknown[]`
 - Produces: `validProductImages(product): string[]`，返回按原顺序去重并过滤后的图片路径。
 
-- [ ] **Step 1: 编写失败测试**
+- [x] **Step 1: 编写失败测试**
 
 在测试导入中加入 `validProductImages`，并增加：
 
@@ -49,13 +49,13 @@ assert.deepEqual(
 );
 ```
 
-- [ ] **Step 2: 运行测试并确认失败**
+- [x] **Step 2: 运行测试并确认失败**
 
 Run: `node scripts/verify-mall-data-client.mjs`
 
 Expected: FAIL，提示 `validProductImages` 尚未导出。
 
-- [ ] **Step 3: 实现图片规范化接口**
+- [x] **Step 3: 实现图片规范化接口**
 
 把 Magento 文件名加入 `PLACEHOLDER_IMAGE_FILENAMES`，并实现：
 
@@ -98,7 +98,7 @@ return {
 };
 ```
 
-- [ ] **Step 4: 运行数据测试**
+- [x] **Step 4: 运行数据测试**
 
 Run: `node scripts/verify-mall-data-client.mjs`
 
@@ -117,7 +117,7 @@ Expected: PASS，输出 `Verified Mall navigation, locale copy, and catalog data
 - Consumes: `loadProduct()` 返回的已规范化 `product.images: string[]`
 - Produces: 只含有效图片的主图、缩略图、`og:image` 和 JSON-LD `image`。
 
-- [ ] **Step 1: 增加静态与浏览器失败契约**
+- [x] **Step 1: 增加静态与浏览器失败契约**
 
 静态脚本断言产品页包含图片错误处理标记：
 
@@ -136,7 +136,7 @@ const sources = await page.locator(".joto-mall__gallery img").evaluateAll((image
 assert(!sources.some((source) => source.includes(forbiddenImage)), "placeholder image remains");
 ```
 
-- [ ] **Step 2: 运行契约并确认旧图库失败**
+- [x] **Step 2: 运行契约并确认旧图库失败**
 
 Run:
 
@@ -146,7 +146,7 @@ node scripts/verify-mall-catalog-pages.mjs
 
 Expected: FAIL，旧图库没有 `failedImages` 运行时错误处理。
 
-- [ ] **Step 3: 实现图库加载失败移除**
+- [x] **Step 3: 实现图库加载失败移除**
 
 用以下结构替换 `gallery(product)`：
 
@@ -234,7 +234,7 @@ function gallery(product) {
 
 主图或缩略图触发 `error` 时，同步更新 `product.images` 并重新安装 SEO；所有路径均失败时移除 `og:image` 和 JSON-LD `image`。
 
-- [ ] **Step 4: 保持 SEO 数据一致**
+- [x] **Step 4: 保持 SEO 数据一致**
 
 `loadProduct()` 已把 `product.images` 规范化，因此 `installProductSeo(product)` 继续从 `product.images[0]` 写入 `og:image`，并从 `product.images` 生成 JSON-LD。在 `verifyMallBrowser()` 的矩阵循环后加入：
 
@@ -265,7 +265,7 @@ assert(
 completed.push("zh/mobile/placeholder-images");
 ```
 
-- [ ] **Step 5: 运行 Mall 静态验证**
+- [x] **Step 5: 运行 Mall 静态验证**
 
 Run:
 
@@ -289,7 +289,7 @@ Expected: 两项均 PASS。
 - Consumes: Task 1 与 Task 2 的最终实现。
 - Produces: 已通过三语言响应式验证的提交。
 
-- [ ] **Step 1: 运行 Mall 浏览器矩阵**
+- [x] **Step 1: 运行 Mall 浏览器矩阵**
 
 Run:
 
@@ -297,9 +297,9 @@ Run:
 /bin/bash /Users/cuihua/.codex/skills/playwright/scripts/playwright_cli.sh run-code --filename scripts/verify-mall-browser.mjs
 ```
 
-Expected: 英文、中文、波斯语桌面、平板、手机及波斯语 reduced-motion 共 10 个场景通过；`consoleProblems` 和 `pageErrors` 均为空。
+Expected: 英文、中文、波斯语桌面、平板、手机、波斯语 reduced-motion 及中文占位图专项共 11 个场景通过；`consoleProblems` 和 `pageErrors` 均为空。
 
-- [ ] **Step 2: 运行全站静态回归**
+- [x] **Step 2: 运行全站静态回归**
 
 Run:
 
@@ -312,7 +312,7 @@ node scripts/verify-mall-data-client.mjs
 
 Expected: 114 个正式路由、三语言 Mall 和数据客户端全部通过。
 
-- [ ] **Step 3: 核对差异**
+- [x] **Step 3: 核对差异**
 
 Run:
 
@@ -323,7 +323,7 @@ git status --short
 
 Expected: 只有图片客户端、产品详情页、验证脚本和本计划文档发生变化；`.playwright-cli/` 与 `.superpowers/` 不纳入提交。
 
-- [ ] **Step 4: 提交实现**
+- [x] **Step 4: 提交实现**
 
 ```bash
 git add assets/mall-data-client.js assets/mall-product-page.js \

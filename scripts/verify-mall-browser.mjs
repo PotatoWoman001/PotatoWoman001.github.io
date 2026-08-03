@@ -404,6 +404,42 @@ async function verifyMallBrowser(origin = "http://127.0.0.1:3009") {
     await waitForCatalog("[data-joto-mall-home]");
     await assertNoOverflow("fa/mobile/reduced-motion");
     completed.push("fa/mobile/reduced-motion");
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    const placeholderProblemStart = consoleProblems.length;
+    const placeholderErrorStart = pageErrors.length;
+    await page.goto(`${origin}/zh/mall/products/ar0b0037ba/`, {
+      waitUntil: "domcontentloaded",
+    });
+    await waitForCatalog("[data-joto-mall-product]");
+    const forbiddenImage =
+      "2637f446bc6640220c9b726c624f2156836bb7a67b754c098f7fda5f126c7fcc.jpg";
+    const imageState = await page.evaluate(() => {
+      const jsonLd = JSON.parse(
+        document.querySelector("[data-joto-mall-product-jsonld]")?.textContent || "{}",
+      );
+      return {
+        sources: [...document.querySelectorAll(".joto-mall__gallery img")]
+          .map((image) => image.getAttribute("src") || ""),
+        ogImage: document.querySelector('meta[property="og:image"]')?.content || "",
+        jsonLdImages: Array.isArray(jsonLd.image) ? jsonLd.image : [],
+      };
+    });
+    assert(
+      ![imageState.ogImage, ...imageState.sources, ...imageState.jsonLdImages]
+        .some((source) => source.includes(forbiddenImage)),
+      "zh/mobile: placeholder image remains in gallery or SEO",
+    );
+    assert(
+      consoleProblems.length === placeholderProblemStart,
+      `zh/mobile/placeholder-images: ${consoleProblems.slice(placeholderProblemStart).join(" | ")}`,
+    );
+    assert(
+      pageErrors.length === placeholderErrorStart,
+      `zh/mobile/placeholder-images: ${pageErrors.slice(placeholderErrorStart).join(" | ")}`,
+    );
+    completed.push("zh/mobile/placeholder-images");
   } finally {
     if (usesLocalRuntimeSnapshot) await page.unroute("**/mall-data/**");
     page.off("console", onConsole);

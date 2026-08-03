@@ -4,6 +4,7 @@ const DEFAULT_PAGE_SIZE = 24;
 const PLACEHOLDER_IMAGE_FILENAMES = new Set([
   "cd6a5082346e186283e0cf0f632762a1172f6ad74da5d9b7a9689974a7afbc84.webp",
   "9099315a9ea9f11b618add5542417582c9fa0e8457cda12074a3c10ec6c0b50c.jpg",
+  "2637f446bc6640220c9b726c624f2156836bb7a67b754c098f7fda5f126c7fcc.jpg",
 ]);
 
 export class MallDataError extends Error {
@@ -60,10 +61,14 @@ export async function loadProduct(slug, { signal } = {}) {
   }
   const manifest = await loadManifest({ signal });
   try {
-    return await fetchJson(
+    const product = await fetchJson(
       `${DATA_ROOT}data/products/${encodeURIComponent(slug)}.json?${snapshotVersionQuery(manifest)}`,
       { signal },
     );
+    return {
+      ...product,
+      images: validProductImages(product),
+    };
   } catch (error) {
     if (error?.cause?.message === "HTTP 404") {
       throw new MallDataError("not-found", error);
@@ -125,15 +130,24 @@ export function rankedCategories(products) {
     );
 }
 
+export function validProductImages(product) {
+  if (!Array.isArray(product?.images)) return [];
+  const seen = new Set();
+  return product.images.flatMap((image) => {
+    if (typeof image !== "string" || !image.trim()) return [];
+    const path = image.trim();
+    const pathname = path.split(/[?#]/, 1)[0];
+    const filename = pathname.split("/").pop()?.toLowerCase();
+    if (!filename || PLACEHOLDER_IMAGE_FILENAMES.has(filename) || seen.has(path)) {
+      return [];
+    }
+    seen.add(path);
+    return [path];
+  });
+}
+
 export function hasProductImage(product) {
-  return (
-    Array.isArray(product?.images) &&
-    product.images.some((image) => {
-      const pathname = String(image || "").split(/[?#]/, 1)[0];
-      const filename = pathname.split("/").pop()?.toLowerCase();
-      return Boolean(filename) && !PLACEHOLDER_IMAGE_FILENAMES.has(filename);
-    })
-  );
+  return validProductImages(product).length > 0;
 }
 
 export function parseCatalogState(searchParams) {
@@ -208,7 +222,7 @@ export function queryProducts(index, requestedState = {}) {
     ...product,
     productType: productTypeFor(product),
     category_path: [...productCategory(product)],
-    images: [...(product.images || [])],
+    images: validProductImages(product),
     demand_tags: [...(product.demand_tags || [])],
   }));
 

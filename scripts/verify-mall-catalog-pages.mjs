@@ -68,6 +68,8 @@ assert.match(client, /\.filter\(\s*hasProductImage/);
 assert.match(product, /\/mall\/products\//);
 assert.match(product, /textContent/);
 assert.match(product, /DOMParser/);
+assert.match(product, /addEventListener\("error"/);
+assert.match(product, /failedImages/);
 assert.match(product, /ALLOWED_DESCRIPTION_TAGS/);
 assert.match(product, /BLOCKED_DESCRIPTION_TAGS/);
 assert.match(product, /technicalDirection|dir:\s*"ltr"|dir:\s*"ltr"/);
