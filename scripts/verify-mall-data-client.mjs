@@ -32,6 +32,16 @@ for (const token of [
   assert.ok(navigation.includes(token), `navigation missing ${token}`);
 }
 assert.doesNotMatch(navigation, /observer\.disconnect\(\)/);
+assert.match(
+  navigation,
+  /classList\.remove\("opacity-0", "translate-y-4"\)/,
+  "dynamically injected mobile Mall links must not retain hidden entrance classes",
+);
+assert.match(
+  navigation,
+  /classList\.add\("opacity-100", "translate-y-0"\)/,
+  "dynamically injected mobile Mall links must be made visibly stable",
+);
 assert.doesNotMatch(client, /fetch\((?!publicPath|`\$\{DATA_ROOT\})/);
 assert.match(client, /\/mall-data\//);
 assert.match(client, /schema-mismatch/);

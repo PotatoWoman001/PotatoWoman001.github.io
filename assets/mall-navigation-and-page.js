@@ -20,6 +20,17 @@ function isBlogLink(link, locale) {
   return normalizedPath(link.href) === normalizedPath(blogPath);
 }
 
+function stabilizeInjectedLink(link) {
+  const hasHiddenEntrance =
+    link.classList.contains("opacity-0") ||
+    link.classList.contains("translate-y-4");
+  if (!hasHiddenEntrance) return;
+
+  link.classList.remove("opacity-0", "translate-y-4");
+  link.classList.add("opacity-100", "translate-y-0");
+  link.style.removeProperty("transition-delay");
+}
+
 export function injectMallLinks(locale = getLocale()) {
   const currentPath = normalizedPath(window.location.pathname);
   const mallPath = normalizedPath(locale.path);
@@ -53,6 +64,7 @@ export function injectMallLinks(locale = getLocale()) {
 
     mallLink.href = locale.path;
     mallLink.textContent = locale.label;
+    stabilizeInjectedLink(mallLink);
     if (currentPath === mallPath || currentPath.startsWith(`${mallPath}/`)) {
       mallLink.setAttribute("aria-current", "page");
     } else {

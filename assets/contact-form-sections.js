@@ -1,4 +1,4 @@
-import { loadProduct } from "./mall-data-client.js?v=20260802-1";
+import { loadProduct } from "./mall-data-client.js?v=20260803-1";
 
 const CONTACT_ENDPOINT = "/api/contact";
 
