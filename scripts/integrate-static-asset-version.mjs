@@ -4,10 +4,10 @@ import { fileURLToPath } from "node:url";
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(scriptDirectory, "..");
-const staticAssetVersion = "20260803-2";
+const staticAssetVersion = "20260803-3";
 const assetPattern = /(\/assets\/[^"'<>?]+\.(?:js|css))(?:\?v=[^"'<>]+)?/g;
-const scriptPattern = /\/assets\/index-DaFvN0XI\.js\?v=20260803-2/g;
-const stylePattern = /\/assets\/index-e49ffBFL\.css\?v=20260803-2/g;
+const scriptPattern = /\/assets\/index-DaFvN0XI\.js\?v=20260803-3/g;
+const stylePattern = /\/assets\/index-e49ffBFL\.css\?v=20260803-3/g;
 const scriptUrl = `/assets/index-DaFvN0XI.js?v=${staticAssetVersion}`;
 const styleUrl = `/assets/index-e49ffBFL.css?v=${staticAssetVersion}`;
 const excludedDirectories = new Set([
