@@ -4,9 +4,9 @@ import {
   queryProducts,
   rankedCategories,
   serializeCatalogState,
-} from "./mall-data-client.js?v=20260803-1";
-import { getMallLocale } from "./mall-i18n.js?v=20260803-1";
-import { createContactForm } from "./contact-form-sections.js?v=20260803-1";
+} from "./mall-data-client.js?v=20260803-2";
+import { getMallLocale } from "./mall-i18n.js?v=20260803-2";
+import { createContactForm } from "./contact-form-sections.js?v=20260803-2";
 
 const locale = getMallLocale();
 const SITE_ORIGIN = "https://jotoglobal.com";
