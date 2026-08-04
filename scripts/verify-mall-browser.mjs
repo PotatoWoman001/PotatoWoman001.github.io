@@ -313,17 +313,32 @@ async function exerciseCatalog(origin, testCase, viewport) {
     (await page.locator(".joto-mall__detail-section").count()) > 0,
     `${label}: product detail missing`,
   );
+  const detailMetrics = await page.locator("[data-joto-mall-product]").evaluate((root) => {
+    const rect = root.getBoundingClientRect();
+    return {
+      width: rect.width,
+      left: rect.left,
+      right: window.innerWidth - rect.right,
+      overflow: document.documentElement.scrollWidth - window.innerWidth,
+    };
+  });
+  assert(
+    Math.abs(detailMetrics.left - detailMetrics.right) <= 1.5,
+    `${label}: detail gutters are asymmetric`,
+  );
+  assert(detailMetrics.overflow <= 1, `${label}: detail page overflows horizontally`);
+  if (viewport.name === "desktop") {
+    assert(detailMetrics.width <= 1280.5, `${label}: detail container is too wide`);
+    assert(detailMetrics.left >= 79, `${label}: desktop detail gutter is too narrow`);
+  }
   if (viewport.name === "mobile") {
-    const detailMetrics = await page.locator("[data-joto-mall-product]").evaluate((root) => {
-      const rect = root.getBoundingClientRect();
+    const mobileDetailMetrics = await page.locator("[data-joto-mall-product]").evaluate((root) => {
       const gallery = root.querySelector(".joto-mall__gallery-main");
       const title = root.querySelector(".joto-mall__product-summary h1");
       const sticky = root.querySelector(".joto-mall__sticky-contact");
       const contact = root.querySelector(".joto-mall__product-summary .joto-mall__button");
       const rootStyle = getComputedStyle(root);
       return {
-        left: rect.left,
-        right: window.innerWidth - rect.right,
         backgroundColor: rootStyle.backgroundColor,
         borderRadius: Number.parseFloat(rootStyle.borderRadius),
         pageBackgroundImage: getComputedStyle(document.querySelector("#root")).backgroundImage,
@@ -333,21 +348,21 @@ async function exerciseCatalog(origin, testCase, viewport) {
         contactVisible: contact.getBoundingClientRect().height > 0,
       };
     });
-    assert(detailMetrics.left >= 13, `${label}: detail left margin is ${detailMetrics.left}px`);
-    assert(detailMetrics.right >= 13, `${label}: detail right margin is ${detailMetrics.right}px`);
+    assert(detailMetrics.left >= 19.5, `${label}: detail left margin is ${detailMetrics.left}px`);
+    assert(detailMetrics.right >= 19.5, `${label}: detail right margin is ${detailMetrics.right}px`);
     assert(
-      detailMetrics.backgroundColor === "rgb(255, 255, 255)",
+      mobileDetailMetrics.backgroundColor === "rgb(255, 255, 255)",
       `${label}: detail panel is not white`,
     );
-    assert(detailMetrics.borderRadius >= 18, `${label}: detail panel radius is too small`);
+    assert(mobileDetailMetrics.borderRadius >= 18, `${label}: detail panel radius is too small`);
     assert(
-      detailMetrics.pageBackgroundImage !== "none",
+      mobileDetailMetrics.pageBackgroundImage !== "none",
       `${label}: detail page grid background is missing`,
     );
-    assert(detailMetrics.galleryHeight <= 240, `${label}: gallery is too tall`);
-    assert(detailMetrics.titleFontSize <= 26.5, `${label}: product title is too large`);
-    assert(detailMetrics.stickyDisplay === "none", `${label}: sticky contact still covers content`);
-    assert(detailMetrics.contactVisible, `${label}: in-flow contact action is hidden`);
+    assert(mobileDetailMetrics.galleryHeight <= 240, `${label}: gallery is too tall`);
+    assert(mobileDetailMetrics.titleFontSize <= 26.5, `${label}: product title is too large`);
+    assert(mobileDetailMetrics.stickyDisplay === "none", `${label}: sticky contact still covers content`);
+    assert(mobileDetailMetrics.contactVisible, `${label}: in-flow contact action is hidden`);
   }
   await assertNoOverflow(`${label}/detail`);
 }

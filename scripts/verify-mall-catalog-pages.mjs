@@ -233,6 +233,18 @@ assert.match(
 );
 assert.match(
   styles,
+  /\[data-joto-mall\]\[data-joto-mall-product\]\s*\{[\s\S]*?max-width:\s*1280px/,
+);
+assert.match(
+  styles,
+  /@media\s*\(max-width:\s*639px\)[\s\S]*?\[data-joto-mall\]\[data-joto-mall-product\]\s*\{[\s\S]*?width:\s*min\(100%\s*-\s*40px,\s*1280px\)/,
+);
+assert.doesNotMatch(
+  styles,
+  /\[data-joto-mall\]\[data-joto-mall-product\][\s\S]{0,240}(?:margin-left|margin-right):/,
+);
+assert.match(
+  styles,
   /@media\s*\(max-width:\s*639px\)[\s\S]*\.joto-mall__product-summary h1[\s\S]*font-size:\s*26px\s*!important/,
 );
 assert.doesNotMatch(
