@@ -67,9 +67,14 @@ html[lang^="fa"] [data-joto-mall] {
 [data-joto-mall] .joto-mall__section,
 [data-joto-mall] .joto-mall__catalog,
 [data-joto-mall] .joto-mall__list-header,
-[data-joto-mall][data-joto-mall-products],
-[data-joto-mall][data-joto-mall-product] {
+[data-joto-mall][data-joto-mall-products] {
   width: min(100% - 40px, 1380px);
+  margin-inline: auto;
+}
+
+[data-joto-mall][data-joto-mall-product] {
+  width: calc(100% - clamp(64px, 10vw, 160px));
+  max-width: 1280px;
   margin-inline: auto;
 }
 
@@ -966,8 +971,7 @@ html[lang^="fa"] [data-joto-mall] {
   [data-joto-mall] .joto-mall__section,
   [data-joto-mall] .joto-mall__catalog,
   [data-joto-mall] .joto-mall__contact-panel,
-  [data-joto-mall][data-joto-mall-products],
-  [data-joto-mall][data-joto-mall-product] {
+  [data-joto-mall][data-joto-mall-products] {
     width: min(100% - 28px, 1380px);
   }
 
@@ -977,7 +981,7 @@ html[lang^="fa"] [data-joto-mall] {
   }
 
   [data-joto-mall][data-joto-mall-product] {
-    width: min(100% - 28px, 1380px);
+    width: min(100% - 40px, 1280px);
     min-height: 0;
     margin: 96px auto 28px;
     border: 1px solid rgb(10 15 12 / 10%);
