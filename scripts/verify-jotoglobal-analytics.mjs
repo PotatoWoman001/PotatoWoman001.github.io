@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
-import { execFileSync } from 'node:child_process';
-import { readFile } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
+import path from 'node:path';
 
 const source = await readFile('assets/jotoglobal-analytics.js', 'utf8');
 const moduleUrl = `data:text/javascript;base64,${Buffer.from(source).toString('base64')}`;
@@ -21,8 +21,18 @@ assert.equal(event.utm.source, 'google');
 assert.equal('userAgent' in event, false);
 assert.equal('ip' in event, false);
 
-const htmlFiles = execFileSync('git', ['ls-files', '*index.html', '404.html'], { encoding: 'utf8' })
-  .trim().split('\n').filter(Boolean);
+async function collectHtml(dir = '.') {
+  const files = [];
+  for (const entry of await readdir(dir, { withFileTypes: true })) {
+    if (entry.name.startsWith('.') || entry.name === 'node_modules' || entry.name === 'work') continue;
+    const target = path.join(dir, entry.name);
+    if (entry.isDirectory()) files.push(...await collectHtml(target));
+    else if (entry.name === 'index.html' || target === '404.html') files.push(target.replace(/^\.\//, ''));
+  }
+  return files;
+}
+
+const htmlFiles = await collectHtml();
 assert.ok(htmlFiles.length > 100);
 for (const file of htmlFiles) {
   const html = await readFile(file, 'utf8');
