@@ -26,7 +26,7 @@ const htmlFiles = execFileSync('git', ['ls-files', '*index.html', '404.html'], {
 assert.ok(htmlFiles.length > 100);
 for (const file of htmlFiles) {
   const html = await readFile(file, 'utf8');
-  assert.match(html, /\/assets\/jotoglobal-analytics\.js\?v=20260805-1/, file);
+  assert.match(html, /\/assets\/jotoglobal-analytics\.js\?v=20260804-1/, file);
 }
 
 console.log(`Verified privacy-safe analytics across ${htmlFiles.length} routes.`);

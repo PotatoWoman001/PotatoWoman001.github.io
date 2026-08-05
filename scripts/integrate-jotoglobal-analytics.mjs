@@ -1,7 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { readFile, writeFile } from 'node:fs/promises';
 
-const TAG = '<script type="module" src="/assets/jotoglobal-analytics.js?v=20260805-1"></script>';
+const TAG = '<script type="module" src="/assets/jotoglobal-analytics.js?v=20260804-1"></script>';
 const files = execFileSync('git', ['ls-files', '*index.html', '404.html'], { encoding: 'utf8' })
   .trim().split('\n').filter(Boolean);
 let changed = 0;
