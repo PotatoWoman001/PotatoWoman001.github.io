@@ -1,0 +1,19 @@
+[
+  {
+    "id": "fixture-article-1",
+    "slug": "secure-global-network",
+    "site": "jotoglobal",
+    "status": "published",
+    "createdAt": "2026-08-05T00:00:00.000Z",
+    "publishedAt": "2026-08-05T00:00:00.000Z",
+    "heroImage": {
+      "url": "/assets/hero-YxcAnS2F.jpg",
+      "alt": { "en": "Secure global network", "zh-CN": "安全全球网络", "fa-IR": "شبکه جهانی امن" }
+    },
+    "translations": {
+      "en": { "title": "Building a Secure Global Network", "excerpt": "A practical guide for distributed enterprises.", "content": "<p>Global networks must balance security, latency, resilience and operational clarity. Teams should define trust boundaries, measure application paths and document failover decisions before selecting products.</p><p>Architecture reviews work best when business owners, security teams and network operators use the same evidence. A phased rollout reduces risk and creates clear checkpoints for performance, access control and incident response.</p>", "seoTitle": "Building a Secure Global Network", "seoDescription": "Practical decisions for secure global enterprise networking." },
+      "zh-CN": { "title": "构建安全的全球企业网络", "excerpt": "面向分布式企业的实用指南。", "content": "<p>全球企业网络需要在安全、时延、韧性与运维清晰度之间取得平衡。团队应先定义信任边界、测量应用链路并记录故障切换决策，再选择具体产品。</p><p>当业务负责人、安全团队和网络运维使用同一组证据时，架构评审更有效。分阶段上线可以降低风险，并为性能、访问控制和事件响应建立清晰检查点。</p>", "seoTitle": "构建安全的全球企业网络", "seoDescription": "全球企业安全网络建设中的关键实施决策。" },
+      "fa-IR": { "title": "ساخت یک شبکه جهانی امن", "excerpt": "راهنمایی عملی برای سازمان‌های توزیع‌شده.", "content": "<p>شبکه‌های جهانی باید میان امنیت، تأخیر، تاب‌آوری و شفافیت عملیاتی تعادل برقرار کنند. تیم‌ها پیش از انتخاب محصول باید مرزهای اعتماد، مسیرهای کاربردی و تصمیم‌های بازیابی را مشخص کنند.</p><p>وقتی مدیران کسب‌وکار، تیم امنیت و عملیات شبکه از شواهد مشترک استفاده می‌کنند، بررسی معماری مؤثرتر می‌شود. استقرار مرحله‌ای ریسک را کاهش می‌دهد و نقاط کنترل روشنی ایجاد می‌کند.</p>", "seoTitle": "ساخت یک شبکه جهانی امن", "seoDescription": "تصمیم‌های عملی برای شبکه امن سازمانی در مقیاس جهانی." }
+    }
+  }
+]
