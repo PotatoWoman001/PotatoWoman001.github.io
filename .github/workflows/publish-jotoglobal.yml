@@ -27,6 +27,7 @@ jobs:
           node scripts/verify-mall-catalog-pages.mjs
           node scripts/verify-site-typography-mall.mjs
           node scripts/verify-site-rules.mjs
+          node scripts/verify-admin-integration-routes.mjs
 
       - name: Build an immutable release archive
         id: release
@@ -122,6 +123,7 @@ jobs:
           node scripts/verify-mall-catalog-pages.mjs
           node scripts/verify-site-typography-mall.mjs
           node scripts/verify-site-rules.mjs
+          node scripts/verify-admin-integration-routes.mjs
           nginx -t
 
           next_link="/var/www/jotoglobal/current.next.${release_id}"
