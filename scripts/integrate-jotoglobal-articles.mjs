@@ -7,3 +7,9 @@ for (const file of ['blog/index.html', 'zh/blog/index.html', 'fa/blog/index.html
   const next = clean.replace(/<\/body>/i, `  ${block}\n</body>`);
   if (next !== original) await writeFile(file, next);
 }
+
+const robotsPath = 'robots.txt';
+const robots = await readFile(robotsPath, 'utf8');
+if (!/article-sitemap\.xml/.test(robots)) {
+  await writeFile(robotsPath, `${robots.trimEnd()}\nSitemap: https://jotoglobal.com/article-sitemap.xml\n`);
+}
