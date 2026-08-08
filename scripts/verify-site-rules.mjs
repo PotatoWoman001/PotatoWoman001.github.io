@@ -27,9 +27,19 @@ function collectIndexFiles(directory) {
 }
 
 const routeFiles = collectIndexFiles(root);
-assert.equal(routeFiles.length, 114, "expected all 114 route index files");
+const articleManifestPath = path.join(root, "article-data/manifest.json");
+const articleRoutes = fs.existsSync(articleManifestPath)
+  ? JSON.parse(fs.readFileSync(articleManifestPath, "utf8")).routes || []
+  : [];
+const articleRouteFiles = new Set(articleRoutes.map((route) => {
+  assert.match(route, /^\/(?:zh\/|fa\/)?blog\/[a-z0-9]+(?:-[a-z0-9]+)*\/$/, `invalid generated article route: ${route}`);
+  return path.resolve(root, `.${route}`, "index.html");
+}));
+const baseRouteFiles = routeFiles.filter((routeFile) => !articleRouteFiles.has(path.resolve(routeFile)));
+assert.equal(baseRouteFiles.length, 114, "expected all 114 base route index files");
+assert.equal(routeFiles.length, baseRouteFiles.length + articleRouteFiles.size, "article manifest must match generated route files");
 
-for (const routeFile of routeFiles) {
+for (const routeFile of baseRouteFiles) {
   const html = fs.readFileSync(routeFile, "utf8");
   assert.ok(
     html.includes(bundleStyleUrl),
@@ -39,6 +49,12 @@ for (const routeFile of routeFiles) {
     html.includes(bundleScriptUrl),
     `${path.relative(root, routeFile)} is missing ${bundleScriptUrl}`,
   );
+}
+
+for (const routeFile of articleRouteFiles) {
+  const html = fs.readFileSync(routeFile, "utf8");
+  assert.ok(html.includes("/assets/jotoglobal-articles.css?v=20260804-1"), `${path.relative(root, routeFile)} is missing article CSS`);
+  assert.ok(html.includes("/assets/jotoglobal-analytics.js?v=20260804-1"), `${path.relative(root, routeFile)} is missing analytics`);
 }
 
 const notFoundHtml = fs.readFileSync(path.join(root, "404.html"), "utf8");
@@ -112,4 +128,4 @@ assert.match(
 );
 assert.match(js, /fontFamily:"Poppins, sans-serif"/);
 
-console.log(`Verified site-wide rules across ${routeFiles.length} routes.`);
+console.log(`Verified site-wide rules across ${baseRouteFiles.length} base routes and ${articleRouteFiles.size} generated article routes.`);
