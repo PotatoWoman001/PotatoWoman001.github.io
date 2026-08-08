@@ -6,7 +6,7 @@ const root = process.cwd();
 const scriptPath = path.join(root, "assets/solution-card-carousel.js");
 const stylesPath = path.join(root, "assets/solution-card-carousel.css");
 const mainBundlePath = path.join(root, "assets/index-DaFvN0XI.js");
-const assetVersion = "20260804-1";
+const assetVersion = "20260805-1";
 
 assert.equal(existsSync(scriptPath), true, "carousel script must exist");
 assert.equal(existsSync(stylesPath), true, "carousel stylesheet must exist");
@@ -79,7 +79,7 @@ for (const homepagePath of homepagePaths) {
 function collectIndexFiles(directory) {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     if (
-      [".git", ".playwright-cli", ".superpowers", "docs", "scripts"].includes(
+      [".git", ".playwright-cli", ".superpowers", "docs", "scripts", "work"].includes(
         entry.name,
       )
     ) {

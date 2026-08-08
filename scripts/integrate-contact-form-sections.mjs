@@ -13,9 +13,9 @@ const contactRoutes = new Set([
 const solutionRoutePattern =
   /^(?:(?:zh|fa)\/)?solutions\/[^/]+(?:\/[^/]+)?\/index\.html$/;
 const finalScriptTag =
-  '<script type="module" src="/assets/contact-form-sections.js?v=20260804-1"></script>';
+  '<script type="module" src="/assets/contact-form-sections.js?v=20260805-1"></script>';
 const finalStyleTag =
-  '<link rel="stylesheet" href="/assets/contact-form-sections.css?v=20260804-1">';
+  '<link rel="stylesheet" href="/assets/contact-form-sections.css?v=20260805-1">';
 const bundleScriptPattern =
   /(<script type="module" crossorigin src="\/assets\/index-DaFvN0XI\.js(?:\?v=[^"]+)?"><\/script>)/;
 const bundleStylePattern =
@@ -26,7 +26,7 @@ async function collectIndexFiles(directory, relativeDirectory = "") {
   const files = [];
 
   for (const entry of entries) {
-    if (entry.name === ".git" || entry.name === ".superpowers") continue;
+    if ([".git", ".superpowers", "work"].includes(entry.name)) continue;
 
     const absolutePath = path.join(directory, entry.name);
     const relativePath = path.posix.join(relativeDirectory, entry.name);

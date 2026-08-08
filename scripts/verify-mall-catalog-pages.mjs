@@ -4,7 +4,7 @@ import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 
 const root = process.cwd();
-const version = "20260804-1";
+const version = "20260805-1";
 const routes = [
   ["mall/index.html", "en", "ltr", "home", "mall-catalog-pages.js"],
   ["zh/mall/index.html", "zh-CN", "ltr", "home", "mall-catalog-pages.js"],
@@ -21,7 +21,7 @@ async function collectIndexFiles(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
   const found = [];
   for (const entry of entries) {
-    if ([".git", ".playwright-cli", ".superpowers", "docs", "preview", "scripts"].includes(entry.name)) {
+    if ([".git", ".playwright-cli", ".superpowers", "docs", "preview", "scripts", "work"].includes(entry.name)) {
       continue;
     }
     const absolute = path.join(directory, entry.name);
@@ -80,7 +80,7 @@ assert.doesNotMatch(product, /product\.source_url|locale\.source/);
 assert.doesNotMatch(i18n, /^\s*source:\s*/m);
 assert.doesNotMatch(`${pages}\n${product}`, /\.innerHTML\s*=/);
 for (const asset of [pages, product]) {
-  assert.match(asset, /\.js\?v=20260804-1/);
+  assert.match(asset, /\.js\?v=20260805-1/);
 }
 assert.match(product, /og:type", "product"/);
 assert.match(product, /"@type": "Product"/);

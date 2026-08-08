@@ -3,7 +3,7 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const version = "20260804-1";
+const version = "20260805-1";
 const expectedRouteCount = 114;
 const excludedDirectories = new Set([
   ".git",
@@ -12,6 +12,7 @@ const excludedDirectories = new Set([
   "docs",
   "preview",
   "scripts",
+  "work",
 ]);
 
 function collectIndexFiles(directory) {

@@ -4,10 +4,10 @@ import { fileURLToPath } from "node:url";
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(scriptDirectory, "..");
-const staticAssetVersion = "20260804-1";
+const staticAssetVersion = "20260805-1";
 const assetPattern = /(\/assets\/[^"'<>?]+\.(?:js|css))(?:\?v=[^"'<>]+)?/g;
-const scriptPattern = /\/assets\/index-DaFvN0XI\.js\?v=20260804-1/g;
-const stylePattern = /\/assets\/index-e49ffBFL\.css\?v=20260804-1/g;
+const scriptPattern = /\/assets\/index-DaFvN0XI\.js\?v=20260805-1/g;
+const stylePattern = /\/assets\/index-e49ffBFL\.css\?v=20260805-1/g;
 const scriptUrl = `/assets/index-DaFvN0XI.js?v=${staticAssetVersion}`;
 const styleUrl = `/assets/index-e49ffBFL.css?v=${staticAssetVersion}`;
 const excludedDirectories = new Set([
@@ -16,6 +16,7 @@ const excludedDirectories = new Set([
   "docs",
   "preview",
   "scripts",
+  "work",
 ]);
 
 async function collectIndexFiles(directory, relativeDirectory = "") {

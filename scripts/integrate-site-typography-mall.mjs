@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(scriptDirectory, "..");
-const version = "20260804-1";
+const version = "20260805-1";
 const expectedRouteCount = 114;
 
 const excludedDirectories = new Set([
@@ -14,6 +14,7 @@ const excludedDirectories = new Set([
   "docs",
   "preview",
   "scripts",
+  "work",
 ]);
 
 const mallCatalogRoutes = [
