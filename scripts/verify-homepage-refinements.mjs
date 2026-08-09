@@ -4,7 +4,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const homepages = ["index.html", "zh/index.html", "fa/index.html"];
-const homepageVersion = "20260809-2";
+const homepageVersion = "20260809-3";
 const contactVersion = "20260809-1";
 
 for (const route of homepages) {
@@ -95,10 +95,19 @@ assert.match(
   /padding-top:\s*clamp\(112px,\s*16svh,\s*152px\)\s*!important/,
 );
 assert.match(homepageStyles, /overflow-x:\s*clip/);
+assert.match(
+  homepageStyles,
+  /\[data-home-hero-refined="true"\]\s*\{\s*min-height:\s*0\s*!important;/,
+);
+assert.match(
+  homepageStyles,
+  /\[data-home-hero-refined="true"\]\s*\[data-home-hero-stage\][\s\S]*?min-height:\s*0\s*!important;[\s\S]*?padding-bottom:\s*clamp\(40px,\s*6svh,\s*56px\)\s*!important;/,
+);
 assert.match(homepageStyles, /data-iran-presence/);
 assert.equal(existsSync(juniperLogoPath), true);
 assert.match(juniperLogo, /<svg/);
 assert.match(juniperLogo, /aria-label="Juniper Networks"/);
+assert.match(juniperLogo, /viewBox="50 0 620 150"/);
 
 assert.match(sharedStyles, /data-testid="header-actions"/);
 assert.match(sharedStyles, /aria-haspopup="menu"/);

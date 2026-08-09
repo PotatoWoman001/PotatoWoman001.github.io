@@ -256,14 +256,20 @@ html[lang="fa-IR"] #about [data-about-stat-value] {
     display: block;
   }
 
+  [data-home-hero-refined="true"] {
+    min-height: 0 !important;
+  }
+
   [data-home-hero-refined="true"] [data-home-hero-stage] {
     box-sizing: border-box;
+    height: auto;
     width: 100%;
+    min-height: 0 !important;
     min-width: 0;
     max-width: 100%;
     align-items: flex-start !important;
     padding-top: clamp(112px, 16svh, 152px) !important;
-    padding-bottom: 24px !important;
+    padding-bottom: clamp(40px, 6svh, 56px) !important;
   }
 
   [data-home-hero-refined="true"] [data-home-hero-content] {
