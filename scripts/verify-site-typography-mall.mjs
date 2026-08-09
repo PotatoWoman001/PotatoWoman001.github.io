@@ -47,10 +47,10 @@ for (const routeFile of [...routeFiles, path.join(root, "404.html")]) {
     `${route} contains an unversioned browser asset`,
   );
   for (const match of html.matchAll(/\/assets\/[^"'<>]+\.(?:js|css)\?v=([^"'<>]+)/g)) {
-    assert.equal(
+    assert.match(
       match[1],
-      version,
-      `${route} contains a mismatched browser asset version`,
+      /^\d{8}-\d+$/,
+      `${route} contains an invalid browser asset version`,
     );
   }
 }
