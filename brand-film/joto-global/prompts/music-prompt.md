@@ -1,0 +1,3 @@
+# JOTO Global Brand Film — Music Prompt
+
+Create an original 85-second instrumental score for a premium enterprise technology brand film. Begin with a restrained low-frequency pulse and sparse organic textures. Introduce a precise modern rhythm around 28 seconds as the five solution areas appear. Build confident momentum from 53 seconds through the global coordination section, then resolve from 77 seconds into a warm, assured final chord by 85 seconds. Contemporary, human and cinematic; no vocals, no corporate ukulele, no heroic trailer brass, no EDM drop, no recognizable melody, no abrupt ending. Leave space for subtle environmental sound details.

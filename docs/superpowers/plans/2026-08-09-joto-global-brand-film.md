@@ -68,10 +68,10 @@ Expected: 目录存在，生成文件与最终大体积导出不会进入 Git。
   "fonts": {
     "primary": "Poppins",
     "localFiles": [
-      "work/jotoglobal-admin-integration-site/assets/Poppins-Regular.ttf",
-      "work/jotoglobal-admin-integration-site/assets/Poppins-Medium.ttf",
-      "work/jotoglobal-admin-integration-site/assets/Poppins-SemiBold.ttf",
-      "work/jotoglobal-admin-integration-site/assets/Poppins-Bold.ttf"
+      "work/jotoglobal-admin-integration-site/assets/Poppins-Regular-B2YTLo9r.ttf",
+      "work/jotoglobal-admin-integration-site/assets/Poppins-Medium-1iPSBYoM.ttf",
+      "work/jotoglobal-admin-integration-site/assets/Poppins-SemiBold-DVCj-rhG.ttf",
+      "work/jotoglobal-admin-integration-site/assets/Poppins-Bold-CdT-0Mts.ttf"
     ]
   },
   "endCard": {

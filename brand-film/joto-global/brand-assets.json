@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "sourceOfTruth": "https://jotoglobal.com/",
+  "canvas": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 25
+  },
+  "colors": {
+    "ink": "#070b0a",
+    "green": "#5ed29c"
+  },
+  "fonts": {
+    "primary": "Poppins",
+    "localFiles": [
+      "work/jotoglobal-admin-integration-site/assets/Poppins-Regular-B2YTLo9r.ttf",
+      "work/jotoglobal-admin-integration-site/assets/Poppins-Medium-1iPSBYoM.ttf",
+      "work/jotoglobal-admin-integration-site/assets/Poppins-SemiBold-DVCj-rhG.ttf",
+      "work/jotoglobal-admin-integration-site/assets/Poppins-Bold-CdT-0Mts.ttf"
+    ]
+  },
+  "endCard": {
+    "wordmark": "JOTO Global",
+    "taglineEn": "We Make IT Happen.",
+    "taglineZh": "让 IT 真正发生。",
+    "officialLogoPolicy": "Use typographic wordmark unless a current official vector or transparent high-resolution logo is supplied and approved."
+  },
+  "excludedAssets": [
+    {
+      "path": "work/jotoglobal-admin-integration-site/assets/joto-logo-DZVb1uOz.png",
+      "reason": "Old lockup contains the retired Collaborate and Better tagline."
+    },
+    {
+      "path": "work/jotoglobal-admin-integration-site/assets/hero-YxcAnS2F.jpg",
+      "reason": "Overly futuristic composite style conflicts with the approved documentary direction."
+    },
+    {
+      "path": "work/jotoglobal-admin-integration-site/assets/planning-R2ujKFgS.jpg",
+      "reason": "Contains third-party branded presentation content."
+    },
+    {
+      "path": "work/jotoglobal-admin-integration-site/assets/deployment-Cx4LVhlN.jpg",
+      "reason": "Broken or unusable source image."
+    },
+    {
+      "path": "work/jotoglobal-admin-integration-site/assets/operations-CtQsnGLa.jpg",
+      "reason": "Contains vendor product branding."
+    }
+  ]
+}
