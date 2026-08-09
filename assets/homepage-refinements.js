@@ -2,6 +2,8 @@ const ABOUT_COPY_SELECTOR = "#about [data-about-copy]";
 const HERO_HEADING_SELECTOR =
   '[aria-labelledby="hero-title"] [data-hero-heading-shell]';
 const GLOBAL_PRESENCE_SELECTOR = "#global-presence";
+const TECHNOLOGY_PORTFOLIO_LAST_LOGO_SELECTOR =
+  '[data-partner-logo-grid] img[alt="AppDynamics logo"]';
 const TEHRAN_LATITUDE = 35.71219607;
 const TEHRAN_LONGITUDE = 51.36844735;
 const TEHRAN_MAP_X = 64.27;
@@ -50,6 +52,37 @@ function refineHomepageHero(headingShell) {
   hero.dataset.homeHeroRefined = "true";
   stage.dataset.homeHeroStage = "";
   content.dataset.homeHeroContent = "";
+  return true;
+}
+
+function enhanceTechnologyPortfolio() {
+  if (document.querySelector("[data-juniper-networks-partner]")) return true;
+
+  const lastLogo = document.querySelector(
+    TECHNOLOGY_PORTFOLIO_LAST_LOGO_SELECTOR,
+  );
+  const lastCard = lastLogo?.closest("[data-partner-logo-card]");
+  const lastWrapper = lastCard?.parentElement;
+  const grid = lastWrapper?.parentElement;
+  if (!lastLogo || !lastCard || !lastWrapper || !grid?.matches("[data-partner-logo-grid]")) {
+    return false;
+  }
+
+  const wrapper = lastWrapper.cloneNode(true);
+  const card = wrapper.querySelector("[data-partner-logo-card]");
+  const image = wrapper.querySelector("img");
+  if (!card || !image) return false;
+
+  wrapper.dataset.juniperNetworksPartner = "";
+  wrapper.classList.remove("translate-y-6", "opacity-0");
+  wrapper.classList.add("translate-y-0", "opacity-100");
+  wrapper.style.transitionDelay = "0ms";
+  card.dataset.partnerName = "Juniper Networks";
+  image.src = "/assets/juniper-networks-logo.svg";
+  image.alt = "Juniper Networks logo";
+  image.dataset.logoScale = "wide";
+  image.removeAttribute("srcset");
+  grid.append(wrapper);
   return true;
 }
 
@@ -185,8 +218,9 @@ function applyHomepageRefinements() {
   const iranComplete = globalPresence
     ? enhancePersianIranPresence(globalPresence)
     : false;
+  const portfolioComplete = enhanceTechnologyPortfolio();
 
-  return Boolean(copy && heroComplete && iranComplete);
+  return Boolean(copy && heroComplete && iranComplete && portfolioComplete);
 }
 
 function startHomepageRefinements() {

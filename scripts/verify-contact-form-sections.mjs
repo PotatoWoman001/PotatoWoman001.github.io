@@ -19,9 +19,9 @@ const solutionRoutePattern =
   /^(?:(?:zh|fa)\/)?solutions\/[^/]+(?:\/[^/]+)?\/index\.html$/;
 const expectedSolutionRouteCount = 75;
 const scriptTag =
-  '<script type="module" src="/assets/contact-form-sections.js?v=20260805-1"></script>';
+  '<script type="module" src="/assets/contact-form-sections.js?v=20260809-1"></script>';
 const styleTag =
-  '<link rel="stylesheet" href="/assets/contact-form-sections.css?v=20260805-1">';
+  '<link rel="stylesheet" href="/assets/contact-form-sections.css?v=20260809-1">';
 
 async function collectIndexFiles(directory, relativeDirectory = "") {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -98,6 +98,9 @@ assert.equal(
   "درخواست محصول: Cisco Router (C881-K9)",
 );
 assert.match(script, /field\.value/);
+assert.doesNotMatch(script, />↗<\/span>/);
+assert.match(script, /joto-solution-contact__submit-icon-svg/);
+assert.match(script, /viewBox="0 0 24 24"/);
 assert.match(script, /dispatchEvent\(new Event\("input", \{ bubbles: true \}\)\)/);
 assert.doesNotMatch(
   script.match(/async function prefillProductInquiry[\s\S]*?\n\}/)?.[0] || "",
@@ -108,6 +111,9 @@ assert.match(styles, /width:\s*280px/);
 assert.match(styles, /height:\s*48px/);
 assert.match(styles, /white-space:\s*nowrap/);
 assert.match(styles, /html\[dir="rtl"\]/);
+assert.match(styles, /::placeholder/);
+assert.match(styles, /joto-solution-contact__form-header p/);
+assert.match(styles, /joto-solution-contact__submit-icon-svg/);
 assert.match(styles, /@media \(max-width:\s*639px\)/);
 assert.match(styles, /clip:\s*rect\(0,\s*0,\s*0,\s*0\)/);
 assert.doesNotMatch(styles, /left:\s*-9999px/);

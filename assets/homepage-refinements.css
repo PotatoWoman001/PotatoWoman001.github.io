@@ -18,6 +18,10 @@
   align-items: flex-start;
 }
 
+[data-juniper-networks-partner] {
+  display: none;
+}
+
 html[dir="rtl"]
   [data-home-hero-refined="true"]
   [data-hero-copy-column] {
@@ -237,6 +241,16 @@ html[lang="fa-IR"] #about [data-about-stat-value] {
   #about [data-about-layout] > :first-child,
   #about [data-about-stats] {
     grid-column: span 6 / span 6;
+  }
+}
+
+@media (max-width: 1023px) {
+  [data-juniper-networks-partner] {
+    display: block;
+  }
+
+  [data-home-hero-refined="true"] [data-home-hero-content] {
+    transform: translateY(clamp(-96px, -10vh, -56px));
   }
 }
 

@@ -264,7 +264,11 @@ function contactFormMarkup(locale, idPrefix, formKind) {
       <div class="joto-solution-contact__actions">
         <button class="joto-solution-contact__submit" data-solution-contact-submit type="submit">
           <span data-solution-contact-submit-label>${escapeHtml(copy.submit)}</span>
-          <span class="joto-solution-contact__submit-icon" aria-hidden="true">↗</span>
+          <span class="joto-solution-contact__submit-icon" aria-hidden="true">
+            <svg class="joto-solution-contact__submit-icon-svg" viewBox="0 0 24 24" fill="none">
+              <path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </span>
         </button>
       </div>
       <p class="joto-solution-contact__status" data-solution-contact-status aria-live="polite"></p>

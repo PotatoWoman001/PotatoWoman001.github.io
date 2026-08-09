@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(scriptDirectory, "..");
-const version = "20260805-1";
+const version = "20260809-1";
 const homeRoutes = ["index.html", "zh/index.html", "fa/index.html"];
 
 const homepageScriptTag =
@@ -53,6 +53,14 @@ function integrateHomepage(source, route) {
 }
 
 let changedFiles = 0;
+
+const juniperLogo = await readFile(
+  path.join(projectRoot, "assets/juniper-networks-logo.svg"),
+  "utf8",
+);
+if (!juniperLogo.includes('aria-label="Juniper Networks"')) {
+  throw new Error("The Juniper Networks logo asset is missing its accessible label.");
+}
 
 for (const route of homeRoutes) {
   const absolutePath = path.join(projectRoot, route);

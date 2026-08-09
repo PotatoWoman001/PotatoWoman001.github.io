@@ -4,7 +4,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const homepages = ["index.html", "zh/index.html", "fa/index.html"];
-const version = "20260805-1";
+const version = "20260809-1";
 
 for (const route of homepages) {
   const html = readFileSync(path.join(root, route), "utf8");
@@ -41,6 +41,10 @@ assert.equal(existsSync(homepageStylesPath), true);
 
 const homepageScript = readFileSync(homepageScriptPath, "utf8");
 const homepageStyles = readFileSync(homepageStylesPath, "utf8");
+const juniperLogoPath = path.join(root, "assets/juniper-networks-logo.svg");
+const juniperLogo = existsSync(juniperLogoPath)
+  ? readFileSync(juniperLogoPath, "utf8")
+  : "";
 const contactScript = readFileSync(
   path.join(root, "assets/contact-form-sections.js"),
   "utf8",
@@ -63,6 +67,9 @@ assert.match(homepageScript, /homepageSecondaryCopyRemoved/);
 assert.match(homepageScript, /removeHeroEyebrow/);
 assert.match(homepageScript, /removeHeroProofCard/);
 assert.match(homepageScript, /enhancePersianIranPresence/);
+assert.match(homepageScript, /enhanceTechnologyPortfolio/);
+assert.match(homepageScript, /Juniper Networks/);
+assert.match(homepageScript, /juniper-networks-logo\.svg/);
 assert.match(homepageScript, /ایران/);
 assert.match(homepageScript, /تهران/);
 assert.match(homepageScript, /35\.71219607/);
@@ -72,7 +79,20 @@ assert.match(homepageStyles, /data-about-stats/);
 assert.match(homepageStyles, /grid-template-columns:\s*repeat\(2/);
 assert.match(homepageStyles, /@media \(max-width:\s*479px\)/);
 assert.match(homepageStyles, /data-home-hero-refined/);
+assert.match(homepageStyles, /@media \(max-width:\s*1023px\)/);
+assert.match(
+  homepageStyles,
+  /\[data-juniper-networks-partner\]\s*\{\s*display:\s*none;/,
+);
+assert.match(
+  homepageStyles,
+  /@media \(max-width:\s*1023px\)[\s\S]*?\[data-juniper-networks-partner\]\s*\{\s*display:\s*block;/,
+);
+assert.match(homepageStyles, /translateY\(clamp\(-/);
 assert.match(homepageStyles, /data-iran-presence/);
+assert.equal(existsSync(juniperLogoPath), true);
+assert.match(juniperLogo, /<svg/);
+assert.match(juniperLogo, /aria-label="Juniper Networks"/);
 
 assert.match(sharedStyles, /data-testid="header-actions"/);
 assert.match(sharedStyles, /aria-haspopup="menu"/);
