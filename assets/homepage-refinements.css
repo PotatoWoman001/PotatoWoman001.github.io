@@ -245,12 +245,45 @@ html[lang="fa-IR"] #about [data-about-stat-value] {
 }
 
 @media (max-width: 1023px) {
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-x: clip;
+  }
+
   [data-juniper-networks-partner] {
     display: block;
   }
 
+  [data-home-hero-refined="true"] [data-home-hero-stage] {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    align-items: flex-start !important;
+    padding-top: clamp(112px, 16svh, 152px) !important;
+    padding-bottom: 24px !important;
+  }
+
   [data-home-hero-refined="true"] [data-home-hero-content] {
-    transform: translateY(clamp(-96px, -10vh, -56px));
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    transform: none;
+  }
+
+  [data-home-hero-refined="true"] [data-hero-heading-shell],
+  [data-home-hero-refined="true"] [data-hero-description],
+  [data-home-hero-refined="true"] [data-home-hero-actions] {
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 359px) {
+  [data-home-hero-refined="true"] [data-home-hero-stage] {
+    padding-top: 112px !important;
   }
 }
 

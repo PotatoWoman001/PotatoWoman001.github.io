@@ -4,33 +4,34 @@ import path from "node:path";
 
 const root = process.cwd();
 const homepages = ["index.html", "zh/index.html", "fa/index.html"];
-const version = "20260809-1";
+const homepageVersion = "20260809-2";
+const contactVersion = "20260809-1";
 
 for (const route of homepages) {
   const html = readFileSync(path.join(root, route), "utf8");
   assert.match(
     html,
-    new RegExp(`/assets/homepage-refinements\\.css\\?v=${version}`),
+    new RegExp(`/assets/homepage-refinements\\.css\\?v=${homepageVersion}`),
   );
   assert.match(
     html,
-    new RegExp(`/assets/homepage-refinements\\.js\\?v=${version}`),
+    new RegExp(`/assets/homepage-refinements\\.js\\?v=${homepageVersion}`),
   );
   assert.match(
     html,
-    new RegExp(`/assets/contact-form-sections\\.css\\?v=${version}`),
+    new RegExp(`/assets/contact-form-sections\\.css\\?v=${contactVersion}`),
   );
   assert.match(
     html,
-    new RegExp(`/assets/contact-form-sections\\.js\\?v=${version}`),
+    new RegExp(`/assets/contact-form-sections\\.js\\?v=${contactVersion}`),
   );
   assert.match(
     html,
-    new RegExp(`/assets/solution-card-carousel\\.css\\?v=${version}`),
+    new RegExp(`/assets/solution-card-carousel\\.css\\?v=${homepageVersion}`),
   );
   assert.match(
     html,
-    new RegExp(`/assets/solution-card-carousel\\.js\\?v=${version}`),
+    new RegExp(`/assets/solution-card-carousel\\.js\\?v=${homepageVersion}`),
   );
 }
 
@@ -88,7 +89,12 @@ assert.match(
   homepageStyles,
   /@media \(max-width:\s*1023px\)[\s\S]*?\[data-juniper-networks-partner\]\s*\{\s*display:\s*block;/,
 );
-assert.match(homepageStyles, /translateY\(clamp\(-/);
+assert.match(homepageStyles, /align-items:\s*flex-start\s*!important/);
+assert.match(
+  homepageStyles,
+  /padding-top:\s*clamp\(112px,\s*16svh,\s*152px\)\s*!important/,
+);
+assert.match(homepageStyles, /overflow-x:\s*clip/);
 assert.match(homepageStyles, /data-iran-presence/);
 assert.equal(existsSync(juniperLogoPath), true);
 assert.match(juniperLogo, /<svg/);
