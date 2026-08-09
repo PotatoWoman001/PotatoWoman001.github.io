@@ -4,7 +4,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const homepages = ["index.html", "zh/index.html", "fa/index.html"];
-const homepageVersion = "20260809-3";
+const homepageVersion = "20260809-4";
 const contactVersion = "20260809-1";
 
 for (const route of homepages) {
@@ -89,19 +89,28 @@ assert.match(
   homepageStyles,
   /@media \(max-width:\s*1023px\)[\s\S]*?\[data-juniper-networks-partner\]\s*\{\s*display:\s*block;/,
 );
-assert.match(homepageStyles, /align-items:\s*flex-start\s*!important/);
-assert.match(
-  homepageStyles,
-  /padding-top:\s*clamp\(112px,\s*16svh,\s*152px\)\s*!important/,
-);
 assert.match(homepageStyles, /overflow-x:\s*clip/);
 assert.match(
   homepageStyles,
-  /\[data-home-hero-refined="true"\]\s*\{\s*min-height:\s*0\s*!important;/,
+  /\[data-home-hero-refined="true"\][\s\S]*?min-height:\s*100vh\s*!important;[\s\S]*?min-height:\s*100svh\s*!important;/,
 );
 assert.match(
   homepageStyles,
-  /\[data-home-hero-refined="true"\]\s*\[data-home-hero-stage\][\s\S]*?min-height:\s*0\s*!important;[\s\S]*?padding-bottom:\s*clamp\(40px,\s*6svh,\s*56px\)\s*!important;/,
+  /\[data-home-hero-refined="true"\]\s*\[data-home-hero-stage\][\s\S]*?min-height:\s*100vh\s*!important;[\s\S]*?min-height:\s*100svh\s*!important;/,
+);
+assert.match(
+  homepageStyles,
+  /\[data-home-hero-refined="true"\]\s*\[data-testid="hero-background-video"\]\s*\{\s*display:\s*none\s*!important;/,
+);
+assert.match(homepageStyles, /joto-mobile-hero-drift/);
+assert.match(homepageStyles, /joto-mobile-hero-breathe/);
+assert.match(
+  homepageStyles,
+  /@media \(max-width:\s*1023px\) and \(max-height:\s*700px\)/,
+);
+assert.match(
+  homepageStyles,
+  /@media \(prefers-reduced-motion:\s*reduce\)[\s\S]*?::before[\s\S]*?::after[\s\S]*?animation:\s*none\s*!important;/,
 );
 assert.match(homepageStyles, /data-iran-presence/);
 assert.equal(existsSync(juniperLogoPath), true);
