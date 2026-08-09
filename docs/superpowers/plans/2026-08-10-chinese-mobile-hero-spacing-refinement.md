@@ -23,12 +23,13 @@
 **Files:**
 - Modify: `scripts/verify-homepage-refinements.mjs:105-125`
 - Modify: `assets/homepage-refinements.css:259-431`
+- Modify: `index.html`, `zh/index.html`, `fa/index.html`（资产版本号）
 
 **Interfaces:**
 - Consumes: `[data-home-hero-refined="true"]`、`--joto-mobile-hero-title-line`、`--joto-mobile-hero-copy-gap`。
 - Produces: `html:lang(zh)` 范围内的中文移动端行高与正文间距覆盖，以及 `max-height: 700px` / `max-width: 359px` 的短屏回收值。
 
-- [ ] **Step 1: 写入失败的静态契约**
+- [x] **Step 1: 写入失败的静态契约**
 
 在 `scripts/verify-homepage-refinements.mjs` 增加以下断言：
 
@@ -47,13 +48,13 @@ assert.match(
 );
 ```
 
-- [ ] **Step 2: 运行静态验证并确认失败**
+- [x] **Step 2: 运行静态验证并确认失败**
 
 Run: `node scripts/verify-homepage-refinements.mjs`
 
 Expected: FAIL，提示未找到中文语言作用域的 `1.06` 行高或新正文间距。
 
-- [ ] **Step 3: 实现中文常规屏与短屏覆盖**
+- [x] **Step 3: 实现中文常规屏与短屏覆盖**
 
 在 `assets/homepage-refinements.css` 的移动端媒体查询内加入：
 
@@ -82,13 +83,15 @@ html:lang(zh) [data-home-hero-refined="true"] {
 }
 ```
 
-- [ ] **Step 4: 运行静态验证并确认通过**
+同时将三语言首页与静态验证中的首页增强资产版本统一更新为 `20260810-1`，避免浏览器继续命中上一版 CSS 缓存。
+
+- [x] **Step 4: 运行静态验证并确认通过**
 
 Run: `node scripts/verify-homepage-refinements.mjs && node scripts/verify-site-typography-mall.mjs`
 
 Expected: 两项验证均通过，114 条本地化路由无回归。
 
-- [ ] **Step 5: 执行浏览器几何回归**
+- [x] **Step 5: 执行浏览器几何回归**
 
 在中文 430 × 932、390 × 844、375 × 667、320 × 568 下检查：
 
@@ -104,14 +107,13 @@ Expected: 两项验证均通过，114 条本地化路由无回归。
 
 Expected: 430 × 932 标题行高约 78px、正文顶部约 420–435px；所有尺寸 `actionsBottom <= innerHeight`、`solutionsTop >= innerHeight`、`overflow === 0`。英文与波斯语各抽查 430 × 932，行高保持原值。
 
-- [ ] **Step 6: 检查并提交**
+- [x] **Step 6: 检查并提交**
 
 Run: `git diff --check && git status --short`
 
 提交文件：
 
 ```bash
-git add assets/homepage-refinements.css scripts/verify-homepage-refinements.mjs
+git add assets/homepage-refinements.css scripts/verify-homepage-refinements.mjs index.html zh/index.html fa/index.html docs/superpowers/plans/2026-08-10-chinese-mobile-hero-spacing-refinement.md
 git commit -m "fix: refine Chinese mobile hero spacing"
 ```
-

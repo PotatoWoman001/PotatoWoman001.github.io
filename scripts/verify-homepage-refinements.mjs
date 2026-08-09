@@ -4,7 +4,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const homepages = ["index.html", "zh/index.html", "fa/index.html"];
-const homepageVersion = "20260809-5";
+const homepageVersion = "20260810-1";
 const contactVersion = "20260809-1";
 
 for (const route of homepages) {
@@ -106,6 +106,18 @@ assert.match(homepageStyles, /--joto-mobile-hero-title-size/);
 assert.match(
   homepageStyles,
   /--joto-mobile-hero-copy-gap:\s*clamp\(/,
+);
+assert.match(
+  homepageStyles,
+  /html:lang\(zh\)[\s\S]*?--joto-mobile-hero-title-line:\s*1\.06/,
+);
+assert.match(
+  homepageStyles,
+  /html:lang\(zh\)[\s\S]*?--joto-mobile-hero-copy-gap:\s*clamp\(78px,\s*10\.5svh,\s*98px\)/,
+);
+assert.match(
+  homepageStyles,
+  /max-height:\s*700px[\s\S]*?html:lang\(zh\)[\s\S]*?--joto-mobile-hero-copy-gap:/,
 );
 assert.match(homepageStyles, /repeating-linear-gradient\(\s*90deg/);
 assert.match(homepageStyles, /joto-mobile-hero-raster-drift/);
