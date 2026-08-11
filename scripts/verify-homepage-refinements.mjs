@@ -5,13 +5,16 @@ import path from "node:path";
 const root = process.cwd();
 const homepages = ["index.html", "zh/index.html", "fa/index.html"];
 const homepageVersion = "20260810-1";
+const homepageStylesVersion = "20260811-3";
 const contactVersion = "20260809-1";
 
 for (const route of homepages) {
   const html = readFileSync(path.join(root, route), "utf8");
   assert.match(
     html,
-    new RegExp(`/assets/homepage-refinements\\.css\\?v=${homepageVersion}`),
+    new RegExp(
+      `/assets/homepage-refinements\\.css\\?v=${homepageStylesVersion}`,
+    ),
   );
   assert.match(
     html,
@@ -118,6 +121,22 @@ assert.match(
 assert.match(
   homepageStyles,
   /max-height:\s*700px[\s\S]*?html:lang\(zh\)[\s\S]*?--joto-mobile-hero-copy-gap:/,
+);
+assert.match(
+  homepageStyles,
+  /html:lang\(zh\)[\s\S]*?--joto-mobile-hero-content-shift:\s*clamp\(42px,\s*7svh,\s*68px\)/,
+);
+assert.match(
+  homepageStyles,
+  /html:lang\(zh\)[\s\S]*?data-home-hero-content[\s\S]*?margin-top:\s*var\(--joto-mobile-hero-content-shift\)/,
+);
+assert.match(
+  homepageStyles,
+  /max-height:\s*700px[\s\S]*?html:lang\(zh\)[\s\S]*?--joto-mobile-hero-content-shift:\s*18px/,
+);
+assert.match(
+  homepageStyles,
+  /max-width:\s*359px[\s\S]*?html:lang\(zh\)[\s\S]*?--joto-mobile-hero-content-shift:\s*10px/,
 );
 assert.match(homepageStyles, /repeating-linear-gradient\(\s*90deg/);
 assert.match(homepageStyles, /joto-mobile-hero-raster-drift/);
