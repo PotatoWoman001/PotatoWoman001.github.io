@@ -320,8 +320,8 @@ function bindContactForm(form, copy) {
       status.textContent = `${copy.error} `;
 
       const emailLink = document.createElement("a");
-      emailLink.href = "mailto:sales@jototech.cn";
-      emailLink.textContent = "sales@jototech.cn";
+      emailLink.href = "mailto:sales@jotoglobal.com";
+      emailLink.textContent = "sales@jotoglobal.com";
       status.append(emailLink, ".");
     }
   });
