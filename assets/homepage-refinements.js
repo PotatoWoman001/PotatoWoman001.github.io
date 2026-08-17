@@ -40,6 +40,21 @@ function removeHeroProofCard(content) {
   proofCard?.remove();
 }
 
+function removeHeroVerticalGuides(hero) {
+  const guidePositions = new Set(["left-1/4", "left-1/2", "left-3/4"]);
+  hero.querySelectorAll("span").forEach((span) => {
+    const isVerticalGuide =
+      span.classList.contains("absolute") &&
+      span.classList.contains("inset-y-0") &&
+      span.classList.contains("w-px") &&
+      span.classList.contains("bg-white/10") &&
+      Array.from(guidePositions).some((position) =>
+        span.classList.contains(position),
+      );
+    if (isVerticalGuide) span.remove();
+  });
+}
+
 function refineHomepageHero(headingShell) {
   const content = headingShell.parentElement;
   const stage = content?.parentElement;
@@ -48,6 +63,7 @@ function refineHomepageHero(headingShell) {
 
   removeHeroEyebrow(headingShell);
   removeHeroProofCard(content);
+  removeHeroVerticalGuides(hero);
 
   hero.dataset.homeHeroRefined = "true";
   stage.dataset.homeHeroStage = "";

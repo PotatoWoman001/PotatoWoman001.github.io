@@ -1,0 +1,62 @@
+/*
+ * Solution partner lockup
+ *
+ * Keep the existing mobile presentation. From iPad widths upward, display
+ * the complete partner lockup at twice its original visual size.
+ */
+@media (min-width: 768px) {
+  [data-partner-lockup-logo] {
+    max-height: 56px !important;
+    max-width: 264px !important;
+  }
+
+  [data-partner-lockup-logo] + span {
+    font-size: 48px !important;
+    line-height: 64px !important;
+  }
+
+  [data-partner-lockup-logo] + span + span {
+    font-size: 40px !important;
+    line-height: 56px !important;
+  }
+
+  div:has(> [data-partner-lockup-logo]) {
+    gap: 32px !important;
+  }
+
+  div:has(> div > [data-partner-lockup-logo]) {
+    column-gap: 32px !important;
+    row-gap: 24px !important;
+  }
+
+  div:has(> div.mt-9 > div > [data-partner-lockup-logo])
+    > div:first-child {
+    gap: 32px !important;
+  }
+
+  div:has(> div.mt-9 > div > [data-partner-lockup-logo])
+    > div:first-child
+    > p {
+    font-size: 22px !important;
+    line-height: 33px !important;
+  }
+
+  div:has(> div.mt-9 > div > [data-partner-lockup-logo])
+    > div:first-child
+    > span {
+    width: 96px !important;
+    height: 2px !important;
+  }
+
+  [data-partner-badge] {
+    gap: 16px !important;
+    padding: 12px 28px !important;
+    font-size: 22px !important;
+    line-height: 33px !important;
+  }
+
+  [data-partner-badge] > span[aria-hidden="true"] {
+    width: 12px !important;
+    height: 12px !important;
+  }
+}

@@ -5,6 +5,7 @@ import path from "node:path";
 const root = process.cwd();
 const homepages = ["index.html", "zh/index.html", "fa/index.html"];
 const homepageVersion = "20260810-1";
+const homepageScriptVersion = "20260817-1";
 const homepageStylesVersion = "20260811-3";
 const contactVersion = "20260809-1";
 
@@ -18,7 +19,9 @@ for (const route of homepages) {
   );
   assert.match(
     html,
-    new RegExp(`/assets/homepage-refinements\\.js\\?v=${homepageVersion}`),
+    new RegExp(
+      `/assets/homepage-refinements\\.js\\?v=${homepageScriptVersion}`,
+    ),
   );
   assert.match(
     html,
@@ -70,6 +73,10 @@ assert.match(homepageScript, /data-about-copy/);
 assert.match(homepageScript, /homepageSecondaryCopyRemoved/);
 assert.match(homepageScript, /removeHeroEyebrow/);
 assert.match(homepageScript, /removeHeroProofCard/);
+assert.match(homepageScript, /removeHeroVerticalGuides/);
+assert.match(homepageScript, /left-1\/4/);
+assert.match(homepageScript, /left-1\/2/);
+assert.match(homepageScript, /left-3\/4/);
 assert.match(homepageScript, /enhancePersianIranPresence/);
 assert.match(homepageScript, /enhanceTechnologyPortfolio/);
 assert.match(homepageScript, /Juniper Networks/);
