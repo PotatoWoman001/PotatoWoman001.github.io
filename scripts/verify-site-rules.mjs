@@ -5,9 +5,10 @@ import path from "node:path";
 const root = process.cwd();
 const cssPath = path.join(root, "assets/index-e49ffBFL.css");
 const jsPath = path.join(root, "assets/index-DaFvN0XI.js");
-const staticAssetVersion = "20260805-1";
-const bundleScriptUrl = `/assets/index-DaFvN0XI.js?v=${staticAssetVersion}`;
-const bundleStyleUrl = `/assets/index-e49ffBFL.css?v=${staticAssetVersion}`;
+const bundleScriptVersion = "20260811-2";
+const bundleStyleVersion = "20260805-1";
+const bundleScriptUrl = `/assets/index-DaFvN0XI.js?v=${bundleScriptVersion}`;
+const bundleStyleUrl = `/assets/index-e49ffBFL.css?v=${bundleStyleVersion}`;
 const css = fs.readFileSync(cssPath, "utf8");
 const js = fs.readFileSync(jsPath, "utf8");
 

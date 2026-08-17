@@ -5,6 +5,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const version = "20260805-1";
+const siteBundleVersion = "20260811-2";
 const routes = [
   ["mall/index.html", "en", "ltr", "home", "mall-catalog-pages.js"],
   ["zh/mall/index.html", "zh-CN", "ltr", "home", "mall-catalog-pages.js"],
@@ -40,8 +41,11 @@ for (const [route, lang, dir, mode, script] of routes) {
   assert.ok(html.includes(`/assets/mall-catalog.css?v=${version}`));
   assert.ok(html.includes(`/assets/contact-form-sections.css?v=${version}`));
   assert.ok(html.includes(`/assets/${script}?v=${version}`));
-  for (const match of html.matchAll(/\/assets\/[^"'<>]+\.(?:js|css)\?v=([^"'<>]+)/g)) {
-    assert.equal(match[1], version, `${route} has mismatched cache version`);
+  for (const match of html.matchAll(/(\/assets\/[^"'<>]+\.(?:js|css))\?v=([^"'<>]+)/g)) {
+    const expectedVersion = match[1] === "/assets/index-DaFvN0XI.js"
+      ? siteBundleVersion
+      : version;
+    assert.equal(match[2], expectedVersion, `${route} has mismatched cache version`);
   }
   assert.doesNotMatch(html, /being prepared|正在整理|در حال آماده‌سازی/);
 }
