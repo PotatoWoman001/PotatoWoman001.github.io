@@ -1,4 +1,4 @@
-export const SALES_EMAIL = "sales@jotoglobal.com";
+export const SALES_EMAIL = "salesglobal@jototech.cn";
 
 const SOURCE_LABELS = Object.freeze({
   "home-contact-form": "首页邮件",
@@ -97,7 +97,7 @@ export function buildSalesMailto(locationLike, placement = "") {
 
 function isSalesMailto(link) {
   const href = link.getAttribute("href") || "";
-  return /^mailto:sales@jotoglobal\.com(?:\?|$)/i.test(href);
+  return /^mailto:salesglobal@jototech\.cn(?:\?|$)/i.test(href);
 }
 
 function normalizeSalesLinks(root = document) {

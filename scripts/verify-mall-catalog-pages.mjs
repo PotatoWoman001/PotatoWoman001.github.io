@@ -5,7 +5,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const version = "20260805-1";
-const siteBundleVersion = "20260811-2";
+const siteBundleVersion = "20260819-1";
 const routes = [
   ["mall/index.html", "en", "ltr", "home", "mall-catalog-pages.js"],
   ["zh/mall/index.html", "zh-CN", "ltr", "home", "mall-catalog-pages.js"],
