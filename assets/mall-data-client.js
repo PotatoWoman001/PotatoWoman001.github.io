@@ -118,7 +118,7 @@ export function productTypeFor(product) {
 
 export function rankedCategories(products) {
   const counts = new Map();
-  products.filter(hasProductImage).forEach((product) => {
+  products.forEach((product) => {
     const name = productCategory(product)[0];
     if (name) counts.set(name, (counts.get(name) || 0) + 1);
   });
@@ -187,9 +187,7 @@ function uniqueValues(products, getter) {
 
 export function queryProducts(index, requestedState = {}) {
   const state = parseCatalogState(serializeCatalogState(requestedState));
-  const source = (Array.isArray(index?.products) ? index.products : []).filter(
-    hasProductImage,
-  );
+  const source = Array.isArray(index?.products) ? index.products : [];
   const query = normalizedText(state.q);
   const filtered = source.filter((product) => {
     const haystack = [

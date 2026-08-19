@@ -5,6 +5,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const version = "20260805-1";
+const mallScriptVersion = "20260819-1";
 const siteBundleVersion = "20260819-1";
 const routes = [
   ["mall/index.html", "en", "ltr", "home", "mall-catalog-pages.js"],
@@ -40,11 +41,13 @@ for (const [route, lang, dir, mode, script] of routes) {
   assert.ok(html.includes(`data-joto-mall-shell="${mode}"`));
   assert.ok(html.includes(`/assets/mall-catalog.css?v=${version}`));
   assert.ok(html.includes(`/assets/contact-form-sections.css?v=${version}`));
-  assert.ok(html.includes(`/assets/${script}?v=${version}`));
+  assert.ok(html.includes(`/assets/${script}?v=${mallScriptVersion}`));
   for (const match of html.matchAll(/(\/assets\/[^"'<>]+\.(?:js|css))\?v=([^"'<>]+)/g)) {
     const expectedVersion = match[1] === "/assets/index-DaFvN0XI.js"
       ? siteBundleVersion
-      : version;
+      : ["/assets/mall-catalog-pages.js", "/assets/mall-product-page.js"].includes(match[1])
+        ? mallScriptVersion
+        : version;
     assert.equal(match[2], expectedVersion, `${route} has mismatched cache version`);
   }
   assert.doesNotMatch(html, /being prepared|正在整理|در حال آماده‌سازی/);
@@ -68,7 +71,7 @@ assert.match(pages, /aria-live/);
 assert.match(pages, /scrollIntoView/);
 assert.match(pages, /textContent/);
 assert.match(client, /hasProductImage/);
-assert.match(client, /\.filter\(\s*hasProductImage/);
+assert.doesNotMatch(client, /\.filter\(\s*hasProductImage/);
 assert.match(product, /\/mall\/products\//);
 assert.match(product, /textContent/);
 assert.match(product, /DOMParser/);
@@ -84,7 +87,7 @@ assert.doesNotMatch(product, /product\.source_url|locale\.source/);
 assert.doesNotMatch(i18n, /^\s*source:\s*/m);
 assert.doesNotMatch(`${pages}\n${product}`, /\.innerHTML\s*=/);
 for (const asset of [pages, product]) {
-  assert.match(asset, /\.js\?v=20260805-1/);
+  assert.match(asset, /\.js\?v=20260819-1/);
 }
 assert.match(product, /og:type", "product"/);
 assert.match(product, /"@type": "Product"/);

@@ -125,10 +125,12 @@ assert.deepEqual(
     { category_path: ["Routers"], images: ["/mall-data/media/images/1.webp"] },
     { category_path: ["Firewalls"], images: ["/mall-data/media/images/2.webp"] },
     { category_path: ["Routers"], images: ["/mall-data/media/images/3.webp"] },
+    { category_path: ["Switches"], images: [] },
   ]),
   [
     { name: "Routers", count: 2 },
     { name: "Firewalls", count: 1 },
+    { name: "Switches", count: 1 },
   ],
 );
 const result = queryProducts({ products }, state);
@@ -214,7 +216,7 @@ assert.equal(
   false,
 );
 
-const imageFiltered = queryProducts(
+const completeCatalog = queryProducts(
   {
     products: [
       products[0],
@@ -236,9 +238,20 @@ const imageFiltered = queryProducts(
   },
   {},
 );
-assert.equal(imageFiltered.total, 1);
-assert.deepEqual(imageFiltered.products.map((product) => product.slug), ["z-router"]);
-assert.deepEqual(imageFiltered.facets.categories, ["Network"]);
+assert.equal(completeCatalog.total, 3);
+assert.deepEqual(
+  completeCatalog.products.map((product) => product.slug),
+  ["z-router", "no-image-switch", "placeholder-switch"],
+);
+assert.deepEqual(completeCatalog.facets.categories, [
+  "Hidden Category",
+  "Network",
+  "Placeholder Category",
+]);
+assert.deepEqual(
+  completeCatalog.products.find((product) => product.slug === "no-image-switch").images,
+  [],
+);
 assert.equal(getMallLocale("/fa/mall/"), MALL_COPY.fa);
 assert.equal(MALL_COPY.fa.technicalDirection, "ltr");
 assert.match(i18n, /در حال بارگذاری/);
