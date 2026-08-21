@@ -5,7 +5,8 @@ import path from "node:path";
 
 const root = process.cwd();
 const version = "20260805-1";
-const mallScriptVersion = "20260819-1";
+const mallStyleVersion = "20260821-1";
+const mallScriptVersion = "20260821-1";
 const siteBundleVersion = "20260819-1";
 const routes = [
   ["mall/index.html", "en", "ltr", "home", "mall-catalog-pages.js"],
@@ -39,12 +40,14 @@ for (const [route, lang, dir, mode, script] of routes) {
   const html = await readFile(path.join(root, route), "utf8");
   assert.match(html, new RegExp(`<html lang="${lang}" dir="${dir}">`));
   assert.ok(html.includes(`data-joto-mall-shell="${mode}"`));
-  assert.ok(html.includes(`/assets/mall-catalog.css?v=${version}`));
+  assert.ok(html.includes(`/assets/mall-catalog.css?v=${mallStyleVersion}`));
   assert.ok(html.includes(`/assets/contact-form-sections.css?v=${version}`));
   assert.ok(html.includes(`/assets/${script}?v=${mallScriptVersion}`));
   for (const match of html.matchAll(/(\/assets\/[^"'<>]+\.(?:js|css))\?v=([^"'<>]+)/g)) {
     const expectedVersion = match[1] === "/assets/index-DaFvN0XI.js"
       ? siteBundleVersion
+      : match[1] === "/assets/mall-catalog.css"
+        ? mallStyleVersion
       : ["/assets/mall-catalog-pages.js", "/assets/mall-product-page.js"].includes(match[1])
         ? mallScriptVersion
         : version;
@@ -87,7 +90,7 @@ assert.doesNotMatch(product, /product\.source_url|locale\.source/);
 assert.doesNotMatch(i18n, /^\s*source:\s*/m);
 assert.doesNotMatch(`${pages}\n${product}`, /\.innerHTML\s*=/);
 for (const asset of [pages, product]) {
-  assert.match(asset, /\.js\?v=20260819-1/);
+  assert.match(asset, /\.js\?v=20260821-1/);
 }
 assert.match(product, /og:type", "product"/);
 assert.match(product, /"@type": "Product"/);
@@ -97,6 +100,9 @@ assert.doesNotMatch(product, /\boffers\b|\bprice\b|\bcurrency\b|\bsku\b/i);
 assert.doesNotMatch(i18n, /\b(?:price|currency|cart|checkout|payment)\b/i);
 for (const expected of [
   "joto-mall__category-navigation",
+  "joto-mall__category-toolbar",
+  "joto-mall__category-track",
+  "joto-mall__category-overflow",
   "joto-mall__category--active",
   "locale.allProducts",
   "locale.moreCategories",
@@ -156,7 +162,15 @@ assert.match(
 assert.match(styles, /\.joto-mall__select-option[\s\S]*min-height:\s*44px/);
 assert.match(
   styles,
-  /\.joto-mall__category-navigation\s*\{[\s\S]*display:\s*flex[\s\S]*overflow-x:\s*auto/,
+  /\.joto-mall__category-toolbar\s*\{[\s\S]*display:\s*grid[\s\S]*overflow:\s*visible/,
+);
+assert.match(
+  styles,
+  /\.joto-mall__category-track\s*\{[\s\S]*display:\s*flex[\s\S]*overflow-x:\s*auto/,
+);
+assert.match(
+  styles,
+  /\.joto-mall__category-overflow\s*\{[\s\S]*position:\s*relative[\s\S]*overflow:\s*visible/,
 );
 assert.match(
   styles,
@@ -176,6 +190,18 @@ assert.doesNotMatch(styles, /height\s+\d+ms|transition:\s*height/);
 assert.match(styles, /prefers-reduced-motion/);
 assert.match(styles, /aspect-ratio/);
 assert.match(styles, /object-fit:\s*contain/);
+assert.match(
+  styles,
+  /\.joto-mall__cards--list \.joto-mall__card\s*\{[\s\S]*height:\s*46px/,
+);
+assert.match(
+  styles,
+  /\.joto-mall__cards--list \.joto-mall__card-link\s*\{[\s\S]*grid-template-columns:\s*48px/,
+);
+assert.match(
+  styles,
+  /@media \(max-width:\s*767px\)[\s\S]*\.joto-mall__cards--list \.joto-mall__card-media[\s\S]*display:\s*none/,
+);
 for (const expected of [
   "--mall-bg: #ffffff",
   "--mall-surface: #ffffff",
@@ -223,15 +249,15 @@ assert.match(
 );
 assert.match(
   styles,
-  /\.joto-mall__cards--list[\s\S]*max-height:\s*76px/,
+  /\.joto-mall__cards--list[\s\S]*max-height:\s*46px/,
 );
 assert.match(
   styles,
-  /@media\s*\(max-width:\s*639px\)[\s\S]*\.joto-mall__cards--list[\s\S]*max-height:\s*68px/,
+  /@media\s*\(max-width:\s*639px\)[\s\S]*\.joto-mall__cards--list[\s\S]*max-height:\s*44px/,
 );
 assert.match(
   styles,
-  /@media\s*\(max-width:\s*639px\)[\s\S]*\.joto-mall__cards--list \.joto-mall__card-media[\s\S]*height:\s*66px/,
+  /@media\s*\(max-width:\s*639px\)[\s\S]*\.joto-mall__cards--list \.joto-mall__card-media[\s\S]*display:\s*none/,
 );
 assert.match(styles, /#root:has\(\[data-joto-mall-product\]\)/);
 assert.match(

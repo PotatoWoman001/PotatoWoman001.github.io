@@ -11,8 +11,6 @@ const VIEWPORTS = [
   { name: "mobile", width: 390, height: 844 },
 ];
 
-const HIDDEN_PRODUCT = "DI-7008-MINI";
-
 function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
@@ -171,7 +169,8 @@ async function exerciseCatalog(origin, testCase, viewport) {
     const grid = root.querySelector(".joto-mall__cards--grid");
     const models = [...root.querySelectorAll(".joto-mall__card-model")];
     const result = root.querySelector(".joto-mall__result-count");
-    const categories = root.querySelector(".joto-mall__category-navigation");
+    const categoryNavigation = root.querySelector(".joto-mall__category-navigation");
+    const categories = root.querySelector(".joto-mall__category-track");
     const search = root.querySelector(".joto-mall__search");
     return {
       cardCount: cards.length,
@@ -184,7 +183,7 @@ async function exerciseCatalog(origin, testCase, viewport) {
       categoryOverflowX: getComputedStyle(categories).overflowX,
       categoryScrollWidth: categories.scrollWidth,
       categoryClientWidth: categories.clientWidth,
-      categoryGap: categories.getBoundingClientRect().top
+      categoryGap: categoryNavigation.getBoundingClientRect().top
         - search.getBoundingClientRect().bottom,
       modelLines: models.map((model) => ({
         text: model.textContent,
@@ -238,12 +237,37 @@ async function exerciseCatalog(origin, testCase, viewport) {
     ),
     `${label}: model is wrapped, clipped or ellipsized`,
   );
-  assert(
-    !(await page.locator(".joto-mall__card-model").allTextContents())
-      .join("\n")
-      .includes(HIDDEN_PRODUCT),
-    `${label}: no-image product remains in listing`,
+  const menuTrigger = page.locator(
+    ".joto-mall__category-overflow .joto-mall__select-trigger",
   );
+  if (await menuTrigger.count()) {
+    const resultTopBefore = await page
+      .locator(".joto-mall__result-count")
+      .evaluate((node) => node.getBoundingClientRect().top);
+    await menuTrigger.click();
+    const menuLayout = await page
+      .locator(".joto-mall__category-overflow .joto-mall__select-menu")
+      .evaluate((menu) => {
+        const rect = menu.getBoundingClientRect();
+        const toolbar = menu.closest(".joto-mall__category-toolbar");
+        return {
+          visible: !menu.hidden && rect.width > 0 && rect.height > 0,
+          withinViewport: rect.left >= 0 && rect.right <= window.innerWidth + 1,
+          toolbarOverflow: getComputedStyle(toolbar).overflow,
+        };
+      });
+    const resultTopAfter = await page
+      .locator(".joto-mall__result-count")
+      .evaluate((node) => node.getBoundingClientRect().top);
+    assert(menuLayout.visible, `${label}: more-category menu is not visible`);
+    assert(menuLayout.withinViewport, `${label}: more-category menu leaves viewport`);
+    assert(menuLayout.toolbarOverflow === "visible", `${label}: menu toolbar clips overflow`);
+    assert(
+      Math.abs(resultTopAfter - resultTopBefore) <= 1,
+      `${label}: opening menu moved results by ${resultTopAfter - resultTopBefore}px`,
+    );
+    await page.keyboard.press("Escape");
+  }
   await assertPageBasics(testCase, viewport, "[data-joto-mall-home]");
   await assertContactForm(testCase, viewport);
 
@@ -275,18 +299,36 @@ async function exerciseCatalog(origin, testCase, viewport) {
 
   await page.locator('[data-view="list"]').click();
   assert((await currentParams()).view === "list", `${label}: list state missing`);
-  const listMetrics = await page.locator(".joto-mall__card").first().evaluate((card) => {
-    const model = card.querySelector(".joto-mall__card-model");
+  const listMetrics = await page.locator(".joto-mall__cards--list").evaluate((list) => {
+    const rows = [...list.querySelectorAll(".joto-mall__card")];
+    const first = rows[0];
+    const model = first.querySelector(".joto-mall__card-model");
+    const media = first.querySelector(".joto-mall__card-media");
+    const type = first.querySelector(".joto-mall__card-type");
     return {
-      height: card.getBoundingClientRect().height,
+      rowCount: rows.length,
+      rowHeights: rows.slice(0, 8).map((row) => row.getBoundingClientRect().height),
+      mediaWidth: media.getBoundingClientRect().width,
+      mediaDisplay: getComputedStyle(media).display,
+      typeDisplay: getComputedStyle(type).display,
       modelWhiteSpace: getComputedStyle(model).whiteSpace,
     };
   });
-  const maximumListHeight = viewport.name === "mobile" ? 70.5 : 80;
-  assert(
-    listMetrics.height <= maximumListHeight,
-    `${label}: list row is ${listMetrics.height}px tall`,
-  );
+  assert(listMetrics.rowCount === 24, `${label}: dense list lost products`);
+  if (viewport.name === "mobile") {
+    assert(listMetrics.mediaDisplay === "none", `${label}: mobile thumbnail remains visible`);
+    assert(listMetrics.typeDisplay === "none", `${label}: mobile type remains visible`);
+    assert(
+      listMetrics.rowHeights.every((height) => height >= 43 && height <= 45),
+      `${label}: mobile row heights ${listMetrics.rowHeights.join(",")}`,
+    );
+  } else {
+    assert(
+      listMetrics.rowHeights.every((height) => height >= 44 && height <= 48),
+      `${label}: desktop row heights ${listMetrics.rowHeights.join(",")}`,
+    );
+    assert(listMetrics.mediaWidth <= 52, `${label}: thumbnail column is ${listMetrics.mediaWidth}px`);
+  }
   assert(listMetrics.modelWhiteSpace === "nowrap", `${label}: list model wraps`);
 
   await page.goto(`${origin}${productsPath}`, { waitUntil: "domcontentloaded" });

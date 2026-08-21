@@ -4,9 +4,9 @@ import {
   queryProducts,
   rankedCategories,
   serializeCatalogState,
-} from "./mall-data-client.js?v=20260819-1";
-import { getMallLocale } from "./mall-i18n.js?v=20260805-1";
-import { createContactForm } from "./contact-form-sections.js?v=20260805-1";
+} from "./mall-data-client.js?v=20260821-1";
+import { getMallLocale } from "./mall-i18n.js?v=20260821-1";
+import { createContactForm } from "./contact-form-sections.js?v=20260821-1";
 
 const locale = getMallLocale();
 const SITE_ORIGIN = "https://jotoglobal.com";
@@ -403,6 +403,17 @@ function renderCatalog(mount, index, { mode }) {
     role: "navigation",
     "aria-label": locale.categories,
   });
+  const categoryToolbar = element("div", {
+    className: "joto-mall__category-toolbar",
+  });
+  const categoryTrack = element("div", {
+    className: "joto-mall__category-track",
+  });
+  const categoryOverflow = element("div", {
+    className: "joto-mall__category-overflow",
+  });
+  categoryToolbar.append(categoryTrack, categoryOverflow);
+  categoryNavigation.append(categoryToolbar);
   const resultsHeading = element("h2", {
     className: "joto-mall__result-count",
     tabIndex: -1,
@@ -447,31 +458,34 @@ function renderCatalog(mount, index, { mode }) {
   }
 
   function paintCategories(selected) {
-    const items = [
+    categoryTrack.replaceChildren(
       categoryButton("", locale.allProducts, !selected),
       ...primaryCategories.map(({ name }) =>
         categoryButton(name, name, selected === name),
       ),
-    ];
-    if (additionalCategories.length) {
-      const additionalValues = additionalCategories.map(({ name }) => name);
-      items.push(
-        selectControl(
-          locale.category,
-          "category",
-          [
-            { value: "", label: locale.moreCategories },
-            ...additionalValues.map((value) => ({
-              value,
-              label: value,
-              dir: "ltr",
-            })),
-          ],
-          additionalValues.includes(selected) ? selected : "",
-        ),
-      );
+    );
+    if (!additionalCategories.length) {
+      categoryOverflow.replaceChildren();
+      categoryOverflow.hidden = true;
+      return;
     }
-    categoryNavigation.replaceChildren(...items);
+    const additionalValues = additionalCategories.map(({ name }) => name);
+    categoryOverflow.hidden = false;
+    categoryOverflow.replaceChildren(
+      selectControl(
+        locale.category,
+        "category",
+        [
+          { value: "", label: locale.moreCategories },
+          ...additionalValues.map((value) => ({
+            value,
+            label: value,
+            dir: "ltr",
+          })),
+        ],
+        additionalValues.includes(selected) ? selected : "",
+      ),
+    );
   }
 
   function closeSelect(wrapper, options = {}) {
