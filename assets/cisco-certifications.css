@@ -1,14 +1,12 @@
-.cisco-certifications {
+.partner-certifications {
   overflow: hidden;
   border-block: 1px solid rgba(255, 255, 255, 0.1);
-  background:
-    radial-gradient(circle at 75% 25%, rgba(4, 159, 217, 0.1), transparent 34%),
-    #07100d;
+  background: radial-gradient(circle at 75% 25%, rgba(4, 159, 217, 0.1), transparent 34%), #07100d;
   padding-block: clamp(80px, 10vw, 144px);
   color: #fff;
 }
 
-.cisco-certifications__header {
+.partner-certifications__header {
   display: grid;
   max-width: 1440px;
   margin-inline: auto;
@@ -16,7 +14,7 @@
   gap: 32px;
 }
 
-.cisco-certifications__eyebrow {
+.partner-certifications__eyebrow {
   color: #5ed29c;
   font-size: 11px;
   font-weight: 600;
@@ -25,7 +23,7 @@
   text-transform: uppercase;
 }
 
-.cisco-certifications__title {
+.partner-certifications__title {
   max-width: 900px;
   font-size: clamp(40px, 5.5vw, 80px);
   font-weight: 500;
@@ -33,7 +31,7 @@
   line-height: 0.96;
 }
 
-.cisco-certifications__description {
+.partner-certifications__description {
   max-width: 720px;
   margin-top: 24px;
   color: rgba(255, 255, 255, 0.58);
@@ -41,41 +39,47 @@
   line-height: 1.75;
 }
 
-.cisco-certifications__viewport {
+.partner-certifications__viewport {
   margin-top: clamp(48px, 6vw, 88px);
   overflow: hidden;
-  cursor: grab;
-  -webkit-mask-image: linear-gradient(
-    90deg,
-    transparent,
-    #000 5%,
-    #000 95%,
-    transparent
-  );
-  mask-image: linear-gradient(
-    90deg,
-    transparent,
-    #000 5%,
-    #000 95%,
-    transparent
-  );
 }
 
-.cisco-certifications__track {
+.partner-certifications[data-layout="scrolling"] .partner-certifications__viewport {
+  cursor: grab;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+
+.partner-certifications__track {
   --certificate-gap: clamp(18px, 2vw, 28px);
   display: flex;
   width: max-content;
   gap: var(--certificate-gap);
-  animation: cisco-certifications-scroll 52s linear infinite;
+}
+
+.partner-certifications[data-layout="scrolling"] .partner-certifications__track {
+  animation: partner-certifications-scroll 58s linear infinite;
   will-change: transform;
 }
 
-.cisco-certifications__sequence {
+.partner-certifications[data-layout="static"] .partner-certifications__track {
+  width: auto;
+  justify-content: center;
+  padding-inline: clamp(20px, 3.4vw, 48px);
+}
+
+.partner-certifications__sequence {
   display: flex;
   gap: var(--certificate-gap);
 }
 
-.cisco-certifications__card {
+.partner-certifications[data-layout="static"] .partner-certifications__sequence {
+  max-width: 1344px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.partner-certifications__card {
   display: block;
   width: min(416px, 41.6vw);
   flex: none;
@@ -87,54 +91,54 @@
   background: #fff;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.26);
   cursor: zoom-in;
-  transition:
-    border-color 180ms ease,
-    transform 180ms ease,
-    box-shadow 180ms ease;
+  transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
 }
 
-.cisco-certifications__card:hover,
-.cisco-certifications__card:focus-visible {
+.partner-certifications[data-layout="static"] .partner-certifications__card {
+  width: min(620px, 76vw);
+}
+
+.partner-certifications[data-layout="static"] .partner-certifications__card[data-certificate-format="portrait"] {
+  width: min(420px, 62vw);
+  aspect-ratio: 595 / 842;
+}
+
+.partner-certifications[data-layout="static"] .partner-certifications__card[data-certificate-format="panoramic"] {
+  width: min(760px, 82vw);
+  aspect-ratio: 842 / 348;
+}
+
+.partner-certifications__card:hover,
+.partner-certifications__card:focus-visible {
   border-color: rgba(94, 210, 156, 0.8);
   outline: none;
   transform: translateY(-4px);
   box-shadow: 0 30px 90px rgba(0, 0, 0, 0.34);
 }
 
-.cisco-certifications__image {
+.partner-certifications__image {
   width: 100%;
   height: 100%;
-  object-fit: contain;
   background: #fff;
+  object-fit: contain;
   pointer-events: none;
   user-select: none;
 }
 
-.cisco-certifications__track:hover,
-.cisco-certifications__track:focus-within,
-[data-cisco-certificate-paused="true"] .cisco-certifications__track {
+.partner-certifications[data-layout="scrolling"] .partner-certifications__track:hover,
+.partner-certifications[data-layout="scrolling"] .partner-certifications__track:focus-within,
+[data-partner-certificate-paused="true"] .partner-certifications__track {
   animation-play-state: paused;
 }
 
-@keyframes cisco-certifications-scroll {
-  to {
-    transform: translate3d(
-      calc(-50% - var(--certificate-gap) / 2),
-      0,
-      0
-    );
-  }
+@keyframes partner-certifications-scroll {
+  to { transform: translate3d(calc(-50% - var(--certificate-gap) / 2), 0, 0); }
 }
 
-html[data-cisco-certificate-open="true"] {
-  overflow: hidden;
-}
+html[data-partner-certificate-open="true"] { overflow: hidden; }
+.partner-certifications__dialog[hidden] { display: none; }
 
-.cisco-certifications__dialog[hidden] {
-  display: none;
-}
-
-.cisco-certifications__dialog {
+.partner-certifications__dialog {
   position: fixed;
   z-index: 100;
   inset: 0;
@@ -145,7 +149,7 @@ html[data-cisco-certificate-open="true"] {
   backdrop-filter: blur(14px);
 }
 
-.cisco-certifications__dialog-figure {
+.partner-certifications__dialog-figure {
   display: grid;
   max-width: min(1200px, 94vw);
   max-height: 90vh;
@@ -154,7 +158,7 @@ html[data-cisco-certificate-open="true"] {
   justify-items: center;
 }
 
-.cisco-certifications__dialog-image {
+.partner-certifications__dialog-image {
   max-width: 100%;
   max-height: 82vh;
   border-radius: 6px;
@@ -163,14 +167,14 @@ html[data-cisco-certificate-open="true"] {
   box-shadow: 0 32px 120px rgba(0, 0, 0, 0.5);
 }
 
-.cisco-certifications__dialog-caption {
+.partner-certifications__dialog-caption {
   color: rgba(255, 255, 255, 0.72);
   font-size: 13px;
   line-height: 1.5;
   text-align: center;
 }
 
-.cisco-certifications__close {
+.partner-certifications__close {
   position: fixed;
   z-index: 1;
   top: 20px;
@@ -188,95 +192,60 @@ html[data-cisco-certificate-open="true"] {
   cursor: pointer;
 }
 
-.cisco-certifications__close:hover,
-.cisco-certifications__close:focus-visible {
+.partner-certifications__close:hover,
+.partner-certifications__close:focus-visible {
   border-color: #5ed29c;
   outline: none;
   color: #5ed29c;
 }
 
-html[dir="rtl"] .cisco-certifications__header,
-html[dir="rtl"] .cisco-certifications__copy,
-html[dir="rtl"] .cisco-certifications__eyebrow {
-  text-align: right;
-}
-
-html[dir="rtl"] .cisco-certifications__close {
-  right: auto;
-  left: 20px;
-}
+html[dir="rtl"] .partner-certifications__header,
+html[dir="rtl"] .partner-certifications__copy,
+html[dir="rtl"] .partner-certifications__eyebrow { text-align: right; }
+html[dir="rtl"] .partner-certifications__close { right: auto; left: 20px; }
 
 @media (min-width: 1024px) {
-  .cisco-certifications__header {
+  .partner-certifications__header {
     grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
     gap: 24px;
   }
 }
 
 @media (max-width: 767px) {
-  .cisco-certifications {
-    padding-block: 72px;
-  }
-
-  .cisco-certifications__viewport {
+  .partner-certifications { padding-block: 72px; }
+  .partner-certifications__viewport {
     overflow-x: auto;
     scroll-padding-inline: 20px;
     scroll-snap-type: x proximity;
     touch-action: pan-x;
-    -webkit-mask-image: none;
-    mask-image: none;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
     scrollbar-width: none;
   }
-
-  .cisco-certifications__viewport::-webkit-scrollbar {
-    display: none;
-  }
-
-  .cisco-certifications__track {
+  .partner-certifications__viewport::-webkit-scrollbar { display: none; }
+  .partner-certifications__track,
+  .partner-certifications[data-layout="scrolling"] .partner-certifications__track {
+    width: max-content;
+    justify-content: flex-start;
     animation: none;
     padding-inline: 20px;
   }
-
-  [data-cisco-certificate-duplicate] {
-    display: none;
-  }
-
-  .cisco-certifications__card {
-    width: 65.6vw;
+  [data-partner-certificate-duplicate] { display: none; }
+  .partner-certifications__card,
+  .partner-certifications[data-layout="static"] .partner-certifications__card {
+    width: 76vw;
     scroll-snap-align: start;
   }
-
-  .cisco-certifications__dialog {
-    padding: 68px 14px 24px;
-  }
-
-  .cisco-certifications__close {
-    top: 12px;
-    right: 12px;
-  }
-
-  html[dir="rtl"] .cisco-certifications__close {
-    right: auto;
-    left: 12px;
-  }
+  .partner-certifications[data-layout="static"] .partner-certifications__card[data-certificate-format="portrait"] { width: 72vw; }
+  .partner-certifications[data-layout="static"] .partner-certifications__card[data-certificate-format="panoramic"] { width: 86vw; }
+  .partner-certifications__dialog { padding: 68px 14px 24px; }
+  .partner-certifications__close { top: 12px; right: 12px; }
+  html[dir="rtl"] .partner-certifications__close { right: auto; left: 12px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cisco-certifications__viewport {
-    overflow-x: auto;
-    scroll-snap-type: x proximity;
-  }
-
-  .cisco-certifications__track {
-    animation: none;
-  }
-
-  [data-cisco-certificate-duplicate] {
-    display: none;
-  }
-
-  .cisco-certifications__card {
-    scroll-snap-align: start;
-    transition: none;
-  }
+  .partner-certifications__viewport { overflow-x: auto; scroll-snap-type: x proximity; }
+  .partner-certifications__track { animation: none !important; }
+  [data-partner-certificate-duplicate] { display: none; }
+  .partner-certifications__card { scroll-snap-align: start; transition: none; }
 }
