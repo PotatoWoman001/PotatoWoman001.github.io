@@ -5,8 +5,9 @@ import path from "node:path";
 
 const root = process.cwd();
 const version = "20260805-1";
-const mallStyleVersion = "20260821-1";
-const mallScriptVersion = "20260821-1";
+const mallNavigationVersion = "20260821-2";
+const mallStyleVersion = "20260821-2";
+const mallScriptVersion = "20260821-2";
 const siteBundleVersion = "20260819-1";
 const routes = [
   ["mall/index.html", "en", "ltr", "home", "mall-catalog-pages.js"],
@@ -46,6 +47,8 @@ for (const [route, lang, dir, mode, script] of routes) {
   for (const match of html.matchAll(/(\/assets\/[^"'<>]+\.(?:js|css))\?v=([^"'<>]+)/g)) {
     const expectedVersion = match[1] === "/assets/index-DaFvN0XI.js"
       ? siteBundleVersion
+      : match[1] === "/assets/mall-navigation-and-page.js"
+        ? mallNavigationVersion
       : match[1] === "/assets/mall-catalog.css"
         ? mallStyleVersion
       : ["/assets/mall-catalog-pages.js", "/assets/mall-product-page.js"].includes(match[1])
@@ -90,7 +93,7 @@ assert.doesNotMatch(product, /product\.source_url|locale\.source/);
 assert.doesNotMatch(i18n, /^\s*source:\s*/m);
 assert.doesNotMatch(`${pages}\n${product}`, /\.innerHTML\s*=/);
 for (const asset of [pages, product]) {
-  assert.match(asset, /\.js\?v=20260821-1/);
+  assert.match(asset, /\.js\?v=20260821-2/);
 }
 assert.match(product, /og:type", "product"/);
 assert.match(product, /"@type": "Product"/);
@@ -102,7 +105,9 @@ for (const expected of [
   "joto-mall__category-navigation",
   "joto-mall__category-toolbar",
   "joto-mall__category-track",
-  "joto-mall__category-overflow",
+  "joto-mall__category-more",
+  "joto-mall__category-popover",
+  "positionCategoryPopover",
   "joto-mall__category--active",
   "locale.allProducts",
   "locale.moreCategories",
@@ -162,16 +167,14 @@ assert.match(
 assert.match(styles, /\.joto-mall__select-option[\s\S]*min-height:\s*44px/);
 assert.match(
   styles,
-  /\.joto-mall__category-toolbar\s*\{[\s\S]*display:\s*grid[\s\S]*overflow:\s*visible/,
+  /\.joto-mall__category-toolbar\s*\{[\s\S]*display:\s*block[\s\S]*overflow:\s*visible/,
 );
 assert.match(
   styles,
   /\.joto-mall__category-track\s*\{[\s\S]*display:\s*flex[\s\S]*overflow-x:\s*auto/,
 );
-assert.match(
-  styles,
-  /\.joto-mall__category-overflow\s*\{[\s\S]*position:\s*relative[\s\S]*overflow:\s*visible/,
-);
+assert.match(styles, /\.joto-mall__category-more[\s\S]*height:\s*40px/);
+assert.match(styles, /\.joto-mall__category-popover[\s\S]*position:\s*fixed/);
 assert.match(
   styles,
   /\.joto-mall__category\s*\{[\s\S]*min-height:\s*40px[\s\S]*font-size:\s*14px/,

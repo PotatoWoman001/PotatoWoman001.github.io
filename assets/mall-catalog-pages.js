@@ -4,9 +4,9 @@ import {
   queryProducts,
   rankedCategories,
   serializeCatalogState,
-} from "./mall-data-client.js?v=20260821-1";
-import { getMallLocale } from "./mall-i18n.js?v=20260821-1";
-import { createContactForm } from "./contact-form-sections.js?v=20260821-1";
+} from "./mall-data-client.js?v=20260821-2";
+import { getMallLocale } from "./mall-i18n.js?v=20260821-2";
+import { createContactForm } from "./contact-form-sections.js?v=20260821-2";
 
 const locale = getMallLocale();
 const SITE_ORIGIN = "https://jotoglobal.com";
@@ -409,10 +409,21 @@ function renderCatalog(mount, index, { mode }) {
   const categoryTrack = element("div", {
     className: "joto-mall__category-track",
   });
-  const categoryOverflow = element("div", {
-    className: "joto-mall__category-overflow",
+  const categoryMore = element("button", {
+    type: "button",
+    className: "joto-mall__category joto-mall__category-more",
+    text: `${locale.moreCategories}⌄`,
+    "aria-haspopup": "listbox",
+    "aria-expanded": "false",
   });
-  categoryToolbar.append(categoryTrack, categoryOverflow);
+  const categoryPopover = element("div", {
+    className: "joto-mall__category-popover",
+    role: "listbox",
+    "aria-label": locale.moreCategories,
+  });
+  categoryPopover.hidden = true;
+  document.body.append(categoryPopover);
+  categoryToolbar.append(categoryTrack);
   categoryNavigation.append(categoryToolbar);
   const resultsHeading = element("h2", {
     className: "joto-mall__result-count",
@@ -465,27 +476,61 @@ function renderCatalog(mount, index, { mode }) {
       ),
     );
     if (!additionalCategories.length) {
-      categoryOverflow.replaceChildren();
-      categoryOverflow.hidden = true;
+      categoryMore.hidden = true;
+      categoryPopover.replaceChildren();
       return;
     }
-    const additionalValues = additionalCategories.map(({ name }) => name);
-    categoryOverflow.hidden = false;
-    categoryOverflow.replaceChildren(
-      selectControl(
-        locale.category,
-        "category",
-        [
-          { value: "", label: locale.moreCategories },
-          ...additionalValues.map((value) => ({
-            value,
-            label: value,
-            dir: "ltr",
-          })),
-        ],
-        additionalValues.includes(selected) ? selected : "",
-      ),
+    categoryMore.hidden = false;
+    categoryMore.classList.toggle(
+      "joto-mall__category--active",
+      additionalCategories.some(({ name }) => name === selected),
     );
+    categoryTrack.append(categoryMore);
+    categoryPopover.replaceChildren(...additionalCategories.map(({ name }) =>
+      element("button", {
+        type: "button",
+        className: "joto-mall__category-popover-option",
+        text: name,
+        dataset: { category: name },
+        role: "option",
+        "aria-selected": String(name === selected),
+        tabIndex: -1,
+        dir: "auto",
+      }),
+    ));
+  }
+
+  function positionCategoryPopover() {
+    if (categoryPopover.hidden) return;
+    const trigger = categoryMore.getBoundingClientRect();
+    const menu = categoryPopover.getBoundingClientRect();
+    const gutter = 8;
+    const rtl = document.documentElement.dir === "rtl";
+    let left = rtl ? trigger.right - menu.width : trigger.left;
+    left = Math.max(gutter, Math.min(left, window.innerWidth - menu.width - gutter));
+    let top = trigger.bottom + 8;
+    if (top + menu.height > window.innerHeight - gutter) {
+      top = Math.max(gutter, trigger.top - menu.height - 8);
+    }
+    categoryPopover.style.left = `${Math.round(left)}px`;
+    categoryPopover.style.top = `${Math.round(top)}px`;
+  }
+
+  function closeCategoryPopover(restoreFocus = false) {
+    categoryPopover.hidden = true;
+    categoryMore.setAttribute("aria-expanded", "false");
+    if (restoreFocus) categoryMore.focus();
+  }
+
+  function openCategoryPopover(focusOption = false) {
+    closeAllSelects();
+    categoryPopover.hidden = false;
+    categoryMore.setAttribute("aria-expanded", "true");
+    positionCategoryPopover();
+    if (focusOption) {
+      const selected = categoryPopover.querySelector('[aria-selected="true"]');
+      (selected || categoryPopover.querySelector("button"))?.focus();
+    }
   }
 
   function closeSelect(wrapper, options = {}) {
@@ -546,6 +591,7 @@ function renderCatalog(mount, index, { mode }) {
   }
 
   function update(next, options = {}) {
+    closeCategoryPopover();
     state = { ...state, ...next };
     const params = serializeCatalogState(state);
     if (options.history !== false) {
@@ -649,6 +695,12 @@ function renderCatalog(mount, index, { mode }) {
     if (select) update({ [select.name]: select.value, page: 1 });
   });
   controls.addEventListener("click", (event) => {
+    const more = event.target.closest(".joto-mall__category-more");
+    if (more) {
+      if (categoryPopover.hidden) openCategoryPopover();
+      else closeCategoryPopover();
+      return;
+    }
     const category = event.target.closest("[data-category]");
     if (category) {
       update({ category: category.dataset.category, page: 1 });
@@ -666,6 +718,11 @@ function renderCatalog(mount, index, { mode }) {
     else openSelect(wrapper);
   });
   controls.addEventListener("keydown", (event) => {
+    if (event.target.closest(".joto-mall__category-more") && ["Enter", " ", "ArrowDown", "ArrowUp"].includes(event.key)) {
+      event.preventDefault();
+      openCategoryPopover(true);
+      return;
+    }
     const trigger = event.target.closest(".joto-mall__select-trigger");
     if (trigger && ["Enter", " ", "ArrowDown", "ArrowUp"].includes(event.key)) {
       event.preventDefault();
@@ -698,7 +755,35 @@ function renderCatalog(mount, index, { mode }) {
   });
   document.addEventListener("pointerdown", (event) => {
     if (!controls.contains(event.target)) closeAllSelects();
+    if (!controls.contains(event.target) && !categoryPopover.contains(event.target)) {
+      closeCategoryPopover();
+    }
   });
+  categoryPopover.addEventListener("click", (event) => {
+    const option = event.target.closest("[data-category]");
+    if (option) update({ category: option.dataset.category, page: 1 });
+  });
+  categoryPopover.addEventListener("keydown", (event) => {
+    const options = [...categoryPopover.querySelectorAll("button")];
+    const index = options.indexOf(event.target);
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      options[(index + (event.key === "ArrowDown" ? 1 : -1) + options.length) % options.length]?.focus();
+    } else if (event.key === "Home" || event.key === "End") {
+      event.preventDefault();
+      options[event.key === "Home" ? 0 : options.length - 1]?.focus();
+    } else if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      event.target.click();
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      closeCategoryPopover(true);
+    } else if (event.key === "Tab") {
+      closeCategoryPopover();
+    }
+  });
+  window.addEventListener("resize", positionCategoryPopover);
+  window.addEventListener("scroll", positionCategoryPopover, true);
   window.addEventListener("popstate", () => {
     state = catalogState();
     paint();

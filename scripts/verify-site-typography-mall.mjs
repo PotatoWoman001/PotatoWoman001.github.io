@@ -4,6 +4,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const version = "20260805-1";
+const mallNavigationVersion = "20260821-2";
 const expectedRouteCount = 114;
 const excludedDirectories = new Set([
   ".git",
@@ -34,7 +35,7 @@ assert.equal(
 const typographyUrl =
   `/assets/site-typography-system.css?v=${version}`;
 const mallScriptUrl =
-  `/assets/mall-navigation-and-page.js?v=${version}`;
+  `/assets/mall-navigation-and-page.js?v=${mallNavigationVersion}`;
 
 for (const routeFile of [...routeFiles, path.join(root, "404.html")]) {
   const route = path.relative(root, routeFile);
@@ -129,6 +130,9 @@ const mallModule = readFileSync(
   path.join(root, "assets/mall-navigation-and-page.js"),
   "utf8",
 );
+const mallNavigationStyles = existsSync(path.join(root, "assets/mall-navigation.css"))
+  ? readFileSync(path.join(root, "assets/mall-navigation.css"), "utf8")
+  : "";
 const mainBundle = readFileSync(
   path.join(root, "assets/index-DaFvN0XI.js"),
   "utf8",
@@ -150,6 +154,25 @@ for (const expected of [
 ]) {
   assert.ok(mallModule.includes(expected), `Mall module missing ${expected}`);
 }
+for (const category of ["网络", "安全", "服务器与存储", "协作通信", "物理安防"]) {
+  assert.ok(mallModule.includes(JSON.stringify(category)), `missing Mall category ${category}`);
+}
+for (const hook of [
+  "data-joto-mall-nav",
+  "data-joto-mall-toggle",
+  "joto-mall-nav__mega",
+  "joto-mall-nav__mobile-categories",
+]) {
+  assert.ok(
+    mallModule.includes(hook) || mallNavigationStyles.includes(hook),
+    `Mall navigation missing ${hook}`,
+  );
+}
+assert.match(mallModule, /loadCatalogIndex/);
+assert.match(
+  mallNavigationStyles,
+  /grid-template-columns:\s*repeat\(5,\s*minmax\(0,\s*1fr\)\)/,
+);
 
 const sitemap = readFileSync(path.join(root, "sitemap.xml"), "utf8");
 for (const url of [

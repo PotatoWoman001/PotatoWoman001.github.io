@@ -1,0 +1,20 @@
+.joto-mall-nav { display: inline-flex; align-items: center; position: relative; }
+.joto-mall-nav__toggle,
+.joto-mall-nav__mobile-toggle { display: inline-grid; min-width: 30px; min-height: 40px; place-items: center; margin-inline-start: -5px; border: 0; background: transparent; color: inherit; cursor: pointer; font: inherit; }
+.joto-mall-nav__toggle[aria-expanded="true"] { transform: rotate(180deg); }
+.joto-mall-nav__mega { position: fixed; z-index: 1000; inset-inline: max(24px, calc((100vw - 1280px) / 2)); top: var(--joto-mall-nav-top, 88px); display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); max-height: min(560px, calc(100vh - var(--joto-mall-nav-top, 88px) - 16px)); overflow: auto; border: 1px solid rgb(255 255 255 / 12%); background: #0b1511; box-shadow: 0 24px 60px rgb(0 0 0 / 30%); color: #fff; }
+.joto-mall-nav__mega[hidden] { display: none; }
+.joto-mall-nav__column { min-width: 0; padding: 28px 30px 30px; border-inline-end: 1px solid rgb(255 255 255 / 12%); }
+.joto-mall-nav__column:last-child { border-inline-end: 0; }
+.joto-mall-nav__heading { display: block; padding-bottom: 18px; border-bottom: 1px solid rgb(255 255 255 / 15%); color: #fff; font-size: 17px; font-weight: 500; text-decoration: none; }
+.joto-mall-nav__children { display: grid; gap: 12px; padding-top: 18px; }
+.joto-mall-nav__children a { color: rgb(255 255 255 / 62%); font-size: 14px; text-decoration: none; }
+.joto-mall-nav__heading:hover, .joto-mall-nav__heading:focus-visible, .joto-mall-nav__children a:hover, .joto-mall-nav__children a:focus-visible { color: #5dd3a0; }
+.joto-mall-nav__mobile-item { position: relative; }
+.joto-mall-nav__mobile-toggle { position: absolute; inset-inline-end: 0; top: 0; min-width: 44px; min-height: 44px; }
+.joto-mall-nav__mobile-categories { display: grid; gap: 2px; margin: 4px 0 0; padding: 0 0 0 18px; list-style: none; }
+[dir="rtl"] .joto-mall-nav__mobile-categories { padding: 0 18px 0 0; }
+.joto-mall-nav__mobile-categories[hidden] { display: none; }
+.joto-mall-nav__mobile-link { display: block; padding: 9px 0; color: inherit; text-decoration: none; }
+@media (max-width: 1023px) { .joto-mall-nav__mega, .joto-mall-nav__toggle { display: none !important; } }
+@media (min-width: 1024px) { .joto-mall-nav__mobile-toggle, .joto-mall-nav__mobile-categories { display: none !important; } }

@@ -1,8 +1,8 @@
 async (page) => {
 const CASES = [
-  { locale: "en", prefix: "", lang: "en", dir: "ltr" },
-  { locale: "zh", prefix: "/zh", lang: "zh-CN", dir: "ltr" },
-  { locale: "fa", prefix: "/fa", lang: "fa-IR", dir: "rtl" },
+  { locale: "en", prefix: "", lang: "en", dir: "ltr", navLabel: "Product categories" },
+  { locale: "zh", prefix: "/zh", lang: "zh-CN", dir: "ltr", navLabel: "产品分类" },
+  { locale: "fa", prefix: "/fa", lang: "fa-IR", dir: "rtl", navLabel: "دسته‌بندی محصولات" },
 ];
 
 const VIEWPORTS = [
@@ -237,23 +237,42 @@ async function exerciseCatalog(origin, testCase, viewport) {
     ),
     `${label}: model is wrapped, clipped or ellipsized`,
   );
-  const menuTrigger = page.locator(
-    ".joto-mall__category-overflow .joto-mall__select-trigger",
-  );
+  if (viewport.name === "desktop") {
+    const navToggle = page.locator(`[data-joto-mall-toggle][aria-label="${testCase.navLabel}"]:visible`);
+    assert((await navToggle.count()) >= 1, `${label}: desktop Mall category toggle missing`);
+    await navToggle.first().click();
+    const mega = page.locator(".joto-mall-nav__mega:not([hidden])");
+    assert((await mega.count()) === 1, `${label}: desktop Mall mega menu did not open`);
+    assert((await mega.locator(".joto-mall-nav__column").count()) === 5, `${label}: mega menu is not five columns`);
+    assert((await mega.locator(".joto-mall-nav__heading").count()) === 5, `${label}: mega menu headings missing`);
+    await page.keyboard.press("Escape");
+  } else if (viewport.name === "mobile") {
+    assert(
+      (await page.locator(".joto-mall-nav__mobile-categories a").count()) === 5,
+      `${label}: mobile Mall navigation is not five categories`,
+    );
+  }
+
+  const menuTrigger = page.locator(".joto-mall__category-more");
   if (await menuTrigger.count()) {
     const resultTopBefore = await page
       .locator(".joto-mall__result-count")
       .evaluate((node) => node.getBoundingClientRect().top);
     await menuTrigger.click();
     const menuLayout = await page
-      .locator(".joto-mall__category-overflow .joto-mall__select-menu")
+      .locator(".joto-mall__category-popover:not([hidden])")
       .evaluate((menu) => {
         const rect = menu.getBoundingClientRect();
-        const toolbar = menu.closest(".joto-mall__category-toolbar");
         return {
           visible: !menu.hidden && rect.width > 0 && rect.height > 0,
-          withinViewport: rect.left >= 0 && rect.right <= window.innerWidth + 1,
-          toolbarOverflow: getComputedStyle(toolbar).overflow,
+          withinViewport:
+            rect.left >= 0
+            && rect.right <= window.innerWidth + 1
+            && rect.top >= 0
+            && rect.bottom <= window.innerHeight + 1,
+          triggerHeight: document
+            .querySelector(".joto-mall__category-more")
+            ?.getBoundingClientRect().height,
         };
       });
     const resultTopAfter = await page
@@ -261,7 +280,7 @@ async function exerciseCatalog(origin, testCase, viewport) {
       .evaluate((node) => node.getBoundingClientRect().top);
     assert(menuLayout.visible, `${label}: more-category menu is not visible`);
     assert(menuLayout.withinViewport, `${label}: more-category menu leaves viewport`);
-    assert(menuLayout.toolbarOverflow === "visible", `${label}: menu toolbar clips overflow`);
+    assert(menuLayout.triggerHeight === 40, `${label}: more-category trigger is not 40px`);
     assert(
       Math.abs(resultTopAfter - resultTopBefore) <= 1,
       `${label}: opening menu moved results by ${resultTopAfter - resultTopBefore}px`,
