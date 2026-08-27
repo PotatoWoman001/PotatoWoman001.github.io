@@ -1,0 +1,422 @@
+.check-point-email-security {
+  --cp-email-pink: #ed0a5c;
+  --cp-email-pink-light: #ff5a92;
+  --cp-email-border: rgba(172, 196, 187, 0.18);
+  position: relative;
+  overflow: clip;
+  border-block: 1px solid rgba(172, 196, 187, 0.1);
+  background:
+    radial-gradient(circle at 84% 18%, rgba(237, 10, 92, 0.07), transparent 26%),
+    #070b0a;
+  padding: clamp(82px, 9vw, 120px) 0;
+  color: #fff;
+}
+
+.check-point-email-security__inner {
+  width: min(1344px, calc(100% - 96px));
+  margin-inline: auto;
+}
+
+.check-point-email-security__panel {
+  border-top: 1px solid rgba(172, 196, 187, 0.24);
+  padding-top: clamp(42px, 5vw, 64px);
+}
+
+.check-point-email-security__hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(340px, 0.85fr);
+  gap: clamp(34px, 5vw, 64px);
+  align-items: center;
+}
+
+.check-point-email-security__eyebrow,
+.check-point-email-security__section-label {
+  margin: 0 0 18px;
+  color: var(--cp-email-pink-light);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.check-point-email-security__title {
+  max-width: 680px;
+  margin: 0;
+  color: #fff;
+  font-size: clamp(34px, 3.5vw, 48px);
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+}
+
+.check-point-email-security__description {
+  max-width: 680px;
+  margin: 22px 0 0;
+  color: #b8c4c0;
+  font-size: clamp(15px, 1.35vw, 18px);
+  line-height: 1.75;
+}
+
+.check-point-email-security__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.check-point-email-security__button {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  padding: 12px 19px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.3;
+  text-decoration: none;
+  transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease;
+}
+
+.check-point-email-security__button:hover {
+  transform: translateY(-1px);
+}
+
+.check-point-email-security__button--primary {
+  background: var(--cp-email-pink);
+}
+
+.check-point-email-security__button--primary:hover {
+  background: #ff1768;
+}
+
+.check-point-email-security__button--secondary {
+  border-color: #5a6a64;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.check-point-email-security__button--secondary:hover {
+  border-color: #94a49e;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.check-point-email-security a:focus-visible {
+  outline: 3px solid var(--cp-email-pink-light);
+  outline-offset: 4px;
+}
+
+.check-point-email-security__visual {
+  position: relative;
+  min-width: 0;
+  border: 1px solid rgba(172, 196, 187, 0.22);
+  border-radius: 2px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.check-point-email-security__mailbox {
+  min-height: 270px;
+  border: 1px solid #34413d;
+  border-radius: 2px;
+  padding: 20px;
+  background: #111816;
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.35);
+}
+
+.check-point-email-security__mailbox-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  border-bottom: 1px solid #293531;
+  padding-bottom: 14px;
+  color: #7d8e88;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.check-point-email-security__threat {
+  margin: 20px 0 18px;
+  border: 1px solid #7d2445;
+  border-radius: 11px;
+  padding: 16px;
+  background: #25111a;
+}
+
+.check-point-email-security__threat strong {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--cp-email-pink-light);
+  font-size: 13px;
+}
+
+.check-point-email-security__threat p {
+  margin: 0;
+  color: #c4ceca;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.check-point-email-security__status {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  color: #b5c1bd;
+  font-size: 12px;
+}
+
+.check-point-email-security__status-dot {
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #3ddc97;
+  box-shadow: 0 0 14px rgba(61, 220, 151, 0.9);
+}
+
+.check-point-email-security__applications {
+  margin: 18px 0 0;
+  color: #74857f;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.check-point-email-security__ai-badge {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  display: grid;
+  width: 82px;
+  height: 82px;
+  place-items: center;
+  border: 5px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  background: var(--cp-email-pink);
+  box-shadow: 0 12px 32px rgba(237, 10, 92, 0.24);
+  color: #fff;
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 0.07em;
+  line-height: 1.25;
+  text-align: center;
+  white-space: pre-line;
+}
+
+.check-point-email-security__section-label {
+  margin-top: clamp(48px, 6vw, 72px);
+}
+
+.check-point-email-security__capabilities {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  border-block: 1px solid var(--cp-email-border);
+}
+
+.check-point-email-security__card {
+  min-width: 0;
+  min-height: 180px;
+  border: 0;
+  border-inline-end: 1px solid var(--cp-email-border);
+  border-radius: 0;
+  padding: 28px 24px 30px;
+  background: transparent;
+}
+
+.check-point-email-security__card:last-child {
+  border-inline-end: 0;
+}
+
+.check-point-email-security__card-index {
+  display: block;
+  margin-bottom: 24px;
+  color: var(--cp-email-pink-light);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.check-point-email-security__card h3,
+.check-point-email-security__proof-card h3 {
+  margin: 0;
+  color: #f6f9f8;
+  font-size: 15px;
+  font-weight: 720;
+  line-height: 1.4;
+}
+
+.check-point-email-security__card p {
+  margin: 10px 0 0;
+  color: #93a39d;
+  font-size: 12px;
+  line-height: 1.62;
+}
+
+.check-point-email-security__proof {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 0;
+  margin-top: 0;
+  border-bottom: 1px solid var(--cp-email-border);
+}
+
+.check-point-email-security__proof-card {
+  border: 0;
+  border-inline-end: 1px solid var(--cp-email-border);
+  border-radius: 0;
+  padding: 25px 24px 28px;
+  background: transparent;
+}
+
+.check-point-email-security__proof-card--accent {
+  border-inline-end: 0;
+}
+
+.check-point-email-security__proof-card--accent h3 {
+  color: var(--cp-email-pink-light);
+}
+
+.check-point-email-security__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 15px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.check-point-email-security__tag {
+  border: 1px solid #35423e;
+  border-radius: 999px;
+  padding: 7px 10px;
+  color: #bdc8c4;
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+html[dir="rtl"] .check-point-email-security {
+  direction: rtl;
+}
+
+html[dir="rtl"] .check-point-email-security__title,
+html[dir="rtl"] .check-point-email-security__description,
+html[dir="rtl"] .check-point-email-security__eyebrow,
+html[dir="rtl"] .check-point-email-security__section-label,
+html[dir="rtl"] .check-point-email-security__card,
+html[dir="rtl"] .check-point-email-security__proof-card,
+html[dir="rtl"] .check-point-email-security__threat {
+  text-align: right;
+}
+
+html[dir="rtl"] .check-point-email-security__ai-badge {
+  right: auto;
+  left: 16px;
+}
+
+@media (max-width: 1023px) {
+  .check-point-email-security__hero {
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 0.82fr);
+    gap: 30px;
+  }
+
+  .check-point-email-security__capabilities {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .check-point-email-security__card:nth-child(2) {
+    border-inline-end: 0;
+  }
+
+  .check-point-email-security__card:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--cp-email-border);
+  }
+}
+
+@media (max-width: 767px) {
+  .check-point-email-security {
+    padding: 64px 0;
+  }
+
+  .check-point-email-security__inner {
+    width: min(100% - 40px, 680px);
+  }
+
+  .check-point-email-security__panel {
+    padding-top: 34px;
+  }
+
+  .check-point-email-security__hero,
+  .check-point-email-security__capabilities,
+  .check-point-email-security__proof {
+    grid-template-columns: 1fr;
+  }
+
+  .check-point-email-security__hero {
+    gap: 32px;
+  }
+
+  .check-point-email-security__actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .check-point-email-security__button {
+    width: 100%;
+  }
+
+  .check-point-email-security__visual {
+    padding: 18px;
+  }
+
+  .check-point-email-security__mailbox {
+    min-height: 245px;
+    padding: 17px;
+  }
+
+  .check-point-email-security__ai-badge,
+  html[dir="rtl"] .check-point-email-security__ai-badge {
+    right: 8px;
+    bottom: 14px;
+    left: auto;
+    width: 92px;
+    height: 92px;
+    border-width: 6px;
+    font-size: 9px;
+  }
+
+  .check-point-email-security__card {
+    min-height: 0;
+    border-inline-end: 0;
+    border-bottom: 1px solid var(--cp-email-border);
+    padding-inline: 0;
+  }
+
+  .check-point-email-security__card:last-child {
+    border-bottom: 0;
+  }
+
+  .check-point-email-security__proof-card {
+    border-inline-end: 0;
+    border-bottom: 1px solid var(--cp-email-border);
+    padding-inline: 0;
+  }
+
+  .check-point-email-security__proof-card:last-child {
+    border-bottom: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .check-point-email-security__button {
+    transition: none;
+  }
+
+  .check-point-email-security__button:hover {
+    transform: none;
+  }
+}
