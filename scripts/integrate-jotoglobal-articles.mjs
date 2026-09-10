@@ -1,10 +1,34 @@
 import { readFile, writeFile } from 'node:fs/promises';
 
-const block = '<link rel="stylesheet" href="/assets/jotoglobal-articles.css?v=20260804-1">\n  <section id="jotoglobalArticles" class="joto-articles"></section>\n  <script type="module" src="/assets/jotoglobal-articles.js?v=20260804-1"></script>';
-for (const file of ['blog/index.html', 'zh/blog/index.html', 'fa/blog/index.html']) {
+const VERSION = '20260910-1';
+const pages = {
+  'blog/index.html': '<html lang="en">',
+  'zh/blog/index.html': '<html lang="zh-CN">',
+  'fa/blog/index.html': '<html lang="fa-IR" dir="rtl">',
+};
+
+function cleanArticleIntegration(html) {
+  return html
+    .replace(/<link[^>]+jotoglobal-articles\.css[^>]*>/gi, '')
+    .replace(/<section id="jotoglobalArticles"[^>]*><\/section>/gi, '')
+    .replace(/<script[^>]+jotoglobal-articles\.js[^>]*><\/script>/gi, '');
+}
+
+function setHtmlLocale(html, replacement) {
+  return html.replace(/<html\b[^>]*>/i, replacement);
+}
+
+for (const [file, htmlTag] of Object.entries(pages)) {
   const original = await readFile(file, 'utf8');
-  const clean = original.replace(/\s*<link[^>]+jotoglobal-articles\.css[^>]*>\s*<section id="jotoglobalArticles"[^>]*><\/section>\s*<script[^>]+jotoglobal-articles\.js[^>]*><\/script>/g, '');
-  const next = clean.replace(/<\/body>/i, `  ${block}\n</body>`);
+  const clean = setHtmlLocale(cleanArticleIntegration(original), htmlTag);
+  const withStyles = clean.replace(
+    /\s*<\/head>/i,
+    `\n    <link rel="stylesheet" href="/assets/jotoglobal-articles.css?v=${VERSION}">\n  </head>`,
+  );
+  const next = withStyles.replace(
+    /\s*<\/body>/i,
+    `\n  <script type="module" src="/assets/jotoglobal-articles.js?v=${VERSION}"></script>\n</body>`,
+  );
   if (next !== original) await writeFile(file, next);
 }
 
