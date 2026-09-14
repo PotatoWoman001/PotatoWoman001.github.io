@@ -232,11 +232,11 @@ git commit -m "feat: show products in Mall navigation"
 - Consumes: the completed product menu and fixed five-category strip.
 - Produces: cache version `20260914-1` across every changed browser entry and three-locale browser evidence.
 
-- [ ] **Step 1: Update affected asset versions mechanically**
+- [x] **Step 1: Update affected asset versions mechanically**
 
 Replace `20260824-1` with `20260914-1` only in Mall navigation/catalog module imports, formal HTML route tags, and the two static verification constants. Do not change unrelated asset versions.
 
-- [ ] **Step 2: Run the complete relevant static suite**
+- [x] **Step 2: Run the complete relevant static suite**
 
 Run:
 
@@ -250,7 +250,7 @@ git diff --check
 
 Expected: all verification scripts PASS and `git diff --check` returns no output.
 
-- [ ] **Step 3: Serve the site and run focused browser verification**
+- [x] **Step 3: Serve the site and run focused browser verification**
 
 Reuse an existing compatible local server when available; otherwise start:
 
@@ -260,11 +260,11 @@ python3 -m http.server 3009
 
 Use the available Mall fixture or production-compatible snapshot and inspect `/mall/`, `/zh/mall/`, and `/fa/mall/` at desktop width. Assert five columns, 0–5 product links per column, localized category headings, valid localized detail hrefs, and no visible stable keys. At mobile width assert only five top-level category links and no desktop mega menu.
 
-- [ ] **Step 4: Record exact browser measurements**
+- [x] **Step 4: Record exact browser measurements**
 
 Capture for each locale: column count, child-link count per category, first product href, visible category labels, horizontal overflow status, and console errors. Any locale mismatch or invalid route blocks completion.
 
-- [ ] **Step 5: Commit only relevant versioned files**
+- [x] **Step 5: Commit only relevant versioned files**
 
 ```bash
 git diff -- '*.html'

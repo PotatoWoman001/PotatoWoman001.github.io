@@ -1,4 +1,4 @@
-import { canonicalCategoryKey, productCategoryKey, productTypeKey } from "./mall-taxonomy.js?v=20260824-1";
+import { canonicalCategoryKey, productCategoryKey, productTypeKey } from "./mall-taxonomy.js?v=20260914-1";
 
 const DATA_ROOT = "/mall-data/";
 const SCHEMA_VERSION = "joto-mall-v1";

@@ -1,8 +1,29 @@
 async (page) => {
 const CASES = [
-  { locale: "en", prefix: "", lang: "en", dir: "ltr", navLabel: "Product categories" },
-  { locale: "zh", prefix: "/zh", lang: "zh-CN", dir: "ltr", navLabel: "产品分类" },
-  { locale: "fa", prefix: "/fa", lang: "fa-IR", dir: "rtl", navLabel: "دسته‌بندی محصولات" },
+  {
+    locale: "en",
+    prefix: "",
+    lang: "en",
+    dir: "ltr",
+    navLabel: "Product categories",
+    categoryLabels: ["All products", "Networking", "Security", "Servers & Storage", "Collaboration", "Physical Security"],
+  },
+  {
+    locale: "zh",
+    prefix: "/zh",
+    lang: "zh-CN",
+    dir: "ltr",
+    navLabel: "产品分类",
+    categoryLabels: ["全部产品", "网络", "安全", "服务器与存储", "协作通信", "物理安防"],
+  },
+  {
+    locale: "fa",
+    prefix: "/fa",
+    lang: "fa-IR",
+    dir: "rtl",
+    navLabel: "دسته‌بندی محصولات",
+    categoryLabels: ["همه محصولات", "شبکه", "امنیت", "سرور و ذخیره‌سازی", "ارتباطات سازمانی", "امنیت فیزیکی"],
+  },
 ];
 
 const VIEWPORTS = [
@@ -177,6 +198,8 @@ async function exerciseCatalog(origin, testCase, viewport) {
       columns: getComputedStyle(grid).gridTemplateColumns.split(" ").length,
       total: Number.parseInt(result?.dataset.resultCount || "0", 10),
       categoryCount: root.querySelectorAll(".joto-mall__category").length,
+      categoryLabels: [...root.querySelectorAll(".joto-mall__category")]
+        .map((button) => button.textContent.trim()),
       categoryHeight: categories.getBoundingClientRect().height,
       categoryDisplay: getComputedStyle(categories).display,
       categoryWrap: getComputedStyle(categories).flexWrap,
@@ -208,7 +231,11 @@ async function exerciseCatalog(origin, testCase, viewport) {
   assert(layout.cardCount === 24, `${label}: expected 24 cards, got ${layout.cardCount}`);
   assert(layout.total > 200, `${label}: expected complete catalog, got ${layout.total}`);
   assert(layout.columns === expectedColumns, `${label}: expected ${expectedColumns} columns`);
-  assert(layout.categoryCount >= 2, `${label}: category navigation incomplete`);
+  assert(layout.categoryCount === 6, `${label}: expected all-products plus five categories`);
+  assert(
+    JSON.stringify(layout.categoryLabels) === JSON.stringify(testCase.categoryLabels),
+    `${label}: wrong localized categories ${JSON.stringify(layout.categoryLabels)}`,
+  );
   assert(layout.categoryHeight <= 64, `${label}: category row is ${layout.categoryHeight}px tall`);
   assert(
     layout.categoryDisplay === "flex" && layout.categoryWrap === "nowrap",
@@ -245,6 +272,30 @@ async function exerciseCatalog(origin, testCase, viewport) {
     assert((await mega.count()) === 1, `${label}: desktop Mall mega menu did not open`);
     assert((await mega.locator(".joto-mall-nav__column").count()) === 5, `${label}: mega menu is not five columns`);
     assert((await mega.locator(".joto-mall-nav__heading").count()) === 5, `${label}: mega menu headings missing`);
+    await mega.locator(".joto-mall-nav__children a").first().waitFor();
+    const megaMetrics = await mega.evaluate((menu) => ({
+      headings: [...menu.querySelectorAll(".joto-mall-nav__heading")]
+        .map((link) => link.textContent.trim()),
+      childCounts: [...menu.querySelectorAll(".joto-mall-nav__column")]
+        .map((column) => column.querySelectorAll(".joto-mall-nav__children a").length),
+      products: [...menu.querySelectorAll(".joto-mall-nav__children a")]
+        .map((link) => ({ label: link.textContent.trim(), path: new URL(link.href).pathname })),
+    }));
+    assert(
+      JSON.stringify(megaMetrics.headings) === JSON.stringify(testCase.categoryLabels.slice(1)),
+      `${label}: wrong mega-menu headings ${JSON.stringify(megaMetrics.headings)}`,
+    );
+    assert(
+      megaMetrics.childCounts.every((count) => count >= 0 && count <= 5),
+      `${label}: mega-menu product limit failed ${JSON.stringify(megaMetrics.childCounts)}`,
+    );
+    assert(megaMetrics.products.length > 0, `${label}: mega menu has no real products`);
+    assert(
+      megaMetrics.products.every(
+        (product) => product.label && product.path.startsWith(`${testCase.prefix}/mall/products/`),
+      ),
+      `${label}: invalid localized product link ${JSON.stringify(megaMetrics.products)}`,
+    );
     await page.keyboard.press("Escape");
   } else if (viewport.name === "mobile") {
     assert(
@@ -430,7 +481,20 @@ async function exerciseCatalog(origin, testCase, viewport) {
 
 async function verifyMallBrowser(origin = "http://127.0.0.1:3009") {
   const usesLocalRuntimeSnapshot = origin.includes("127.0.0.1");
+  const localProductRoute = /\/(?:zh\/|fa\/)?mall\/products\/[a-z0-9-]+\/?(?:\?.*)?$/;
   if (usesLocalRuntimeSnapshot) {
+    await page.route(localProductRoute, async (route) => {
+      const requestPath = route.request().url().slice(origin.length).split(/[?#]/, 1)[0];
+      const localePrefix = requestPath.startsWith("/zh/")
+        ? "/zh"
+        : requestPath.startsWith("/fa/")
+          ? "/fa"
+          : "";
+      const response = await route.fetch({
+        url: `${origin}${localePrefix}/mall/product/index.html`,
+      });
+      await route.fulfill({ response });
+    });
     await page.route("**/mall-data/**", async (route) => {
       const requestUrl = route.request().url().replace(
         `${origin}/mall-data/`,
@@ -517,7 +581,10 @@ async function verifyMallBrowser(origin = "http://127.0.0.1:3009") {
     );
     completed.push("zh/mobile/placeholder-images");
   } finally {
-    if (usesLocalRuntimeSnapshot) await page.unroute("**/mall-data/**");
+    if (usesLocalRuntimeSnapshot) {
+      await page.unroute(localProductRoute);
+      await page.unroute("**/mall-data/**");
+    }
     page.off("console", onConsole);
     page.off("pageerror", onPageError);
   }

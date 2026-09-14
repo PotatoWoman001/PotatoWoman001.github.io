@@ -4,7 +4,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const version = "20260805-1";
-const mallNavigationVersion = "20260824-1";
+const mallNavigationVersion = "20260914-1";
 const expectedRouteCount = 114;
 const excludedDirectories = new Set([
   ".git",

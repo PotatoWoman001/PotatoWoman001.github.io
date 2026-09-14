@@ -5,9 +5,9 @@ import path from "node:path";
 
 const root = process.cwd();
 const version = "20260805-1";
-const mallNavigationVersion = "20260824-1";
+const mallNavigationVersion = "20260914-1";
 const mallStyleVersion = "20260821-2";
-const mallScriptVersion = "20260824-1";
+const mallScriptVersion = "20260914-1";
 const siteBundleVersion = "20260819-1";
 const routes = [
   ["mall/index.html", "en", "ltr", "home", "mall-catalog-pages.js"],
@@ -93,7 +93,7 @@ assert.doesNotMatch(product, /product\.source_url|locale\.source/);
 assert.doesNotMatch(i18n, /^\s*source:\s*/m);
 assert.doesNotMatch(`${pages}\n${product}`, /\.innerHTML\s*=/);
 for (const asset of [pages, product]) {
-  assert.match(asset, /\.js\?v=20260824-1/);
+  assert.match(asset, /\.js\?v=20260914-1/);
 }
 assert.match(product, /og:type", "product"/);
 assert.match(product, /"@type": "Product"/);

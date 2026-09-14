@@ -1,7 +1,7 @@
-import { loadCatalogIndex } from "./mall-data-client.js?v=20260824-1";
-import { MALL_CATEGORIES, localizedCategoryLabel, productCategoryKey } from "./mall-taxonomy.js?v=20260824-1";
+import { loadCatalogIndex } from "./mall-data-client.js?v=20260914-1";
+import { MALL_CATEGORIES, localizedCategoryLabel, productCategoryKey } from "./mall-taxonomy.js?v=20260914-1";
 
-const ASSET_VERSION = "20260824-1";
+const ASSET_VERSION = "20260914-1";
 const LOCALES = {
   en: { key: "en", label: "Mall", path: "/mall/", categoriesLabel: "Product categories" },
   zh: { key: "zh", label: "商城", path: "/zh/mall/", categoriesLabel: "产品分类" },
