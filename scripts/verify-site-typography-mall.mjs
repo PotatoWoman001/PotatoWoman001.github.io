@@ -4,7 +4,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const version = "20260805-1";
-const mallNavigationVersion = "20260821-2";
+const mallNavigationVersion = "20260824-1";
 const expectedRouteCount = 114;
 const excludedDirectories = new Set([
   ".git",
@@ -130,6 +130,10 @@ const mallModule = readFileSync(
   path.join(root, "assets/mall-navigation-and-page.js"),
   "utf8",
 );
+const mallTaxonomy = readFileSync(
+  path.join(root, "assets/mall-taxonomy.js"),
+  "utf8",
+);
 const mallNavigationStyles = existsSync(path.join(root, "assets/mall-navigation.css"))
   ? readFileSync(path.join(root, "assets/mall-navigation.css"), "utf8")
   : "";
@@ -155,7 +159,7 @@ for (const expected of [
   assert.ok(mallModule.includes(expected), `Mall module missing ${expected}`);
 }
 for (const category of ["网络", "安全", "服务器与存储", "协作通信", "物理安防"]) {
-  assert.ok(mallModule.includes(JSON.stringify(category)), `missing Mall category ${category}`);
+  assert.ok(mallTaxonomy.includes(JSON.stringify(category)), `missing Mall category ${category}`);
 }
 for (const hook of [
   "data-joto-mall-nav",
@@ -169,6 +173,9 @@ for (const hook of [
   );
 }
 assert.match(mallModule, /loadCatalogIndex/);
+assert.match(mallModule, /deriveProductsByCategory/);
+assert.match(mallModule, /localizedProductHref/);
+assert.match(mallModule, /productNavigationLabel/);
 assert.match(
   mallNavigationStyles,
   /grid-template-columns:\s*repeat\(5,\s*minmax\(0,\s*1fr\)\)/,

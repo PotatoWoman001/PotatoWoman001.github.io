@@ -5,9 +5,9 @@ import path from "node:path";
 
 const root = process.cwd();
 const version = "20260805-1";
-const mallNavigationVersion = "20260821-2";
+const mallNavigationVersion = "20260824-1";
 const mallStyleVersion = "20260821-2";
-const mallScriptVersion = "20260821-2";
+const mallScriptVersion = "20260824-1";
 const siteBundleVersion = "20260819-1";
 const routes = [
   ["mall/index.html", "en", "ltr", "home", "mall-catalog-pages.js"],
@@ -93,7 +93,7 @@ assert.doesNotMatch(product, /product\.source_url|locale\.source/);
 assert.doesNotMatch(i18n, /^\s*source:\s*/m);
 assert.doesNotMatch(`${pages}\n${product}`, /\.innerHTML\s*=/);
 for (const asset of [pages, product]) {
-  assert.match(asset, /\.js\?v=20260821-2/);
+  assert.match(asset, /\.js\?v=20260824-1/);
 }
 assert.match(product, /og:type", "product"/);
 assert.match(product, /"@type": "Product"/);
@@ -147,10 +147,12 @@ assert.doesNotMatch(pages, /locale\.sortRecent/);
 assert.doesNotMatch(pages, /joto-mall__section--recent/);
 assert.doesNotMatch(pages, /\.slice\(0,\s*12\)/);
 assert.match(pages, /function renderCatalog\(/);
+assert.match(pages, /MALL_CATEGORIES/);
+assert.doesNotMatch(pages, /rankedCategories\(index\.products/);
 assert.match(pages, /renderCatalog\(mount,\s*index,\s*\{\s*mode:\s*"home"/);
 assert.match(pages, /renderCatalog\(mount,\s*index,\s*\{\s*mode:\s*"list"/);
 assert.match(pages, /className:\s*"joto-mall__card-type"/);
-assert.match(pages, /state\.category\s*\|\|\s*locale\.allProductsHeading/);
+assert.match(pages, /localizedCategoryLabel\(state\.category, locale\)/);
 assert.match(pages, /title:\s*model\.trim\(\)\s*\|\|\s*undefined/);
 assert.match(pages, /function paginationItems\(/);
 assert.ok(

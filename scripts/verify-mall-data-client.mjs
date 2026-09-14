@@ -12,6 +12,18 @@ import {
   validProductImages,
 } from "../assets/mall-data-client.js";
 import { MALL_COPY, getMallLocale } from "../assets/mall-i18n.js";
+import {
+  canonicalCategoryKey,
+  localizedCategoryLabel,
+  localizedProductType,
+  productCategoryKey,
+  productTypeKey,
+} from "../assets/mall-taxonomy.js";
+import {
+  deriveProductsByCategory,
+  localizedProductHref,
+  productNavigationLabel,
+} from "../assets/mall-navigation-and-page.js";
 
 const [navigation, client, i18n] = await Promise.all([
   readFile("assets/mall-navigation-and-page.js", "utf8"),
@@ -93,14 +105,14 @@ const state = parseCatalogState(
 );
 assert.deepEqual(state, {
   q: "router",
-  category: "Network",
+  category: "networking",
   page: 1,
   pageSize: 24,
   view: "list",
 });
 assert.equal(
   serializeCatalogState(state).toString(),
-  "q=router&category=Network&view=list",
+  "q=router&category=networking&view=list",
 );
 assert.equal(
   productTypeFor({
@@ -109,7 +121,7 @@ assert.equal(
     brand: "Huawei",
     category_path: ["Routers", "Enterprise Routers"],
   }),
-  "Enterprise Routers",
+  "routers",
 );
 assert.equal(
   productTypeFor({
@@ -118,7 +130,7 @@ assert.equal(
     brand: "Cisco",
     category_path: [],
   }),
-  "ASA 5500 Firewall",
+  "firewalls",
 );
 assert.deepEqual(
   rankedCategories([
@@ -128,9 +140,8 @@ assert.deepEqual(
     { category_path: ["Switches"], images: [] },
   ]),
   [
-    { name: "Routers", count: 2 },
-    { name: "Firewalls", count: 1 },
-    { name: "Switches", count: 1 },
+    { name: "networking", count: 3 },
+    { name: "security", count: 1 },
   ],
 );
 const result = queryProducts({ products }, state);
@@ -140,7 +151,42 @@ const emptyBrand = queryProducts({ products }, {});
 assert.equal(emptyBrand.products.find((item) => item.slug === "a-switch").summary, "");
 assert.equal(
   emptyBrand.products.find((item) => item.slug === "a-switch").productType,
-  "Switches",
+  "switches",
+);
+assert.equal(canonicalCategoryKey("服务器与存储"), "servers-storage");
+assert.equal(productCategoryKey(products[0]), "networking");
+assert.equal(productTypeKey(products[1]), "switches");
+assert.equal(localizedCategoryLabel("networking", "zh-CN"), "网络");
+assert.equal(localizedCategoryLabel("networking", "fa-IR"), "شبکه");
+assert.equal(localizedProductType("routers", "en"), "Routers");
+assert.equal(localizedProductType("routers", "zh-CN"), "路由器");
+assert.equal(localizedProductType("routers", "fa-IR"), "مسیریاب‌ها");
+const menuProducts = Array.from({ length: 7 }, (_, index) => ({
+  slug: `router-${index + 1}`,
+  brand: "Cisco",
+  model: `C${index + 1}`,
+  category_path: ["Networking", "Routers"],
+}));
+menuProducts.push({ ...menuProducts[0], slug: "router-duplicate" });
+menuProducts.push({ slug: "missing-label", category_path: ["Networking"] });
+const groupedMenuProducts = deriveProductsByCategory(menuProducts);
+assert.equal(groupedMenuProducts.get("networking").length, 5);
+assert.deepEqual(
+  groupedMenuProducts.get("networking").map(({ slug }) => slug),
+  ["router-1", "router-2", "router-3", "router-4", "router-5"],
+);
+assert.equal(productNavigationLabel(menuProducts[0]), "Cisco C1");
+assert.equal(
+  localizedProductHref({ key: "zh" }, "router-1"),
+  "/zh/mall/products/router-1/",
+);
+assert.equal(
+  localizedProductHref({ key: "fa" }, "router-1"),
+  "/fa/mall/products/router-1/",
+);
+assert.equal(
+  localizedProductHref({ key: "en" }, "router-1"),
+  "/mall/products/router-1/",
 );
 const bulkResult = queryProducts(
   {
@@ -243,11 +289,7 @@ assert.deepEqual(
   completeCatalog.products.map((product) => product.slug),
   ["z-router", "no-image-switch", "placeholder-switch"],
 );
-assert.deepEqual(completeCatalog.facets.categories, [
-  "Hidden Category",
-  "Network",
-  "Placeholder Category",
-]);
+assert.deepEqual(completeCatalog.facets.categories, ["networking"]);
 assert.deepEqual(
   completeCatalog.products.find((product) => product.slug === "no-image-switch").images,
   [],

@@ -33,7 +33,7 @@
 - Consumes: `MALL_CATEGORIES`, `productCategoryKey(product)` and the source of `mall-navigation-and-page.js` / `mall-catalog-pages.js`.
 - Produces: failing assertions for `deriveProductsByCategory(products)`, `productNavigationLabel(product)`, `localizedProductHref(locale, slug)`, maximum-five and deduplication behavior, and fixed five-category page rendering.
 
-- [ ] **Step 1: Add failing navigation helper tests**
+- [x] **Step 1: Add failing navigation helper tests**
 
 Import the navigation helpers and add fixtures that include duplicates, incomplete products, and more than five networking products:
 
@@ -64,7 +64,7 @@ assert.equal(localizedProductHref({ key: "fa" }, "router-1"), "/fa/mall/products
 assert.equal(localizedProductHref({ key: "en" }, "router-1"), "/mall/products/router-1/");
 ```
 
-- [ ] **Step 2: Add failing fixed-category source contracts**
+- [x] **Step 2: Add failing fixed-category source contracts**
 
 Require navigation and catalog rendering to consume `MALL_CATEGORIES` directly and reject the old dynamic ranking path:
 
@@ -76,7 +76,7 @@ assert.match(pages, /MALL_CATEGORIES/);
 assert.doesNotMatch(pages, /rankedCategories\(index\.products/);
 ```
 
-- [ ] **Step 3: Run focused checks and confirm failure**
+- [x] **Step 3: Run focused checks and confirm failure**
 
 Run:
 
@@ -88,7 +88,7 @@ node scripts/verify-mall-catalog-pages.mjs
 
 Expected: FAIL because the product-navigation helpers are not exported and `mall-catalog-pages.js` still calls `rankedCategories(index.products || [])`.
 
-- [ ] **Step 4: Commit the contract changes**
+- [x] **Step 4: Commit the contract changes**
 
 ```bash
 git add scripts/verify-mall-data-client.mjs scripts/verify-site-typography-mall.mjs scripts/verify-mall-catalog-pages.mjs
