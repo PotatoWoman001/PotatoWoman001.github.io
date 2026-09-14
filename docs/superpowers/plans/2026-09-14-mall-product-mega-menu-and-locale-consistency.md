@@ -110,7 +110,7 @@ git commit -m "test: specify Mall product navigation"
 - Consumes: `MALL_CATEGORIES`, `productCategoryKey(product)`, `localizedCategoryLabel(key, locale)`, `loadCatalogIndex()`.
 - Produces: `productNavigationLabel(product): string`, `localizedProductHref(locale, slug): string`, and `deriveProductsByCategory(products): Map<string, Product[]>`.
 
-- [ ] **Step 1: Implement product label and localized detail paths**
+- [x] **Step 1: Implement product label and localized detail paths**
 
 Add pure exported helpers:
 
@@ -133,7 +133,7 @@ export function localizedProductHref(locale, slug) {
 }
 ```
 
-- [ ] **Step 2: Implement ordered maximum-five grouping with deduplication**
+- [x] **Step 2: Implement ordered maximum-five grouping with deduplication**
 
 ```js
 export function deriveProductsByCategory(items = []) {
@@ -156,7 +156,7 @@ export function deriveProductsByCategory(items = []) {
 }
 ```
 
-- [ ] **Step 3: Replace type links with product detail links**
+- [x] **Step 3: Replace type links with product detail links**
 
 Change `renderMegaColumns` so each child link is generated from a product:
 
@@ -172,7 +172,7 @@ Change `renderMegaColumns` so each child link is generated from a product:
 
 After `loadCatalogIndex()` resolves, call `renderMegaColumns(panel, locale, deriveProductsByCategory(index?.products))`; on failure render headings with empty buckets.
 
-- [ ] **Step 4: Render the page category strip from the fixed taxonomy**
+- [x] **Step 4: Render the page category strip from the fixed taxonomy**
 
 Import `MALL_CATEGORIES`, remove the `rankedCategories` import and dynamic ranking variables, then paint all five localized categories:
 
@@ -189,7 +189,7 @@ categoryPopover.replaceChildren();
 
 Retain the existing selection, URL serialization, result count and empty state behavior.
 
-- [ ] **Step 5: Run syntax and focused checks**
+- [x] **Step 5: Run syntax and focused checks**
 
 Run:
 
@@ -203,7 +203,7 @@ node scripts/verify-mall-catalog-pages.mjs
 
 Expected: all commands PASS.
 
-- [ ] **Step 6: Commit the implementation**
+- [x] **Step 6: Commit the implementation**
 
 ```bash
 git add assets/mall-navigation-and-page.js assets/mall-catalog-pages.js scripts/verify-mall-data-client.mjs scripts/verify-site-typography-mall.mjs scripts/verify-mall-catalog-pages.mjs

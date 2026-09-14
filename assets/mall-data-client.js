@@ -1,3 +1,5 @@
+import { canonicalCategoryKey, productCategoryKey, productTypeKey } from "./mall-taxonomy.js?v=20260824-1";
+
 const DATA_ROOT = "/mall-data/";
 const SCHEMA_VERSION = "joto-mall-v1";
 const DEFAULT_PAGE_SIZE = 24;
@@ -97,6 +99,8 @@ function escapeRegExp(value) {
 }
 
 export function productTypeFor(product) {
+  const controlledType = productTypeKey(product);
+  if (controlledType) return controlledType;
   const categories = productCategory(product).filter(Boolean);
   if (categories.length) return String(categories.at(-1)).trim();
 
@@ -119,7 +123,7 @@ export function productTypeFor(product) {
 export function rankedCategories(products) {
   const counts = new Map();
   products.forEach((product) => {
-    const name = productCategory(product)[0];
+    const name = productCategoryKey(product);
     if (name) counts.set(name, (counts.get(name) || 0) + 1);
   });
   return [...counts]
@@ -157,7 +161,7 @@ export function parseCatalogState(searchParams) {
       : new URLSearchParams(searchParams);
   return {
     q: (params.get("q") || "").normalize("NFKC").trim().slice(0, 200),
-    category: (params.get("category") || "").trim(),
+    category: canonicalCategoryKey((params.get("category") || "").trim()),
     page: Math.max(1, Number.parseInt(params.get("page") || "1", 10) || 1),
     pageSize: DEFAULT_PAGE_SIZE,
     view: params.get("view") === "list" ? "list" : "grid",
@@ -202,7 +206,7 @@ export function queryProducts(index, requestedState = {}) {
       .join("\n");
     return (
       (!query || haystack.includes(query)) &&
-      (!state.category || productCategory(product).includes(state.category))
+      (!state.category || productCategoryKey(product) === state.category)
     );
   });
 
@@ -232,7 +236,7 @@ export function queryProducts(index, requestedState = {}) {
     totalPages,
     state: { ...state, page },
     facets: {
-      categories: uniqueValues(filtered, (product) => productCategory(product)[0]),
+      categories: uniqueValues(filtered, productCategoryKey),
     },
   };
 }

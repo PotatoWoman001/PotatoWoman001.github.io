@@ -2,11 +2,11 @@ import {
   loadCatalogIndex,
   parseCatalogState,
   queryProducts,
-  rankedCategories,
   serializeCatalogState,
-} from "./mall-data-client.js?v=20260821-2";
-import { getMallLocale } from "./mall-i18n.js?v=20260821-2";
+} from "./mall-data-client.js?v=20260824-1";
+import { getMallLocale } from "./mall-i18n.js?v=20260824-1";
 import { createContactForm } from "./contact-form-sections.js?v=20260821-2";
+import { MALL_CATEGORIES, localizedCategoryLabel, localizedProductType } from "./mall-taxonomy.js?v=20260824-1";
 
 const locale = getMallLocale();
 const SITE_ORIGIN = "https://jotoglobal.com";
@@ -181,7 +181,7 @@ function productCard(product) {
     }),
     element("p", {
       className: "joto-mall__card-type",
-      text: product.productType || "\u00a0",
+      text: localizedProductType(product.productType, locale) || "\u00a0",
     }),
   );
   copy.append(
@@ -395,9 +395,6 @@ function renderCatalog(mount, index, { mode }) {
     className: "joto-mall__filters",
     "aria-label": locale.filters,
   });
-  const ranked = rankedCategories(index.products || []);
-  const primaryCategories = ranked.slice(0, 5);
-  const additionalCategories = ranked.slice(5);
   const categoryNavigation = element("div", {
     className: "joto-mall__category-navigation",
     role: "navigation",
@@ -464,40 +461,19 @@ function renderCatalog(mount, index, { mode }) {
       text: label,
       dataset: { category: value },
       "aria-pressed": String(selected),
-      dir: value ? "ltr" : undefined,
+      dir: value ? locale.dir : undefined,
     });
   }
 
   function paintCategories(selected) {
     categoryTrack.replaceChildren(
       categoryButton("", locale.allProducts, !selected),
-      ...primaryCategories.map(({ name }) =>
-        categoryButton(name, name, selected === name),
+      ...MALL_CATEGORIES.map(({ key }) =>
+        categoryButton(key, localizedCategoryLabel(key, locale), selected === key),
       ),
     );
-    if (!additionalCategories.length) {
-      categoryMore.hidden = true;
-      categoryPopover.replaceChildren();
-      return;
-    }
-    categoryMore.hidden = false;
-    categoryMore.classList.toggle(
-      "joto-mall__category--active",
-      additionalCategories.some(({ name }) => name === selected),
-    );
-    categoryTrack.append(categoryMore);
-    categoryPopover.replaceChildren(...additionalCategories.map(({ name }) =>
-      element("button", {
-        type: "button",
-        className: "joto-mall__category-popover-option",
-        text: name,
-        dataset: { category: name },
-        role: "option",
-        "aria-selected": String(name === selected),
-        tabIndex: -1,
-        dir: "auto",
-      }),
-    ));
+    categoryMore.hidden = true;
+    categoryPopover.replaceChildren();
   }
 
   function positionCategoryPopover() {
@@ -612,7 +588,9 @@ function renderCatalog(mount, index, { mode }) {
     paintCategories(state.category);
     controls.replaceChildren(categoryNavigation);
 
-    const activeCategory = state.category || locale.allProductsHeading;
+    const activeCategory = state.category
+      ? localizedCategoryLabel(state.category, locale)
+      : locale.allProductsHeading;
     const countText = `${activeCategory} · ${result.total} ${locale.results}`;
     resultsHeading.textContent = countText;
     resultsHeading.dataset.resultCount = String(result.total);

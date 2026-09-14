@@ -1,18 +1,12 @@
-import { loadCatalogIndex } from "./mall-data-client.js?v=20260821-2";
+import { loadCatalogIndex } from "./mall-data-client.js?v=20260824-1";
+import { MALL_CATEGORIES, localizedCategoryLabel, productCategoryKey } from "./mall-taxonomy.js?v=20260824-1";
 
-const ASSET_VERSION = "20260821-2";
+const ASSET_VERSION = "20260824-1";
 const LOCALES = {
   en: { key: "en", label: "Mall", path: "/mall/", categoriesLabel: "Product categories" },
   zh: { key: "zh", label: "商城", path: "/zh/mall/", categoriesLabel: "产品分类" },
   fa: { key: "fa", label: "فروشگاه", path: "/fa/mall/", categoriesLabel: "دسته‌بندی محصولات" },
 };
-const MALL_CATEGORIES = [
-  { value: "网络", aliases: ["Networking", "Routers", "Switches", "Enterprise Network"], labels: { en: "Networking", zh: "网络", fa: "شبکه" } },
-  { value: "安全", aliases: ["Firewalls", "Security"], labels: { en: "Security", zh: "安全", fa: "امنیت" } },
-  { value: "服务器与存储", aliases: ["Storages", "Servers", "Storage"], labels: { en: "Servers & Storage", zh: "服务器与存储", fa: "سرور و ذخیره‌سازی" } },
-  { value: "协作通信", aliases: ["Collaboration", "Unified Communications", "Voice"], labels: { en: "Collaboration", zh: "协作通信", fa: "ارتباطات سازمانی" } },
-  { value: "物理安防", aliases: ["Safeguarding", "Video Surveillance", "Physical Security"], labels: { en: "Physical Security", zh: "物理安防", fa: "امنیت فیزیکی" } },
-];
 let catalogPromise;
 
 function getLocale(pathname = window.location.pathname) {
@@ -40,52 +34,72 @@ export function categoryHref(locale, value) {
   url.searchParams.set("category", value);
   return `${url.pathname}${url.search}`;
 }
-export function deriveSubcategories(items = []) {
-  const result = new Map(MALL_CATEGORIES.map(({ value }) => [value, new Map()]));
-  const topLevelCounts = new Map();
-  items.forEach((item) => {
-    const path = Array.isArray(item?.category_path)
-      ? item.category_path.map((part) => String(part || "").trim()).filter(Boolean)
-      : [];
-    if (path[0]) topLevelCounts.set(path[0], (topLevelCounts.get(path[0]) || 0) + 1);
-    MALL_CATEGORIES.forEach(({ value }) => {
-      const index = path.indexOf(value);
-      const child = index >= 0 ? path.slice(index + 1).find(Boolean) : "";
-      if (!child || child === value) return;
-      const counts = result.get(value);
-      counts.set(child, (counts.get(child) || 0) + 1);
-    });
+
+const normalizedProductIdentity = (value) =>
+  String(value || "").normalize("NFKC").trim().toLocaleLowerCase();
+
+export function productNavigationLabel(product) {
+  const brand = String(product?.brand || "").normalize("NFKC").trim();
+  const model = String(product?.model || "").normalize("NFKC").trim();
+  if (
+    brand &&
+    model &&
+    normalizedProductIdentity(model).startsWith(`${normalizedProductIdentity(brand)} `)
+  ) {
+    return model;
+  }
+  return [brand, model].filter(Boolean).join(" ");
+}
+
+export function localizedProductHref(locale, slug) {
+  const prefix = locale.key === "zh" ? "/zh" : locale.key === "fa" ? "/fa" : "";
+  return `${prefix}/mall/products/${encodeURIComponent(slug)}/`;
+}
+
+export function deriveProductsByCategory(items = []) {
+  const result = new Map(MALL_CATEGORIES.map(({ key }) => [key, []]));
+  const seenSlugs = new Set();
+  const seenLabels = new Map(MALL_CATEGORIES.map(({ key }) => [key, new Set()]));
+  items.forEach((product) => {
+    const categoryKey = productCategoryKey(product);
+    const bucket = result.get(categoryKey);
+    const slug = String(product?.slug || "").trim();
+    const label = productNavigationLabel(product);
+    const identity = normalizedProductIdentity(label);
+    if (
+      !bucket ||
+      bucket.length >= 5 ||
+      !/^[a-z0-9-]{1,500}$/.test(slug) ||
+      !identity
+    ) {
+      return;
+    }
+    if (seenSlugs.has(slug) || seenLabels.get(categoryKey).has(identity)) return;
+    seenSlugs.add(slug);
+    seenLabels.get(categoryKey).add(identity);
+    bucket.push(product);
   });
-  MALL_CATEGORIES.forEach(({ value, aliases }) => {
-    const counts = result.get(value);
-    aliases.forEach((alias) => {
-      const count = topLevelCounts.get(alias) || 0;
-      if (count) counts.set(alias, Math.max(count, counts.get(alias) || 0));
-    });
-  });
-  return new Map([...result].map(([category, counts]) => [category, [...counts]
-    .sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]))
-    .slice(0, 5).map(([name]) => name)]));
+  return result;
 }
 function categoryLink(locale, category, className) {
   const link = document.createElement("a");
   link.className = className;
-  link.href = categoryHref(locale, category.value);
-  link.textContent = category.labels[locale.key];
+  link.href = categoryHref(locale, category.key);
+  link.textContent = localizedCategoryLabel(category.key, locale);
   link.dir = locale.key === "fa" ? "rtl" : "ltr";
   return link;
 }
-function renderMegaColumns(panel, locale, subcategories = new Map()) {
+function renderMegaColumns(panel, locale, productsByCategory = new Map()) {
   panel.replaceChildren(...MALL_CATEGORIES.map((category) => {
     const column = document.createElement("section");
     column.className = "joto-mall-nav__column";
     column.append(categoryLink(locale, category, "joto-mall-nav__heading"));
     const children = document.createElement("div");
     children.className = "joto-mall-nav__children";
-    (subcategories.get(category.value) || []).forEach((name) => {
+    (productsByCategory.get(category.key) || []).forEach((product) => {
       const link = document.createElement("a");
-      link.href = categoryHref(locale, name);
-      link.textContent = name;
+      link.href = localizedProductHref(locale, product.slug);
+      link.textContent = productNavigationLabel(product);
       link.dir = "auto";
       children.append(link);
     });
@@ -160,7 +174,7 @@ function enhanceDesktopLink(link, locale) {
     }
   });
   catalogPromise ||= loadCatalogIndex();
-  catalogPromise.then((index) => renderMegaColumns(panel, locale, deriveSubcategories(index?.products)))
+  catalogPromise.then((index) => renderMegaColumns(panel, locale, deriveProductsByCategory(index?.products)))
     .catch(() => renderMegaColumns(panel, locale));
 }
 function enhanceMobileLink(link, locale) {
