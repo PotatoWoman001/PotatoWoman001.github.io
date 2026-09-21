@@ -1,4 +1,9 @@
-import { canonicalCategoryKey, productCategoryKey, productTypeKey } from "./mall-taxonomy.js?v=20260914-1";
+import {
+  canonicalCategoryKey,
+  canonicalProductTypeKey,
+  productCategoryKey,
+  productTypeKey,
+} from "./mall-taxonomy.js?v=20260921-1";
 
 const DATA_ROOT = "/mall-data/";
 const SCHEMA_VERSION = "joto-mall-v1";
@@ -162,6 +167,7 @@ export function parseCatalogState(searchParams) {
   return {
     q: (params.get("q") || "").normalize("NFKC").trim().slice(0, 200),
     category: canonicalCategoryKey((params.get("category") || "").trim()),
+    type: canonicalProductTypeKey((params.get("type") || "").trim()),
     page: Math.max(1, Number.parseInt(params.get("page") || "1", 10) || 1),
     pageSize: DEFAULT_PAGE_SIZE,
     view: params.get("view") === "list" ? "list" : "grid",
@@ -173,6 +179,7 @@ export function serializeCatalogState(state) {
     new URLSearchParams({
       q: state.q || "",
       category: state.category || "",
+      type: state.type || "",
       page: String(state.page || 1),
       view: state.view || "grid",
     }),
@@ -180,6 +187,7 @@ export function serializeCatalogState(state) {
   const params = new URLSearchParams();
   if (normalized.q) params.set("q", normalized.q);
   if (normalized.category) params.set("category", normalized.category);
+  if (normalized.type) params.set("type", normalized.type);
   if (normalized.page !== 1) params.set("page", String(normalized.page));
   if (normalized.view !== "grid") params.set("view", normalized.view);
   return params;
@@ -206,7 +214,8 @@ export function queryProducts(index, requestedState = {}) {
       .join("\n");
     return (
       (!query || haystack.includes(query)) &&
-      (!state.category || productCategoryKey(product) === state.category)
+      (!state.category || productCategoryKey(product) === state.category) &&
+      (!state.type || productTypeKey(product) === state.type)
     );
   });
 

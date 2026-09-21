@@ -3,10 +3,10 @@ import {
   parseCatalogState,
   queryProducts,
   serializeCatalogState,
-} from "./mall-data-client.js?v=20260914-1";
+} from "./mall-data-client.js?v=20260921-1";
 import { getMallLocale } from "./mall-i18n.js?v=20260914-1";
 import { createContactForm } from "./contact-form-sections.js?v=20260821-2";
-import { MALL_CATEGORIES, localizedCategoryLabel, localizedProductType } from "./mall-taxonomy.js?v=20260914-1";
+import { MALL_CATEGORIES, localizedCategoryLabel, localizedProductType } from "./mall-taxonomy.js?v=20260921-1";
 
 const locale = getMallLocale();
 const SITE_ORIGIN = "https://jotoglobal.com";
@@ -588,9 +588,11 @@ function renderCatalog(mount, index, { mode }) {
     paintCategories(state.category);
     controls.replaceChildren(categoryNavigation);
 
-    const activeCategory = state.category
-      ? localizedCategoryLabel(state.category, locale)
-      : locale.allProductsHeading;
+    const activeCategory = state.type
+      ? localizedProductType(state.type, locale)
+      : state.category
+        ? localizedCategoryLabel(state.category, locale)
+        : locale.allProductsHeading;
     const countText = `${activeCategory} · ${result.total} ${locale.results}`;
     resultsHeading.textContent = countText;
     resultsHeading.dataset.resultCount = String(result.total);
@@ -610,6 +612,7 @@ function renderCatalog(mount, index, { mode }) {
         update({
           q: "",
           category: "",
+          type: "",
           page: 1,
         }),
       );
@@ -681,7 +684,7 @@ function renderCatalog(mount, index, { mode }) {
     }
     const category = event.target.closest("[data-category]");
     if (category) {
-      update({ category: category.dataset.category, page: 1 });
+      update({ category: category.dataset.category, type: "", page: 1 });
       return;
     }
     const option = event.target.closest(".joto-mall__select-option");
@@ -739,7 +742,7 @@ function renderCatalog(mount, index, { mode }) {
   });
   categoryPopover.addEventListener("click", (event) => {
     const option = event.target.closest("[data-category]");
-    if (option) update({ category: option.dataset.category, page: 1 });
+    if (option) update({ category: option.dataset.category, type: "", page: 1 });
   });
   categoryPopover.addEventListener("keydown", (event) => {
     const options = [...categoryPopover.querySelectorAll("button")];

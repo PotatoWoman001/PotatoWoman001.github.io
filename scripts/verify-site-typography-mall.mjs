@@ -4,7 +4,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const version = "20260805-1";
-const mallNavigationVersion = "20260914-1";
+const mallNavigationVersion = "20260921-1";
 const expectedRouteCount = 114;
 const excludedDirectories = new Set([
   ".git",
@@ -172,10 +172,10 @@ for (const hook of [
     `Mall navigation missing ${hook}`,
   );
 }
-assert.match(mallModule, /loadCatalogIndex/);
-assert.match(mallModule, /deriveProductsByCategory/);
-assert.match(mallModule, /localizedProductHref/);
-assert.match(mallModule, /productNavigationLabel/);
+assert.match(mallModule, /productTypeKeysForCategory/);
+assert.match(mallModule, /localizedProductType/);
+assert.match(mallModule, /productTypeHref/);
+assert.doesNotMatch(mallModule, /productNavigationLabel|localizedProductHref/);
 assert.match(
   mallNavigationStyles,
   /grid-template-columns:\s*repeat\(5,\s*minmax\(0,\s*1fr\)\)/,

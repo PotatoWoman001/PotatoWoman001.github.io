@@ -62,6 +62,12 @@ export function canonicalCategoryKey(value) {
   return CATEGORY_DEFINITIONS.find((item) => item.key === candidate || item.aliases.some((alias) => normalize(alias) === candidate))?.key || "";
 }
 
+export function canonicalProductTypeKey(value) {
+  const candidate = normalize(value);
+  if (!candidate) return "";
+  return TYPE_DEFINITIONS.find((item) => item.key === candidate)?.key || "";
+}
+
 export function productCategoryKey(product) {
   const path = Array.isArray(product?.category_path) ? product.category_path : [];
   for (const segment of path) {
@@ -90,6 +96,13 @@ export function localizedProductType(product, locale) {
   const key = typeof product === "string" ? product : productTypeKey(product);
   const item = TYPE_DEFINITIONS.find((candidate) => candidate.key === key);
   return item?.labels[mallLocaleKey(locale)] || "";
+}
+
+export function productTypeKeysForCategory(categoryKey) {
+  const category = canonicalCategoryKey(categoryKey);
+  return TYPE_DEFINITIONS
+    .filter((item) => item.category === category)
+    .map((item) => item.key);
 }
 
 export function categoryTypeKeys(products, categoryKey) {

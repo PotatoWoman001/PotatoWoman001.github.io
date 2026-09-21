@@ -1,4 +1,4 @@
-import { loadProduct } from "./mall-data-client.js?v=20260914-1";
+import { loadProduct } from "./mall-data-client.js?v=20260921-1";
 import { getMallLocale } from "./mall-i18n.js?v=20260914-1";
 
 const SITE_ORIGIN = "https://jotoglobal.com";
