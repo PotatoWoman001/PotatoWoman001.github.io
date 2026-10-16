@@ -1,162 +1,23 @@
 name: Publish jotoglobal to Aliyun
-
 on:
   workflow_dispatch:
-
 permissions:
   contents: read
-
 concurrency:
   group: jotoglobal-production
   cancel-in-progress: false
-
 jobs:
-  publish:
+  deploy-inquiry-routing:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
-    env:
-      DEPLOY_HOST: 139.224.51.172
-      DEPLOY_USER: root
-
+    timeout-minutes: 5
     steps:
-      - name: Check out the exact release source
-        uses: actions/checkout@v5
-
-      - name: Verify the website before upload
-        run: |
-          node scripts/verify-mall-catalog-pages.mjs
-          node scripts/verify-site-typography-mall.mjs
-          node scripts/verify-site-rules.mjs
-
-      - name: Build an immutable release archive
-        id: release
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-          release_id="$(date -u +%Y%m%dT%H%M%SZ)-${GITHUB_SHA::7}"
-          archive="/tmp/jotoglobal-${release_id}.tar.gz"
-          git archive --format=tar.gz --output="$archive" HEAD
-          echo "release_id=$release_id" >> "$GITHUB_OUTPUT"
-          echo "archive=$archive" >> "$GITHUB_OUTPUT"
-
-      - name: Configure the restricted deployment key
-        shell: bash
+      - name: Deploy staged inquiry routing and run restricted recipient test
         env:
-          JOTO_ALIYUN_SSH_KEY: ${{ secrets.JOTO_ALIYUN_SSH_KEY }}
+          DEPLOY_KEY: ${{ secrets.JOTO_ALIYUN_SSH_KEY }}
         run: |
-          set -Eeuo pipefail
+          set -euo pipefail
           install -d -m 0700 ~/.ssh
-          printf '%s\n' "$JOTO_ALIYUN_SSH_KEY" > ~/.ssh/joto-aliyun
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/joto-aliyun
           chmod 0600 ~/.ssh/joto-aliyun
-          cat >> ~/.ssh/known_hosts <<'HOSTKEY'
-          139.224.51.172 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILFbw8wchhE+in/D8Ne/6mmyfUj9h8McSsdQYjWjrfYx
-          HOSTKEY
-
-      - name: Authorize the deployment key on first use
-        shell: bash
-        env:
-          JOTO_ALIYUN_ROOT_PASSWORD: ${{ secrets.JOTO_ALIYUN_ROOT_PASSWORD }}
-        run: |
-          set -Eeuo pipefail
-          if [ -z "${JOTO_ALIYUN_ROOT_PASSWORD:-}" ]; then
-            echo "Root bootstrap secret is absent; using the authorized key."
-            exit 0
-          fi
-          if ! command -v sshpass >/dev/null 2>&1; then
-            sudo apt-get update
-            sudo apt-get install -y sshpass
-          fi
-          public_key="$(ssh-keygen -y -f ~/.ssh/joto-aliyun) joto-github-actions"
-          SSHPASS="$JOTO_ALIYUN_ROOT_PASSWORD" sshpass -e ssh \
-            -o PreferredAuthentications=password \
-            -o PubkeyAuthentication=no \
-            "$DEPLOY_USER@$DEPLOY_HOST" \
-            "umask 077; install -d -m 0700 /root/.ssh; touch /root/.ssh/authorized_keys; grep -qxF '$public_key' /root/.ssh/authorized_keys || printf '%s\\n' '$public_key' >> /root/.ssh/authorized_keys; chmod 0600 /root/.ssh/authorized_keys"
-
-      - name: Upload the release archive
-        shell: bash
-        env:
-          RELEASE_ID: ${{ steps.release.outputs.release_id }}
-          ARCHIVE: ${{ steps.release.outputs.archive }}
-        run: |
-          set -Eeuo pipefail
-          scp -i ~/.ssh/joto-aliyun "$ARCHIVE" \
-            "$DEPLOY_USER@$DEPLOY_HOST:/tmp/jotoglobal-${RELEASE_ID}.tar.gz"
-
-      - name: Validate and atomically activate the release
-        shell: bash
-        env:
-          RELEASE_ID: ${{ steps.release.outputs.release_id }}
-        run: |
-          set -Eeuo pipefail
-          ssh -i ~/.ssh/joto-aliyun "$DEPLOY_USER@$DEPLOY_HOST" \
-            bash -s -- "$RELEASE_ID" <<'REMOTE'
-          set -Eeuo pipefail
-          release_id="$1"
-          release_root=/var/www/jotoglobal/releases
-          release_path="$release_root/$release_id"
-          archive="/tmp/jotoglobal-${release_id}.tar.gz"
-          current=/var/www/jotoglobal/current
-          previous="$(readlink -f "$current")"
-          switched=0
-
-          rollback() {
-            if [ "$switched" -eq 1 ]; then
-              rollback_link="/var/www/jotoglobal/current.rollback.${release_id}"
-              ln -s "$previous" "$rollback_link"
-              mv -Tf "$rollback_link" "$current"
-              systemctl reload nginx
-            fi
-          }
-          trap rollback ERR
-
-          test -n "$previous"
-          test ! -e "$release_path"
-          mkdir "$release_path"
-          tar -xzf "$archive" -C "$release_path"
-          cd "$release_path"
-
-          test -f index.html
-          test -f zh/index.html
-          test -f fa/index.html
-          node scripts/verify-mall-catalog-pages.mjs
-          node scripts/verify-site-typography-mall.mjs
-          node scripts/verify-site-rules.mjs
-          nginx -t
-
-          next_link="/var/www/jotoglobal/current.next.${release_id}"
-          ln -s "$release_path" "$next_link"
-          mv -Tf "$next_link" "$current"
-          switched=1
-
-          nginx -t
-          systemctl reload nginx
-          curl -fsSI -H 'Host: jotoglobal.com' http://127.0.0.1/zh/mall/ | head -n 8
-          test "$(readlink -f "$current")" = "$release_path"
-
-          trap - ERR
-          rm -f "$archive"
-          printf 'PREVIOUS=%s\nCURRENT=%s\nDEPLOY_OK=%s\n' \
-            "$previous" "$(readlink -f "$current")" "$release_id"
-          REMOTE
-
-      - name: Verify production DNS and HTTPS routes
-        shell: bash
-        run: |
-          set -Eeuo pipefail
-
-          dns_json="$(curl -fsS --retry 5 --retry-delay 2 \
-            'https://dns.google/resolve?name=jotoglobal.com&type=A')"
-          printf '%s' "$dns_json" | jq -e --arg ip "$DEPLOY_HOST" \
-            '.Answer[]? | select(.type == 1 and .data == $ip)' >/dev/null
-          printf 'PUBLIC_DNS_OK=%s\n' "$DEPLOY_HOST"
-
-          ssh -i ~/.ssh/joto-aliyun "$DEPLOY_USER@$DEPLOY_HOST" bash -s <<'REMOTE'
-          set -Eeuo pipefail
-          for path in / /zh/ /fa/ /mall/ /zh/mall/ /fa/mall/ /mall-data/manifest.json; do
-            status="$(curl -sS -L --resolve jotoglobal.com:443:127.0.0.1 \
-              -o /dev/null -w '%{http_code}' "https://jotoglobal.com${path}")"
-            test "$status" = 200
-            printf 'PUBLIC_OK=%s %s\n' "$status" "$path"
-          done
-          REMOTE
+          printf '%s\n' '139.224.51.172 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILFbw8wchhE+in/D8Ne/6mmyfUj9h8McSsdQYjWjrfYx' > ~/.ssh/known_hosts
+          ssh -i ~/.ssh/joto-aliyun -o BatchMode=yes -o ConnectTimeout=15 root@139.224.51.172 'bash /tmp/joto-inquiry-distribution-20261016/deploy.sh'
