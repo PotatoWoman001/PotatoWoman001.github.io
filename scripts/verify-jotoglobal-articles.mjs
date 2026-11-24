@@ -11,8 +11,8 @@ for (const [file, localePattern] of listPages) {
   const html = await readFile(file, 'utf8');
   assert.match(html, localePattern);
   assert.doesNotMatch(html, /id="jotoglobalArticles"/);
-  assert.equal((html.match(/jotoglobal-articles\.js\?v=20260910-1/g) || []).length, 1);
-  assert.equal((html.match(/jotoglobal-articles\.css\?v=20260910-1/g) || []).length, 1);
+  assert.equal((html.match(/jotoglobal-articles\.js\?v=20261124-1/g) || []).length, 1);
+  assert.equal((html.match(/jotoglobal-articles\.css\?v=20261124-1/g) || []).length, 1);
 }
 const robots = await readFile('robots.txt', 'utf8'); assert.match(robots, /article-sitemap\.xml/);
 const manifestPath = 'article-data/manifest.json';
@@ -39,7 +39,8 @@ for (const route of manifest.routes) {
   assert.match(html, /hreflang="en"/);
   assert.match(html, /hreflang="zh-CN"/);
   assert.match(html, /hreflang="fa-IR"/);
-  assert.match(html, /jotoglobal-articles\.css\?v=20260910-1/);
+  // Generated pages come from the server-side article publisher, which versions its own stylesheet.
+  assert.match(html, /jotoglobal-articles\.css\?v=\d{8}-\d+/);
   assert.match(html, /jotoglobal-analytics\.js/);
   assert.doesNotMatch(html, /<\s*(iframe|object|embed)\b|javascript\s*:/i);
 }

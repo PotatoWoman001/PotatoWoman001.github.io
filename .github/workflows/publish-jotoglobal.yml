@@ -27,6 +27,7 @@ jobs:
           node scripts/verify-mall-catalog-pages.mjs
           node scripts/verify-site-typography-mall.mjs
           node scripts/verify-site-rules.mjs
+          node scripts/verify-zh-hk-locale.mjs
           node scripts/verify-jotoglobal-lead-routing.mjs
           node scripts/verify-cisco-certification-carousel.mjs
           node scripts/verify-admin-integration-routes.mjs
@@ -124,12 +125,23 @@ jobs:
           test -f index.html
           test -f zh/index.html
           test -f fa/index.html
-          node scripts/render-jotoglobal-articles.mjs \
-            --articles /var/www/audit/backend/data/sites/jotoglobal/articles.json \
-            --site-root "$release_path"
+          # Keep the generated articles that are live now (published by the
+          # server-side article publisher). Render from the article library only
+          # when the current release has no article manifest yet.
+          carry_status=0
+          node scripts/carry-over-generated-articles.mjs \
+            --from "$previous" --to "$release_path" || carry_status=$?
+          if [ "$carry_status" -eq 3 ]; then
+            node scripts/render-jotoglobal-articles.mjs \
+              --articles /var/www/audit/backend/data/sites/jotoglobal/articles.json \
+              --site-root "$release_path"
+          elif [ "$carry_status" -ne 0 ]; then
+            exit "$carry_status"
+          fi
           node scripts/verify-mall-catalog-pages.mjs
           node scripts/verify-site-typography-mall.mjs
           node scripts/verify-site-rules.mjs
+          node scripts/verify-zh-hk-locale.mjs
           node scripts/verify-jotoglobal-lead-routing.mjs
           node scripts/verify-cisco-certification-carousel.mjs
           node scripts/verify-admin-integration-routes.mjs
