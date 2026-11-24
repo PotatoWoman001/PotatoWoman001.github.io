@@ -29,6 +29,9 @@ jobs:
           node scripts/verify-site-rules.mjs
           node scripts/verify-jotoglobal-lead-routing.mjs
           node scripts/verify-cisco-certification-carousel.mjs
+          node scripts/verify-admin-integration-routes.mjs
+          node scripts/verify-jotoglobal-articles.mjs
+          node scripts/verify-jotoglobal-release-overlay.mjs
 
       - name: Build an immutable release archive
         id: release
@@ -121,11 +124,16 @@ jobs:
           test -f index.html
           test -f zh/index.html
           test -f fa/index.html
+          node scripts/render-jotoglobal-articles.mjs \
+            --articles /var/www/audit/backend/data/sites/jotoglobal/articles.json \
+            --site-root "$release_path"
           node scripts/verify-mall-catalog-pages.mjs
           node scripts/verify-site-typography-mall.mjs
           node scripts/verify-site-rules.mjs
           node scripts/verify-jotoglobal-lead-routing.mjs
           node scripts/verify-cisco-certification-carousel.mjs
+          node scripts/verify-admin-integration-routes.mjs
+          node scripts/verify-jotoglobal-articles.mjs
           nginx -t
 
           next_link="/var/www/jotoglobal/current.next.${release_id}"
