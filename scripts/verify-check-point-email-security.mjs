@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const version = "20260826-3";
+const version = "20261124-1";
 const routes = [
   "solutions/security/check-point/index.html",
   "zh/solutions/security/check-point/index.html",

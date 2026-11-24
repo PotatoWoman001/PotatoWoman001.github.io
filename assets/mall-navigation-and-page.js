@@ -9,10 +9,13 @@ const ASSET_VERSION = "20260921-1";
 const LOCALES = {
   en: { key: "en", label: "Mall", path: "/mall/", categoriesLabel: "Product categories" },
   zh: { key: "zh", label: "商城", path: "/zh/mall/", categoriesLabel: "产品分类" },
+  // The Mall is not translated for zh-HK yet: /zh-hk/ pages link to the zh-CN Mall.
+  zhHk: { key: "zh", label: "商城", path: "/zh/mall/", categoriesLabel: "产品分类", blogPath: "/zh-hk/blog/" },
   fa: { key: "fa", label: "فروشگاه", path: "/fa/mall/", categoriesLabel: "دسته‌بندی محصولات" },
 };
 function getLocale(pathname = window.location.pathname) {
   const path = pathname.toLowerCase();
+  if (path.startsWith("/zh-hk/") || path === "/zh-hk") return LOCALES.zhHk;
   if (path.startsWith("/zh/") || path === "/zh") return LOCALES.zh;
   if (path.startsWith("/fa/") || path === "/fa") return LOCALES.fa;
   return LOCALES.en;
@@ -29,7 +32,7 @@ function normalizedPath(value) {
   return new URL(value, window.location.origin).pathname.replace(/\/+$/, "") || "/";
 }
 function isBlogLink(link, locale) {
-  return normalizedPath(link.href) === normalizedPath(locale.path.replace(/mall\/?$/, "blog/"));
+  return normalizedPath(link.href) === normalizedPath(locale.blogPath || locale.path.replace(/mall\/?$/, "blog/"));
 }
 export function categoryHref(locale, value) {
   const params = new URLSearchParams({ category: value });

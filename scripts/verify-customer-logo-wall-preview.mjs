@@ -15,7 +15,7 @@ const previewStylesPath = `${root}/assets/customer-logo-wall-preview.css`;
 const sharedScriptPath = `${root}/assets/customer-logo-wall-three-row.js`;
 const sharedStylesPath = `${root}/assets/customer-logo-wall-three-row.css`;
 const homepageScriptPath = `${root}/assets/customer-logo-wall-homepage.js`;
-const mainBundlePath = `${root}/assets/index-DaFvN0XI.js`;
+const mainBundlePath = `${root}/assets/index-covers-fe2c6a4b8409.js`;
 const homepageRoutePaths = [
   `${root}/index.html`,
   `${root}/zh/index.html`,

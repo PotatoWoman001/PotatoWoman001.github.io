@@ -5,7 +5,7 @@ import {
   serializeCatalogState,
 } from "./mall-data-client.js?v=20260921-1";
 import { getMallLocale } from "./mall-i18n.js?v=20260914-1";
-import { createContactForm } from "./contact-form-sections.js?v=20260821-2";
+import { createContactForm } from "./contact-form-sections.js?v=20261124-1";
 import { MALL_CATEGORIES, localizedCategoryLabel, localizedProductType } from "./mall-taxonomy.js?v=20260921-1";
 
 const locale = getMallLocale();

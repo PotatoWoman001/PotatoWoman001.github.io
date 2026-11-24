@@ -1,4 +1,4 @@
-const CHECK_POINT_EMAIL_ROUTE = /^\/(?:zh\/|fa\/)?solutions\/security\/check-point\/?$/;
+const CHECK_POINT_EMAIL_ROUTE = /^\/(?:zh-hk\/|zh\/|fa\/)?solutions\/security\/check-point\/?$/;
 
 const PLATFORMS = [
   "Microsoft 365",
@@ -87,7 +87,7 @@ function createElement(tag, className, text) {
 }
 
 function getCopy(pathname) {
-  if (pathname.startsWith("/zh/")) return COPY.zh;
+  if (pathname.startsWith("/zh/") || pathname.startsWith("/zh-hk/")) return COPY.zh;
   if (pathname.startsWith("/fa/")) return COPY.fa;
   return COPY.en;
 }

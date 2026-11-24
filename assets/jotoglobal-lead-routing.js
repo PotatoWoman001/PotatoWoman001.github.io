@@ -26,7 +26,8 @@ export function classifyLeadSource(locationLike) {
     locationLike instanceof URL ? locationLike : new URL(locationLike.href);
   const parts = url.pathname.split("/").filter(Boolean);
   const locale =
-    parts[0] === "zh" ? "zh-CN" : parts[0] === "fa" ? "fa-IR" : "en";
+    // zh-hk pages report as zh-CN so the inquiry backend keeps accepting them; pagePath keeps /zh-hk/.
+    parts[0] === "zh" || parts[0] === "zh-hk" ? "zh-CN" : parts[0] === "fa" ? "fa-IR" : "en";
   const route = locale === "en" ? parts : parts.slice(1);
   const pagePath = `${url.pathname}${url.search}`.slice(0, 500);
   const product = cleanValue(url.searchParams.get("product"), 160);

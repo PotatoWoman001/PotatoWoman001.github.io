@@ -83,7 +83,8 @@ const LOCALE_PREFIXES = {
 
 function getRouteContext(pathname) {
   const parts = pathname.replace(/\/index\.html$/, "").split("/").filter(Boolean);
-  const locale = parts[0] === "zh" ? "zh-CN" : parts[0] === "fa" ? "fa-IR" : "en";
+  // /zh-hk/ pages reuse the zh-CN copy; assets/zh-hk-locale.js renders it in HK Traditional Chinese.
+  const locale = parts[0] === "zh" || parts[0] === "zh-hk" ? "zh-CN" : parts[0] === "fa" ? "fa-IR" : "en";
   const routeParts = locale === "en" ? parts : parts.slice(1);
   return { locale, routeParts };
 }
@@ -162,7 +163,7 @@ function enhanceHomepageActions(primaryCta, locale) {
   const contactLink = document.createElement("a");
   const arrow = primaryCta.querySelector("svg")?.cloneNode(true);
 
-  contactLink.href = `${LOCALE_PREFIXES[locale]}/contact`;
+  contactLink.href = `${locale === "zh-CN" && /^\/zh-hk(?:\/|$)/i.test(window.location.pathname) ? "/zh-hk" : LOCALE_PREFIXES[locale]}/contact`;
   contactLink.className = primaryCta.className;
   contactLink.dataset.heroCta = "";
   contactLink.dataset.homeHeroContactCta = "";

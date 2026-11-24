@@ -8,6 +8,7 @@ const homepageVersion = "20260810-1";
 const homepageScriptVersion = "20260817-1";
 const homepageStylesVersion = "20260811-3";
 const contactVersion = "20260809-1";
+const contactScriptVersion = "20261124-1";
 
 for (const route of homepages) {
   const html = readFileSync(path.join(root, route), "utf8");
@@ -29,7 +30,7 @@ for (const route of homepages) {
   );
   assert.match(
     html,
-    new RegExp(`/assets/contact-form-sections\\.js\\?v=${contactVersion}`),
+    new RegExp(`/assets/contact-form-sections\\.js\\?v=${contactScriptVersion}`),
   );
   assert.match(
     html,

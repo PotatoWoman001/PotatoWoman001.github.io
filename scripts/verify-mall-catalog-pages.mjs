@@ -5,10 +5,11 @@ import path from "node:path";
 
 const root = process.cwd();
 const version = "20260805-1";
-const mallNavigationVersion = "20260921-1";
+const mallNavigationVersion = "20261124-1";
 const mallStyleVersion = "20260821-2";
 const mallScriptVersion = "20260921-1";
-const siteBundleVersion = "20260819-1";
+const siteBundleVersion = "20261124-1";
+const mallPagesVersion = "20261124-1"; // mall-catalog-pages.js imports the updated contact form module
 const routes = [
   ["mall/index.html", "en", "ltr", "home", "mall-catalog-pages.js"],
   ["zh/mall/index.html", "zh-CN", "ltr", "home", "mall-catalog-pages.js"],
@@ -35,7 +36,9 @@ async function collectIndexFiles(directory) {
   return found;
 }
 
-assert.equal((await collectIndexFiles(root)).length, 114);
+const articleManifestFile = path.join(root, "article-data/manifest.json");
+const generatedArticleFiles = new Set((existsSync(articleManifestFile) ? JSON.parse(await readFile(articleManifestFile, "utf8")).routes || [] : []).map((route) => path.resolve(root, `.${route}`, "index.html")));
+assert.equal((await collectIndexFiles(root)).filter((file) => !generatedArticleFiles.has(path.resolve(file))).length, 149); // 114 + 35 zh-hk
 for (const [route, lang, dir, mode, script] of routes) {
   assert.equal(existsSync(path.join(root, route)), true, `${route} missing`);
   const html = await readFile(path.join(root, route), "utf8");
@@ -43,15 +46,19 @@ for (const [route, lang, dir, mode, script] of routes) {
   assert.ok(html.includes(`data-joto-mall-shell="${mode}"`));
   assert.ok(html.includes(`/assets/mall-catalog.css?v=${mallStyleVersion}`));
   assert.ok(html.includes(`/assets/contact-form-sections.css?v=${version}`));
-  assert.ok(html.includes(`/assets/${script}?v=${mallScriptVersion}`));
+  assert.ok(html.includes(`/assets/${script}?v=${script === "mall-catalog-pages.js" ? mallPagesVersion : mallScriptVersion}`));
   for (const match of html.matchAll(/(\/assets\/[^"'<>]+\.(?:js|css))\?v=([^"'<>]+)/g)) {
-    const expectedVersion = match[1] === "/assets/index-DaFvN0XI.js"
+    const expectedVersion = match[1] === "/assets/index-covers-fe2c6a4b8409.js"
       ? siteBundleVersion
       : match[1] === "/assets/mall-navigation-and-page.js"
         ? mallNavigationVersion
+      : match[1] === "/assets/index-e49ffBFL.css"
+        ? siteBundleVersion
       : match[1] === "/assets/mall-catalog.css"
         ? mallStyleVersion
-      : ["/assets/mall-catalog-pages.js", "/assets/mall-product-page.js"].includes(match[1])
+      : match[1] === "/assets/mall-catalog-pages.js"
+        ? mallPagesVersion
+      : match[1] === "/assets/mall-product-page.js"
         ? mallScriptVersion
         : version;
     assert.equal(match[2], expectedVersion, `${route} has mismatched cache version`);

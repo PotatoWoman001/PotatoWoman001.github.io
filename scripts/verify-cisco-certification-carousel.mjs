@@ -3,7 +3,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const version = "20260821-1";
+const version = "20261124-1";
 const routeGroups = [
   "network/cisco",
   "network/extreme-networks",

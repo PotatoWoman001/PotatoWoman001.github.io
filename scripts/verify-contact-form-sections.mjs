@@ -19,7 +19,7 @@ const solutionRoutePattern =
   /^(?:(?:zh|fa)\/)?solutions\/[^/]+(?:\/[^/]+)?\/index\.html$/;
 const expectedSolutionRouteCount = 75;
 const scriptTag =
-  '<script type="module" src="/assets/contact-form-sections.js?v=20260809-1"></script>';
+  '<script type="module" src="/assets/contact-form-sections.js?v=20261124-1"></script>';
 const styleTag =
   '<link rel="stylesheet" href="/assets/contact-form-sections.css?v=20260809-1">';
 

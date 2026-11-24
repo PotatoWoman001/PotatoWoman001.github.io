@@ -1,4 +1,5 @@
-const locale = location.pathname.startsWith('/zh/')
+// /zh-hk/ shows the zh-CN cards (rendered in Traditional Chinese by zh-hk-locale.js).
+const locale = location.pathname.startsWith('/zh/') || location.pathname.startsWith('/zh-hk/')
   ? 'zh-CN'
   : location.pathname.startsWith('/fa/')
     ? 'fa-IR'

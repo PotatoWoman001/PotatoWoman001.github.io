@@ -5,6 +5,7 @@
     <loc>https://jotoglobal.com/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/" />
   </url>
@@ -12,6 +13,15 @@
     <loc>https://jotoglobal.com/zh/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/" />
   </url>
@@ -19,6 +29,7 @@
     <loc>https://jotoglobal.com/fa/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/" />
   </url>
@@ -26,6 +37,7 @@
     <loc>https://jotoglobal.com/about</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/about" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/about" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/about" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/about" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/about" />
   </url>
@@ -33,6 +45,15 @@
     <loc>https://jotoglobal.com/zh/about</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/about" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/about" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/about" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/about" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/about</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/about" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/about" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/about" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/about" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/about" />
   </url>
@@ -40,6 +61,7 @@
     <loc>https://jotoglobal.com/fa/about</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/about" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/about" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/about" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/about" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/about" />
   </url>
@@ -47,6 +69,7 @@
     <loc>https://jotoglobal.com/contact</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/contact" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/contact" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/contact" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/contact" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/contact" />
   </url>
@@ -54,6 +77,15 @@
     <loc>https://jotoglobal.com/zh/contact</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/contact" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/contact" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/contact" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/contact" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/contact" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/contact</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/contact" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/contact" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/contact" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/contact" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/contact" />
   </url>
@@ -61,6 +93,7 @@
     <loc>https://jotoglobal.com/fa/contact</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/contact" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/contact" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/contact" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/contact" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/contact" />
   </url>
@@ -68,6 +101,7 @@
     <loc>https://jotoglobal.com/blog</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog" />
   </url>
@@ -75,6 +109,15 @@
     <loc>https://jotoglobal.com/zh/blog</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/blog</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog" />
   </url>
@@ -82,6 +125,7 @@
     <loc>https://jotoglobal.com/fa/blog</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog" />
   </url>
@@ -89,6 +133,7 @@
     <loc>https://jotoglobal.com/blog/connected-it-and-safeguarding</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog/connected-it-and-safeguarding" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog/connected-it-and-safeguarding" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog/connected-it-and-safeguarding" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog/connected-it-and-safeguarding" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog/connected-it-and-safeguarding" />
   </url>
@@ -96,6 +141,15 @@
     <loc>https://jotoglobal.com/zh/blog/connected-it-and-safeguarding</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog/connected-it-and-safeguarding" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog/connected-it-and-safeguarding" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog/connected-it-and-safeguarding" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog/connected-it-and-safeguarding" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog/connected-it-and-safeguarding" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/blog/connected-it-and-safeguarding</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog/connected-it-and-safeguarding" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog/connected-it-and-safeguarding" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog/connected-it-and-safeguarding" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog/connected-it-and-safeguarding" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog/connected-it-and-safeguarding" />
   </url>
@@ -103,6 +157,7 @@
     <loc>https://jotoglobal.com/fa/blog/connected-it-and-safeguarding</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog/connected-it-and-safeguarding" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog/connected-it-and-safeguarding" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog/connected-it-and-safeguarding" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog/connected-it-and-safeguarding" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog/connected-it-and-safeguarding" />
   </url>
@@ -110,6 +165,7 @@
     <loc>https://jotoglobal.com/blog/enterprise-network-growth</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog/enterprise-network-growth" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog/enterprise-network-growth" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog/enterprise-network-growth" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog/enterprise-network-growth" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog/enterprise-network-growth" />
   </url>
@@ -117,6 +173,15 @@
     <loc>https://jotoglobal.com/zh/blog/enterprise-network-growth</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog/enterprise-network-growth" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog/enterprise-network-growth" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog/enterprise-network-growth" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog/enterprise-network-growth" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog/enterprise-network-growth" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/blog/enterprise-network-growth</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog/enterprise-network-growth" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog/enterprise-network-growth" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog/enterprise-network-growth" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog/enterprise-network-growth" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog/enterprise-network-growth" />
   </url>
@@ -124,6 +189,7 @@
     <loc>https://jotoglobal.com/fa/blog/enterprise-network-growth</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog/enterprise-network-growth" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog/enterprise-network-growth" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog/enterprise-network-growth" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog/enterprise-network-growth" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog/enterprise-network-growth" />
   </url>
@@ -131,6 +197,7 @@
     <loc>https://jotoglobal.com/blog/five-campus-standardisation</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog/five-campus-standardisation" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog/five-campus-standardisation" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog/five-campus-standardisation" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog/five-campus-standardisation" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog/five-campus-standardisation" />
   </url>
@@ -138,6 +205,15 @@
     <loc>https://jotoglobal.com/zh/blog/five-campus-standardisation</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog/five-campus-standardisation" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog/five-campus-standardisation" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog/five-campus-standardisation" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog/five-campus-standardisation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog/five-campus-standardisation" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/blog/five-campus-standardisation</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog/five-campus-standardisation" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog/five-campus-standardisation" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog/five-campus-standardisation" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog/five-campus-standardisation" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog/five-campus-standardisation" />
   </url>
@@ -145,6 +221,7 @@
     <loc>https://jotoglobal.com/fa/blog/five-campus-standardisation</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog/five-campus-standardisation" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog/five-campus-standardisation" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog/five-campus-standardisation" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog/five-campus-standardisation" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog/five-campus-standardisation" />
   </url>
@@ -152,6 +229,7 @@
     <loc>https://jotoglobal.com/blog/it-operations-in-china</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog/it-operations-in-china" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog/it-operations-in-china" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog/it-operations-in-china" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog/it-operations-in-china" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog/it-operations-in-china" />
   </url>
@@ -159,6 +237,15 @@
     <loc>https://jotoglobal.com/zh/blog/it-operations-in-china</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog/it-operations-in-china" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog/it-operations-in-china" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog/it-operations-in-china" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog/it-operations-in-china" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog/it-operations-in-china" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/blog/it-operations-in-china</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog/it-operations-in-china" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog/it-operations-in-china" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog/it-operations-in-china" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog/it-operations-in-china" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog/it-operations-in-china" />
   </url>
@@ -166,6 +253,7 @@
     <loc>https://jotoglobal.com/fa/blog/it-operations-in-china</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog/it-operations-in-china" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog/it-operations-in-china" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog/it-operations-in-china" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog/it-operations-in-china" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog/it-operations-in-china" />
   </url>
@@ -173,6 +261,7 @@
     <loc>https://jotoglobal.com/blog/multi-site-network-rollout</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog/multi-site-network-rollout" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog/multi-site-network-rollout" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog/multi-site-network-rollout" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog/multi-site-network-rollout" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog/multi-site-network-rollout" />
   </url>
@@ -180,6 +269,15 @@
     <loc>https://jotoglobal.com/zh/blog/multi-site-network-rollout</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog/multi-site-network-rollout" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog/multi-site-network-rollout" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog/multi-site-network-rollout" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog/multi-site-network-rollout" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog/multi-site-network-rollout" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/blog/multi-site-network-rollout</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog/multi-site-network-rollout" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog/multi-site-network-rollout" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog/multi-site-network-rollout" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog/multi-site-network-rollout" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog/multi-site-network-rollout" />
   </url>
@@ -187,6 +285,7 @@
     <loc>https://jotoglobal.com/fa/blog/multi-site-network-rollout</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog/multi-site-network-rollout" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog/multi-site-network-rollout" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog/multi-site-network-rollout" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog/multi-site-network-rollout" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog/multi-site-network-rollout" />
   </url>
@@ -194,6 +293,7 @@
     <loc>https://jotoglobal.com/blog/practical-security-response</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog/practical-security-response" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog/practical-security-response" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog/practical-security-response" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog/practical-security-response" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog/practical-security-response" />
   </url>
@@ -201,6 +301,15 @@
     <loc>https://jotoglobal.com/zh/blog/practical-security-response</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog/practical-security-response" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog/practical-security-response" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog/practical-security-response" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog/practical-security-response" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog/practical-security-response" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/blog/practical-security-response</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog/practical-security-response" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog/practical-security-response" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog/practical-security-response" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog/practical-security-response" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog/practical-security-response" />
   </url>
@@ -208,6 +317,7 @@
     <loc>https://jotoglobal.com/fa/blog/practical-security-response</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/blog/practical-security-response" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/blog/practical-security-response" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/blog/practical-security-response" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/blog/practical-security-response" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/blog/practical-security-response" />
   </url>
@@ -215,6 +325,7 @@
     <loc>https://jotoglobal.com/solutions/network</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/network" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/network" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/network" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/network" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/network" />
   </url>
@@ -222,6 +333,15 @@
     <loc>https://jotoglobal.com/zh/solutions/network</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/network" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/network" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/network" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/network" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/network" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/network</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/network" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/network" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/network" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/network" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/network" />
   </url>
@@ -229,6 +349,7 @@
     <loc>https://jotoglobal.com/fa/solutions/network</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/network" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/network" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/network" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/network" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/network" />
   </url>
@@ -236,6 +357,7 @@
     <loc>https://jotoglobal.com/solutions/security</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security" />
   </url>
@@ -243,6 +365,15 @@
     <loc>https://jotoglobal.com/zh/solutions/security</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/security</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security" />
   </url>
@@ -250,6 +381,7 @@
     <loc>https://jotoglobal.com/fa/solutions/security</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security" />
   </url>
@@ -257,6 +389,7 @@
     <loc>https://jotoglobal.com/solutions/server-storage</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/server-storage" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/server-storage" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/server-storage" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/server-storage" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/server-storage" />
   </url>
@@ -264,6 +397,15 @@
     <loc>https://jotoglobal.com/zh/solutions/server-storage</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/server-storage" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/server-storage" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/server-storage" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/server-storage" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/server-storage" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/server-storage</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/server-storage" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/server-storage" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/server-storage" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/server-storage" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/server-storage" />
   </url>
@@ -271,6 +413,7 @@
     <loc>https://jotoglobal.com/fa/solutions/server-storage</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/server-storage" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/server-storage" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/server-storage" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/server-storage" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/server-storage" />
   </url>
@@ -278,6 +421,7 @@
     <loc>https://jotoglobal.com/solutions/collaboration</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/collaboration" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/collaboration" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/collaboration" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/collaboration" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/collaboration" />
   </url>
@@ -285,6 +429,15 @@
     <loc>https://jotoglobal.com/zh/solutions/collaboration</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/collaboration" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/collaboration" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/collaboration" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/collaboration" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/collaboration" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/collaboration</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/collaboration" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/collaboration" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/collaboration" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/collaboration" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/collaboration" />
   </url>
@@ -292,6 +445,7 @@
     <loc>https://jotoglobal.com/fa/solutions/collaboration</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/collaboration" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/collaboration" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/collaboration" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/collaboration" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/collaboration" />
   </url>
@@ -299,6 +453,7 @@
     <loc>https://jotoglobal.com/solutions/safeguarding</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/safeguarding" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/safeguarding" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/safeguarding" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/safeguarding" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/safeguarding" />
   </url>
@@ -306,6 +461,15 @@
     <loc>https://jotoglobal.com/zh/solutions/safeguarding</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/safeguarding" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/safeguarding" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/safeguarding" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/safeguarding" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/safeguarding" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/safeguarding</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/safeguarding" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/safeguarding" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/safeguarding" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/safeguarding" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/safeguarding" />
   </url>
@@ -313,6 +477,7 @@
     <loc>https://jotoglobal.com/fa/solutions/safeguarding</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/safeguarding" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/safeguarding" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/safeguarding" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/safeguarding" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/safeguarding" />
   </url>
@@ -320,6 +485,7 @@
     <loc>https://jotoglobal.com/solutions/network/aruba</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/network/aruba" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/network/aruba" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/network/aruba" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/network/aruba" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/network/aruba" />
   </url>
@@ -327,6 +493,15 @@
     <loc>https://jotoglobal.com/zh/solutions/network/aruba</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/network/aruba" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/network/aruba" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/network/aruba" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/network/aruba" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/network/aruba" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/network/aruba</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/network/aruba" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/network/aruba" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/network/aruba" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/network/aruba" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/network/aruba" />
   </url>
@@ -334,6 +509,7 @@
     <loc>https://jotoglobal.com/fa/solutions/network/aruba</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/network/aruba" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/network/aruba" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/network/aruba" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/network/aruba" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/network/aruba" />
   </url>
@@ -341,6 +517,7 @@
     <loc>https://jotoglobal.com/solutions/network/cisco</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/network/cisco" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/network/cisco" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/network/cisco" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/network/cisco" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/network/cisco" />
   </url>
@@ -348,6 +525,15 @@
     <loc>https://jotoglobal.com/zh/solutions/network/cisco</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/network/cisco" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/network/cisco" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/network/cisco" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/network/cisco" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/network/cisco" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/network/cisco</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/network/cisco" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/network/cisco" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/network/cisco" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/network/cisco" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/network/cisco" />
   </url>
@@ -355,6 +541,7 @@
     <loc>https://jotoglobal.com/fa/solutions/network/cisco</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/network/cisco" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/network/cisco" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/network/cisco" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/network/cisco" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/network/cisco" />
   </url>
@@ -362,6 +549,7 @@
     <loc>https://jotoglobal.com/solutions/network/extreme-networks</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/network/extreme-networks" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/network/extreme-networks" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/network/extreme-networks" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/network/extreme-networks" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/network/extreme-networks" />
   </url>
@@ -369,6 +557,15 @@
     <loc>https://jotoglobal.com/zh/solutions/network/extreme-networks</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/network/extreme-networks" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/network/extreme-networks" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/network/extreme-networks" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/network/extreme-networks" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/network/extreme-networks" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/network/extreme-networks</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/network/extreme-networks" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/network/extreme-networks" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/network/extreme-networks" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/network/extreme-networks" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/network/extreme-networks" />
   </url>
@@ -376,6 +573,7 @@
     <loc>https://jotoglobal.com/fa/solutions/network/extreme-networks</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/network/extreme-networks" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/network/extreme-networks" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/network/extreme-networks" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/network/extreme-networks" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/network/extreme-networks" />
   </url>
@@ -383,6 +581,7 @@
     <loc>https://jotoglobal.com/solutions/network/sangfor</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/network/sangfor" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/network/sangfor" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/network/sangfor" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/network/sangfor" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/network/sangfor" />
   </url>
@@ -390,6 +589,15 @@
     <loc>https://jotoglobal.com/zh/solutions/network/sangfor</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/network/sangfor" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/network/sangfor" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/network/sangfor" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/network/sangfor" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/network/sangfor" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/network/sangfor</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/network/sangfor" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/network/sangfor" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/network/sangfor" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/network/sangfor" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/network/sangfor" />
   </url>
@@ -397,6 +605,7 @@
     <loc>https://jotoglobal.com/fa/solutions/network/sangfor</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/network/sangfor" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/network/sangfor" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/network/sangfor" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/network/sangfor" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/network/sangfor" />
   </url>
@@ -404,6 +613,7 @@
     <loc>https://jotoglobal.com/solutions/security/check-point</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security/check-point" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security/check-point" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security/check-point" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security/check-point" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security/check-point" />
   </url>
@@ -411,6 +621,15 @@
     <loc>https://jotoglobal.com/zh/solutions/security/check-point</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security/check-point" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security/check-point" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security/check-point" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security/check-point" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security/check-point" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/security/check-point</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security/check-point" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security/check-point" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security/check-point" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security/check-point" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security/check-point" />
   </url>
@@ -418,6 +637,7 @@
     <loc>https://jotoglobal.com/fa/solutions/security/check-point</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security/check-point" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security/check-point" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security/check-point" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security/check-point" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security/check-point" />
   </url>
@@ -425,6 +645,7 @@
     <loc>https://jotoglobal.com/solutions/security/fortinet</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security/fortinet" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security/fortinet" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security/fortinet" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security/fortinet" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security/fortinet" />
   </url>
@@ -432,6 +653,15 @@
     <loc>https://jotoglobal.com/zh/solutions/security/fortinet</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security/fortinet" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security/fortinet" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security/fortinet" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security/fortinet" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security/fortinet" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/security/fortinet</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security/fortinet" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security/fortinet" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security/fortinet" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security/fortinet" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security/fortinet" />
   </url>
@@ -439,6 +669,7 @@
     <loc>https://jotoglobal.com/fa/solutions/security/fortinet</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security/fortinet" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security/fortinet" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security/fortinet" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security/fortinet" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security/fortinet" />
   </url>
@@ -446,6 +677,7 @@
     <loc>https://jotoglobal.com/solutions/security/knowbe4</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security/knowbe4" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security/knowbe4" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security/knowbe4" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security/knowbe4" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security/knowbe4" />
   </url>
@@ -453,6 +685,15 @@
     <loc>https://jotoglobal.com/zh/solutions/security/knowbe4</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security/knowbe4" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security/knowbe4" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security/knowbe4" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security/knowbe4" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security/knowbe4" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/security/knowbe4</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security/knowbe4" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security/knowbe4" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security/knowbe4" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security/knowbe4" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security/knowbe4" />
   </url>
@@ -460,6 +701,7 @@
     <loc>https://jotoglobal.com/fa/solutions/security/knowbe4</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security/knowbe4" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security/knowbe4" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security/knowbe4" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security/knowbe4" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security/knowbe4" />
   </url>
@@ -467,6 +709,7 @@
     <loc>https://jotoglobal.com/solutions/security/onelogin</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security/onelogin" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security/onelogin" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security/onelogin" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security/onelogin" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security/onelogin" />
   </url>
@@ -474,6 +717,15 @@
     <loc>https://jotoglobal.com/zh/solutions/security/onelogin</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security/onelogin" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security/onelogin" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security/onelogin" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security/onelogin" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security/onelogin" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/security/onelogin</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security/onelogin" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security/onelogin" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security/onelogin" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security/onelogin" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security/onelogin" />
   </url>
@@ -481,6 +733,7 @@
     <loc>https://jotoglobal.com/fa/solutions/security/onelogin</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security/onelogin" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security/onelogin" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security/onelogin" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security/onelogin" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security/onelogin" />
   </url>
@@ -488,6 +741,7 @@
     <loc>https://jotoglobal.com/solutions/security/palo-alto-networks</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security/palo-alto-networks" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security/palo-alto-networks" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security/palo-alto-networks" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security/palo-alto-networks" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security/palo-alto-networks" />
   </url>
@@ -495,6 +749,15 @@
     <loc>https://jotoglobal.com/zh/solutions/security/palo-alto-networks</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security/palo-alto-networks" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security/palo-alto-networks" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security/palo-alto-networks" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security/palo-alto-networks" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security/palo-alto-networks" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/security/palo-alto-networks</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security/palo-alto-networks" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security/palo-alto-networks" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security/palo-alto-networks" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security/palo-alto-networks" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security/palo-alto-networks" />
   </url>
@@ -502,6 +765,7 @@
     <loc>https://jotoglobal.com/fa/solutions/security/palo-alto-networks</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security/palo-alto-networks" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security/palo-alto-networks" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security/palo-alto-networks" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security/palo-alto-networks" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security/palo-alto-networks" />
   </url>
@@ -509,6 +773,7 @@
     <loc>https://jotoglobal.com/solutions/security/sangfor</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security/sangfor" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security/sangfor" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security/sangfor" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security/sangfor" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security/sangfor" />
   </url>
@@ -516,6 +781,15 @@
     <loc>https://jotoglobal.com/zh/solutions/security/sangfor</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security/sangfor" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security/sangfor" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security/sangfor" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security/sangfor" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security/sangfor" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/security/sangfor</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security/sangfor" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security/sangfor" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security/sangfor" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security/sangfor" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security/sangfor" />
   </url>
@@ -523,6 +797,7 @@
     <loc>https://jotoglobal.com/fa/solutions/security/sangfor</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/security/sangfor" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/security/sangfor" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/security/sangfor" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/security/sangfor" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/security/sangfor" />
   </url>
@@ -530,6 +805,7 @@
     <loc>https://jotoglobal.com/solutions/server-storage/dell-technologies</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/server-storage/dell-technologies" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/server-storage/dell-technologies" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/server-storage/dell-technologies" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/server-storage/dell-technologies" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/server-storage/dell-technologies" />
   </url>
@@ -537,6 +813,15 @@
     <loc>https://jotoglobal.com/zh/solutions/server-storage/dell-technologies</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/server-storage/dell-technologies" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/server-storage/dell-technologies" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/server-storage/dell-technologies" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/server-storage/dell-technologies" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/server-storage/dell-technologies" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/server-storage/dell-technologies</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/server-storage/dell-technologies" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/server-storage/dell-technologies" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/server-storage/dell-technologies" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/server-storage/dell-technologies" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/server-storage/dell-technologies" />
   </url>
@@ -544,6 +829,7 @@
     <loc>https://jotoglobal.com/fa/solutions/server-storage/dell-technologies</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/server-storage/dell-technologies" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/server-storage/dell-technologies" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/server-storage/dell-technologies" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/server-storage/dell-technologies" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/server-storage/dell-technologies" />
   </url>
@@ -551,6 +837,7 @@
     <loc>https://jotoglobal.com/solutions/server-storage/huawei</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/server-storage/huawei" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/server-storage/huawei" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/server-storage/huawei" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/server-storage/huawei" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/server-storage/huawei" />
   </url>
@@ -558,6 +845,15 @@
     <loc>https://jotoglobal.com/zh/solutions/server-storage/huawei</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/server-storage/huawei" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/server-storage/huawei" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/server-storage/huawei" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/server-storage/huawei" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/server-storage/huawei" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/server-storage/huawei</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/server-storage/huawei" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/server-storage/huawei" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/server-storage/huawei" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/server-storage/huawei" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/server-storage/huawei" />
   </url>
@@ -565,6 +861,7 @@
     <loc>https://jotoglobal.com/fa/solutions/server-storage/huawei</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/server-storage/huawei" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/server-storage/huawei" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/server-storage/huawei" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/server-storage/huawei" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/server-storage/huawei" />
   </url>
@@ -572,6 +869,7 @@
     <loc>https://jotoglobal.com/solutions/server-storage/inspur</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/server-storage/inspur" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/server-storage/inspur" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/server-storage/inspur" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/server-storage/inspur" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/server-storage/inspur" />
   </url>
@@ -579,6 +877,15 @@
     <loc>https://jotoglobal.com/zh/solutions/server-storage/inspur</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/server-storage/inspur" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/server-storage/inspur" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/server-storage/inspur" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/server-storage/inspur" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/server-storage/inspur" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/server-storage/inspur</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/server-storage/inspur" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/server-storage/inspur" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/server-storage/inspur" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/server-storage/inspur" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/server-storage/inspur" />
   </url>
@@ -586,6 +893,7 @@
     <loc>https://jotoglobal.com/fa/solutions/server-storage/inspur</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/server-storage/inspur" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/server-storage/inspur" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/server-storage/inspur" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/server-storage/inspur" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/server-storage/inspur" />
   </url>
@@ -593,6 +901,7 @@
     <loc>https://jotoglobal.com/solutions/collaboration/audiocodes</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/collaboration/audiocodes" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/collaboration/audiocodes" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/collaboration/audiocodes" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/collaboration/audiocodes" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/collaboration/audiocodes" />
   </url>
@@ -600,6 +909,15 @@
     <loc>https://jotoglobal.com/zh/solutions/collaboration/audiocodes</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/collaboration/audiocodes" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/collaboration/audiocodes" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/collaboration/audiocodes" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/collaboration/audiocodes" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/collaboration/audiocodes" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/collaboration/audiocodes</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/collaboration/audiocodes" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/collaboration/audiocodes" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/collaboration/audiocodes" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/collaboration/audiocodes" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/collaboration/audiocodes" />
   </url>
@@ -607,6 +925,7 @@
     <loc>https://jotoglobal.com/fa/solutions/collaboration/audiocodes</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/collaboration/audiocodes" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/collaboration/audiocodes" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/collaboration/audiocodes" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/collaboration/audiocodes" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/collaboration/audiocodes" />
   </url>
@@ -614,6 +933,7 @@
     <loc>https://jotoglobal.com/solutions/collaboration/cyberdata</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/collaboration/cyberdata" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/collaboration/cyberdata" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/collaboration/cyberdata" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/collaboration/cyberdata" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/collaboration/cyberdata" />
   </url>
@@ -621,6 +941,15 @@
     <loc>https://jotoglobal.com/zh/solutions/collaboration/cyberdata</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/collaboration/cyberdata" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/collaboration/cyberdata" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/collaboration/cyberdata" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/collaboration/cyberdata" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/collaboration/cyberdata" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/collaboration/cyberdata</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/collaboration/cyberdata" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/collaboration/cyberdata" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/collaboration/cyberdata" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/collaboration/cyberdata" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/collaboration/cyberdata" />
   </url>
@@ -628,6 +957,7 @@
     <loc>https://jotoglobal.com/fa/solutions/collaboration/cyberdata</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/collaboration/cyberdata" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/collaboration/cyberdata" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/collaboration/cyberdata" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/collaboration/cyberdata" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/collaboration/cyberdata" />
   </url>
@@ -635,6 +965,7 @@
     <loc>https://jotoglobal.com/solutions/collaboration/informacast</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/collaboration/informacast" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/collaboration/informacast" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/collaboration/informacast" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/collaboration/informacast" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/collaboration/informacast" />
   </url>
@@ -642,6 +973,15 @@
     <loc>https://jotoglobal.com/zh/solutions/collaboration/informacast</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/collaboration/informacast" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/collaboration/informacast" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/collaboration/informacast" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/collaboration/informacast" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/collaboration/informacast" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/collaboration/informacast</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/collaboration/informacast" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/collaboration/informacast" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/collaboration/informacast" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/collaboration/informacast" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/collaboration/informacast" />
   </url>
@@ -649,6 +989,7 @@
     <loc>https://jotoglobal.com/fa/solutions/collaboration/informacast</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/collaboration/informacast" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/collaboration/informacast" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/collaboration/informacast" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/collaboration/informacast" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/collaboration/informacast" />
   </url>
@@ -656,6 +997,7 @@
     <loc>https://jotoglobal.com/solutions/collaboration/vodia</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/collaboration/vodia" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/collaboration/vodia" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/collaboration/vodia" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/collaboration/vodia" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/collaboration/vodia" />
   </url>
@@ -663,6 +1005,15 @@
     <loc>https://jotoglobal.com/zh/solutions/collaboration/vodia</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/collaboration/vodia" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/collaboration/vodia" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/collaboration/vodia" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/collaboration/vodia" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/collaboration/vodia" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/collaboration/vodia</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/collaboration/vodia" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/collaboration/vodia" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/collaboration/vodia" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/collaboration/vodia" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/collaboration/vodia" />
   </url>
@@ -670,6 +1021,7 @@
     <loc>https://jotoglobal.com/fa/solutions/collaboration/vodia</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/collaboration/vodia" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/collaboration/vodia" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/collaboration/vodia" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/collaboration/vodia" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/collaboration/vodia" />
   </url>
@@ -677,6 +1029,7 @@
     <loc>https://jotoglobal.com/solutions/safeguarding/hikvision</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/safeguarding/hikvision" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/safeguarding/hikvision" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/safeguarding/hikvision" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/safeguarding/hikvision" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/safeguarding/hikvision" />
   </url>
@@ -684,6 +1037,15 @@
     <loc>https://jotoglobal.com/zh/solutions/safeguarding/hikvision</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/safeguarding/hikvision" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/safeguarding/hikvision" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/safeguarding/hikvision" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/safeguarding/hikvision" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/safeguarding/hikvision" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/safeguarding/hikvision</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/safeguarding/hikvision" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/safeguarding/hikvision" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/safeguarding/hikvision" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/safeguarding/hikvision" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/safeguarding/hikvision" />
   </url>
@@ -691,6 +1053,7 @@
     <loc>https://jotoglobal.com/fa/solutions/safeguarding/hikvision</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/safeguarding/hikvision" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/safeguarding/hikvision" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/safeguarding/hikvision" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/safeguarding/hikvision" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/safeguarding/hikvision" />
   </url>
@@ -698,6 +1061,7 @@
     <loc>https://jotoglobal.com/solutions/safeguarding/keyking</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/safeguarding/keyking" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/safeguarding/keyking" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/safeguarding/keyking" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/safeguarding/keyking" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/safeguarding/keyking" />
   </url>
@@ -705,6 +1069,15 @@
     <loc>https://jotoglobal.com/zh/solutions/safeguarding/keyking</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/safeguarding/keyking" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/safeguarding/keyking" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/safeguarding/keyking" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/safeguarding/keyking" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/safeguarding/keyking" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/safeguarding/keyking</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/safeguarding/keyking" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/safeguarding/keyking" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/safeguarding/keyking" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/safeguarding/keyking" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/safeguarding/keyking" />
   </url>
@@ -712,6 +1085,7 @@
     <loc>https://jotoglobal.com/fa/solutions/safeguarding/keyking</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/safeguarding/keyking" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/safeguarding/keyking" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/safeguarding/keyking" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/safeguarding/keyking" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/safeguarding/keyking" />
   </url>
@@ -719,6 +1093,7 @@
     <loc>https://jotoglobal.com/solutions/safeguarding/verkada</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/safeguarding/verkada" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/safeguarding/verkada" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/safeguarding/verkada" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/safeguarding/verkada" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/safeguarding/verkada" />
   </url>
@@ -726,6 +1101,15 @@
     <loc>https://jotoglobal.com/zh/solutions/safeguarding/verkada</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/safeguarding/verkada" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/safeguarding/verkada" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/safeguarding/verkada" />
+    <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/safeguarding/verkada" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/safeguarding/verkada" />
+  </url>
+  <url>
+    <loc>https://jotoglobal.com/zh-hk/solutions/safeguarding/verkada</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/safeguarding/verkada" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/safeguarding/verkada" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/safeguarding/verkada" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/safeguarding/verkada" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/safeguarding/verkada" />
   </url>
@@ -733,6 +1117,7 @@
     <loc>https://jotoglobal.com/fa/solutions/safeguarding/verkada</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://jotoglobal.com/solutions/safeguarding/verkada" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://jotoglobal.com/zh/solutions/safeguarding/verkada" />
+    <xhtml:link rel="alternate" hreflang="zh-HK" href="https://jotoglobal.com/zh-hk/solutions/safeguarding/verkada" />
     <xhtml:link rel="alternate" hreflang="fa-IR" href="https://jotoglobal.com/fa/solutions/safeguarding/verkada" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://jotoglobal.com/solutions/safeguarding/verkada" />
   </url>

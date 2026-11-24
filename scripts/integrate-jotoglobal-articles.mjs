@@ -1,6 +1,6 @@
 import { readFile, writeFile } from 'node:fs/promises';
 
-const VERSION = '20260910-1';
+const VERSION = '20261124-1';
 const pages = {
   'blog/index.html': '<html lang="en">',
   'zh/blog/index.html': '<html lang="zh-CN">',

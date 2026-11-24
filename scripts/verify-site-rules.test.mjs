@@ -7,18 +7,18 @@ import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 const script = fileURLToPath(new URL('./verify-site-rules.mjs', import.meta.url));
-const styleUrl = '/assets/index-e49ffBFL.css?v=20260804-1';
-const scriptUrl = '/assets/index-DaFvN0XI.js?v=20260804-1';
+const styleUrl = '/assets/index-e49ffBFL.css?v=20261124-1';
+const scriptUrl = '/assets/index-covers-fe2c6a4b8409.js?v=20261124-1';
 
-test('动态文章路由不改变 114 个基础路由合约', () => {
+test('动态文章路由不改变 149 个基础路由合约', () => {
   const root = mkdtempSync(path.join(tmpdir(), 'jotoglobal-site-rules-'));
   mkdirSync(path.join(root, 'assets'), { recursive: true });
   const sourceRoot = path.resolve(path.dirname(script), '..');
-  for (const file of ['index-e49ffBFL.css', 'index-DaFvN0XI.js']) {
+  for (const file of ['index-e49ffBFL.css', 'index-covers-fe2c6a4b8409.js']) {
     writeFileSync(path.join(root, 'assets', file), readFileSync(path.join(sourceRoot, 'assets', file)));
   }
   const baseHtml = `<link rel="stylesheet" href="${styleUrl}"><script src="${scriptUrl}"></script>`;
-  for (let index = 0; index < 114; index += 1) {
+  for (let index = 0; index < 149; index += 1) {
     const directory = path.join(root, `base-${index}`); mkdirSync(directory); writeFileSync(path.join(directory, 'index.html'), baseHtml);
   }
   writeFileSync(path.join(root, '404.html'), baseHtml);
@@ -29,5 +29,5 @@ test('动态文章路由不改变 114 个基础路由合约', () => {
   }
   mkdirSync(path.join(root, 'article-data')); writeFileSync(path.join(root, 'article-data/manifest.json'), JSON.stringify({ routes }));
   const output = execFileSync(process.execPath, [script], { cwd: root, encoding: 'utf8' });
-  assert.match(output, /114 base routes and 3 generated article routes/);
+  assert.match(output, /149 base routes and 3 generated article routes/);
 });

@@ -5,8 +5,8 @@ import path from "node:path";
 const root = process.cwd();
 const scriptPath = path.join(root, "assets/solution-card-carousel.js");
 const stylesPath = path.join(root, "assets/solution-card-carousel.css");
-const mainBundlePath = path.join(root, "assets/index-DaFvN0XI.js");
-const assetVersion = "20260805-1";
+const mainBundlePath = path.join(root, "assets/index-covers-fe2c6a4b8409.js");
+const assetVersion = "20260810-1"; // version served in production
 
 assert.equal(existsSync(scriptPath), true, "carousel script must exist");
 assert.equal(existsSync(stylesPath), true, "carousel stylesheet must exist");
@@ -63,6 +63,7 @@ assert.match(styles, /prefers-reduced-motion:\s*reduce/);
 const homepagePaths = [
   path.join(root, "index.html"),
   path.join(root, "zh/index.html"),
+  path.join(root, "zh-hk/index.html"),
   path.join(root, "fa/index.html"),
 ];
 

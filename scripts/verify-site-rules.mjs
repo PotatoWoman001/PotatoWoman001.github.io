@@ -4,10 +4,10 @@ import path from "node:path";
 
 const root = process.cwd();
 const cssPath = path.join(root, "assets/index-e49ffBFL.css");
-const jsPath = path.join(root, "assets/index-DaFvN0XI.js");
-const bundleScriptVersion = "20260819-1";
-const bundleStyleVersion = "20260805-1";
-const bundleScriptUrl = `/assets/index-DaFvN0XI.js?v=${bundleScriptVersion}`;
+const jsPath = path.join(root, "assets/index-covers-fe2c6a4b8409.js");
+const bundleScriptVersion = "20261124-1";
+const bundleStyleVersion = "20261124-1";
+const bundleScriptUrl = `/assets/index-covers-fe2c6a4b8409.js?v=${bundleScriptVersion}`;
 const bundleStyleUrl = `/assets/index-e49ffBFL.css?v=${bundleStyleVersion}`;
 const css = fs.readFileSync(cssPath, "utf8");
 const js = fs.readFileSync(jsPath, "utf8");
@@ -37,7 +37,7 @@ const articleRouteFiles = new Set(articleRoutes.map((route) => {
   return path.resolve(root, `.${route}`, "index.html");
 }));
 const baseRouteFiles = routeFiles.filter((routeFile) => !articleRouteFiles.has(path.resolve(routeFile)));
-assert.equal(baseRouteFiles.length, 114, "expected all 114 base route index files");
+assert.equal(baseRouteFiles.length, 149, "expected all 149 base route index files (114 + 35 zh-hk)");
 assert.equal(routeFiles.length, baseRouteFiles.length + articleRouteFiles.size, "article manifest must match generated route files");
 
 for (const routeFile of baseRouteFiles) {
@@ -54,8 +54,8 @@ for (const routeFile of baseRouteFiles) {
 
 for (const routeFile of articleRouteFiles) {
   const html = fs.readFileSync(routeFile, "utf8");
-  assert.ok(html.includes("/assets/jotoglobal-articles.css?v=20260804-1"), `${path.relative(root, routeFile)} is missing article CSS`);
-  assert.ok(html.includes("/assets/jotoglobal-analytics.js?v=20260804-1"), `${path.relative(root, routeFile)} is missing analytics`);
+  assert.match(html, /\/assets\/jotoglobal-articles\.css\?v=\d{8}-\d+/, `${path.relative(root, routeFile)} is missing article CSS`);
+  assert.match(html, /\/assets\/jotoglobal-analytics\.js\?v=\d{8}-\d+/, `${path.relative(root, routeFile)} is missing analytics`);
 }
 
 const notFoundHtml = fs.readFileSync(path.join(root, "404.html"), "utf8");

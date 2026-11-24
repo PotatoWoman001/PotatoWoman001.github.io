@@ -35,6 +35,11 @@ async function collectRuntimeFiles(directory) {
   return files;
 }
 
+// zh-HK pages report the zh-CN locale to the inquiry backend; the page path keeps /zh-hk/.
+assert.deepEqual(classifyLeadSource(new URL("https://jotoglobal.com/zh-hk/contact")), {
+  sourceKey: "contact-page-form", locale: "zh-CN", pagePath: "/zh-hk/contact", entry: "", objectSlug: "",
+});
+assert.equal(classifyLeadSource(new URL("https://jotoglobal.com/zh-hk/solutions/network/cisco")).objectSlug, "network/cisco");
 assert.deepEqual(classifyLeadSource(new URL("https://jotoglobal.com/zh/")), {
   sourceKey: "home-contact-form",
   locale: "zh-CN",
@@ -80,7 +85,7 @@ const runtimeSource = (
   await Promise.all(runtimeFiles.map((file) => readFile(file, "utf8")))
 ).join("\n");
 const mainBundle = await readFile(
-  path.join(projectRoot, "assets/index-DaFvN0XI.js"),
+  path.join(projectRoot, "assets/index-covers-fe2c6a4b8409.js"),
   "utf8",
 );
 
@@ -95,7 +100,7 @@ assert.doesNotMatch(
 );
 assert.match(
   mainBundle,
-  /import"\.\/jotoglobal-lead-routing\.js\?v=20260819-1"/,
+  /import"\.\/jotoglobal-lead-routing\.js\?v=20261124-1"/,
 );
 
 console.log(

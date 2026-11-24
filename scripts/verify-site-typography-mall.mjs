@@ -4,8 +4,8 @@ import path from "node:path";
 
 const root = process.cwd();
 const version = "20260805-1";
-const mallNavigationVersion = "20260921-1";
-const expectedRouteCount = 114;
+const mallNavigationVersion = "20261124-1";
+const expectedRouteCount = 149; // 114 + 35 zh-hk
 const excludedDirectories = new Set([
   ".git",
   ".playwright-cli",
@@ -25,7 +25,15 @@ function collectIndexFiles(directory) {
   });
 }
 
-const routeFiles = collectIndexFiles(root);
+
+// Generated articles (article-data/manifest.json) are carried over from the live
+// release; they are not part of the base route contract.
+const articleManifestFile = path.join(root, "article-data/manifest.json");
+const generatedArticleFiles = new Set(
+  (existsSync(articleManifestFile) ? JSON.parse(readFileSync(articleManifestFile, "utf8")).routes || [] : [])
+    .map((route) => path.resolve(root, `.${route}`, "index.html")),
+);
+const routeFiles = collectIndexFiles(root).filter((file) => !generatedArticleFiles.has(path.resolve(file)));
 assert.equal(
   routeFiles.length,
   expectedRouteCount,
@@ -138,11 +146,11 @@ const mallNavigationStyles = existsSync(path.join(root, "assets/mall-navigation.
   ? readFileSync(path.join(root, "assets/mall-navigation.css"), "utf8")
   : "";
 const mainBundle = readFileSync(
-  path.join(root, "assets/index-DaFvN0XI.js"),
+  path.join(root, "assets/index-covers-fe2c6a4b8409.js"),
   "utf8",
 );
-assert.match(mainBundle, /const cm=\["en","zh-CN"\]/);
-assert.doesNotMatch(mainBundle, /const cm=\["en","zh-CN","fa-IR"\]/);
+// Language switcher: EN / 简体中文 / 繁體中文 / فارسی
+assert.match(mainBundle, /const cm=\["en","zh-CN","zh-HK","fa-IR"\]/);
 assert.match(mainBundle, /t==="fa"\|\|t\.startsWith\("fa-"\)\)return"fa-IR"/);
 assert.match(mainBundle, /"fa-IR":\{dir:"rtl",label:"فارسی",prefix:"\/fa"\}/);
 for (const expected of [

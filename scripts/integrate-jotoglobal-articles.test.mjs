@@ -36,8 +36,8 @@ test('文章入口与 sitemap 注入可重复执行', () => {
       assert.doesNotMatch(html, /id="jotoglobalArticles"/);
       assert.equal((html.match(/jotoglobal-articles\.js/g) || []).length, 1);
       assert.equal((html.match(/jotoglobal-articles\.css/g) || []).length, 1);
-      assert.match(html, /jotoglobal-articles\.js\?v=20260910-1/);
-      assert.match(html, /jotoglobal-articles\.css\?v=20260910-1/);
+      assert.match(html, /jotoglobal-articles\.js\?v=20261124-1/);
+      assert.match(html, /jotoglobal-articles\.css\?v=20261124-1/);
       assert.ok(html.indexOf('jotoglobal-articles.css') < html.indexOf('</head>'));
       assert.ok(html.indexOf('jotoglobal-articles.js') < html.indexOf('</body>'));
     }

@@ -68,7 +68,7 @@ const SHARED_COPY = {
 };
 
 function getLocale() {
-  const [, routeLocale] = window.location.pathname.match(/^\/(zh|fa)\//) || [];
+  const [, routeLocale] = window.location.pathname.match(/^\/(zh|fa)(?:-hk)?\//) /* zh-hk uses the zh copy */ || [];
   if (routeLocale) return routeLocale;
   const language = document.documentElement.lang.toLowerCase();
   if (language.startsWith("zh")) return "zh";
@@ -77,7 +77,7 @@ function getLocale() {
 }
 
 function normalizedRoute() {
-  return window.location.pathname.replace(/^\/(?:zh|fa)(?=\/)/, "").replace(/\/$/, "");
+  return window.location.pathname.replace(/^\/(?:zh-hk|zh|fa)(?=\/)/, "").replace(/\/$/, "");
 }
 
 function localizedCopy(brand) {
