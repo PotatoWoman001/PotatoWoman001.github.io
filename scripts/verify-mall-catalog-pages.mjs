@@ -8,8 +8,9 @@ const version = "20260805-1";
 const mallNavigationVersion = "20261124-1";
 const mallStyleVersion = "20260821-2";
 const mallScriptVersion = "20260921-1";
-const siteBundleVersion = "20261124-1";
-const mallPagesVersion = "20261124-1"; // mall-catalog-pages.js imports the updated contact form module
+const siteBundleVersion = "20261125-1";
+const siteStyleVersion = "20261124-1";
+const mallPagesVersion = "20261125-1"; // mall-catalog-pages.js imports the updated contact form module
 const routes = [
   ["mall/index.html", "en", "ltr", "home", "mall-catalog-pages.js"],
   ["zh/mall/index.html", "zh-CN", "ltr", "home", "mall-catalog-pages.js"],
@@ -53,7 +54,7 @@ for (const [route, lang, dir, mode, script] of routes) {
       : match[1] === "/assets/mall-navigation-and-page.js"
         ? mallNavigationVersion
       : match[1] === "/assets/index-e49ffBFL.css"
-        ? siteBundleVersion
+        ? siteStyleVersion
       : match[1] === "/assets/mall-catalog.css"
         ? mallStyleVersion
       : match[1] === "/assets/mall-catalog-pages.js"

@@ -5,7 +5,7 @@ import path from "node:path";
 const root = process.cwd();
 const cssPath = path.join(root, "assets/index-e49ffBFL.css");
 const jsPath = path.join(root, "assets/index-covers-fe2c6a4b8409.js");
-const bundleScriptVersion = "20261124-1";
+const bundleScriptVersion = "20261125-1";
 const bundleStyleVersion = "20261124-1";
 const bundleScriptUrl = `/assets/index-covers-fe2c6a4b8409.js?v=${bundleScriptVersion}`;
 const bundleStyleUrl = `/assets/index-e49ffBFL.css?v=${bundleStyleVersion}`;

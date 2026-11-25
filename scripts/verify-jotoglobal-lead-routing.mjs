@@ -61,7 +61,7 @@ assert.equal(
 );
 assert.match(
   buildSalesMailto(new URL("https://jotoglobal.com/zh/contact")),
-  /^mailto:salesglobal@jototech\.cn\?subject=/,
+  /^mailto:sales@jotoglobal\.com\?subject=/,
 );
 assert.deepEqual(
   buildTrafficSource(
@@ -91,16 +91,16 @@ const mainBundle = await readFile(
 
 assert.doesNotMatch(
   runtimeSource,
-  /sales@jotoglobal\.com|sales@jototech\.cn/,
+  /salesglobal@jototech\.cn|sales@jototech\.cn/,
 );
-assert.match(runtimeSource, /salesglobal@jototech\.cn/);
+assert.match(runtimeSource, /sales@jotoglobal\.com/);
 assert.doesNotMatch(
   runtimeSource,
   /tomi@jototech\.cn|amy\.geng@jototech\.cn|shuting\.wang@jototech\.cn|jungleqiu@icloud\.com/,
 );
 assert.match(
   mainBundle,
-  /import"\.\/jotoglobal-lead-routing\.js\?v=20261124-1"/,
+  /import"\.\/jotoglobal-lead-routing\.js\?v=20261125-1"/,
 );
 
 console.log(

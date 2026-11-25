@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 
 const script = fileURLToPath(new URL('./verify-site-rules.mjs', import.meta.url));
 const styleUrl = '/assets/index-e49ffBFL.css?v=20261124-1';
-const scriptUrl = '/assets/index-covers-fe2c6a4b8409.js?v=20261124-1';
+const scriptUrl = '/assets/index-covers-fe2c6a4b8409.js?v=20261125-1';
 
 test('动态文章路由不改变 149 个基础路由合约', () => {
   const root = mkdtempSync(path.join(tmpdir(), 'jotoglobal-site-rules-'));
