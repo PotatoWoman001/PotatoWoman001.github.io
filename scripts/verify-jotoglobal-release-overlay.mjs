@@ -10,7 +10,8 @@ const siteRulesAt = workflow.indexOf('node scripts/verify-site-rules.mjs', rende
 const switchAt = workflow.indexOf('mv -Tf "$next_link" "$current"', renderAt);
 
 assert.ok(carryAt >= 0, 'release workflow must carry over the live generated articles');
-assert.match(workflow, /--from "\$previous" --to "\$release_path"/);
+assert.match(workflow, /--from "\$article_source" --to "\$release_path"/);
+assert.match(workflow, /ls -1dt "\$release_root"\/\*\//, "must fall back to the newest earlier release with articles");
 assert.ok(renderAt > carryAt, 'release workflow must fall back to rendering the independent article library');
 assert.match(workflow, /carry_status" -eq 3/);
 assert.ok(siteRulesAt > renderAt, 'release must validate after the article overlay');

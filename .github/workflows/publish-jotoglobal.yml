@@ -128,9 +128,24 @@ jobs:
           # Keep the generated articles that are live now (published by the
           # server-side article publisher). Render from the article library only
           # when the current release has no article manifest yet.
+          # Use the current release, or — if it has no article manifest (for
+          # example after an older branch was published) — the newest earlier
+          # release that still has one.
+          article_source="$previous"
+          if [ ! -f "$article_source/article-data/manifest.json" ]; then
+            for candidate in $(ls -1dt "$release_root"/*/ 2>/dev/null); do
+              candidate="${candidate%/}"
+              [ "$candidate" = "$release_path" ] && continue
+              if [ -f "$candidate/article-data/manifest.json" ]; then
+                article_source="$candidate"
+                break
+              fi
+            done
+          fi
+          echo "ARTICLE_SOURCE=$article_source"
           carry_status=0
           node scripts/carry-over-generated-articles.mjs \
-            --from "$previous" --to "$release_path" || carry_status=$?
+            --from "$article_source" --to "$release_path" || carry_status=$?
           if [ "$carry_status" -eq 3 ]; then
             node scripts/render-jotoglobal-articles.mjs \
               --articles /var/www/audit/backend/data/sites/jotoglobal/articles.json \
