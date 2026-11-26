@@ -5,6 +5,7 @@ import path from "node:path";
 
 const root = process.cwd();
 const version = "20260805-1";
+const contactCaptchaVersion = "20261125-1";
 const mallNavigationVersion = "20261124-1";
 const mallStyleVersion = "20260821-2";
 const mallScriptVersion = "20260921-1";
@@ -58,6 +59,8 @@ for (const [route, lang, dir, mode, script] of routes) {
         ? mallStyleVersion
       : match[1] === "/assets/mall-catalog-pages.js"
         ? mallPagesVersion
+      : match[1] === "/assets/jotoglobal-contact-captcha.js"
+        ? contactCaptchaVersion
       : match[1] === "/assets/mall-product-page.js"
         ? mallScriptVersion
         : version;
